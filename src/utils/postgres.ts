@@ -34,13 +34,12 @@ export const generateWhere = (filter: Filter = {}) => {
       return `${pre}(${orQuery})`;
     } else {
       const pre = acc ? `${acc} AND ` : '';
-      const replacement = ['like', 'notLike'].includes(
+      const replacement = ['like', 'not like'].includes(
         (data as FilterParam).operator
       )
         ? `%${(data as FilterParam).value}%`
         : (data as FilterParam).value;
       result.replacements.push(replacement);
-      result.replacements.push((data as FilterParam).value);
       return `${pre}${buildFilter(field, data as FilterParam)}`;
     }
   }, '');
