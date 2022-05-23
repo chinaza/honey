@@ -1,3 +1,4 @@
+import config from '@src/config';
 import {
   Controller,
   createController,
@@ -7,6 +8,7 @@ import {
   updateByIdController
 } from '@src/controllers';
 import { GetQueryFilter } from '@src/shared/interface';
+import { NextFunction, Request, Response } from 'express';
 import ExpressApp, { Middleware } from './express';
 import Postgres from './postgres';
 
@@ -60,7 +62,16 @@ export default class Honey {
     controller: Controller,
     middleware: Middleware[] = []
   ) {
-    this.express.appRoutes[method](path, ...middleware, controller);
+    const dbCheck = async (req: Request, res: Response, next: NextFunction) => {
+      if (!config.db) {
+        return res.status(503).send({
+          message: 'DB Initialization in progress'
+        });
+      } else {
+        next();
+      }
+    };
+    this.express.appRoutes[method](path, dbCheck, ...middleware, controller);
   }
 
   public addMiddleware(middleware: Middleware[]) {

@@ -6,6 +6,7 @@ import {
   GetQueryFilter,
   UpdateOpParam
 } from '@src/shared/interface';
+import HttpError from './error';
 
 const formatter = {
   string: String,
@@ -30,14 +31,16 @@ export const generateUpdateData = (
   body: Record<string, any>,
   params: Record<string, 'replace' | 'inc' | 'dec'>
 ) => {
-  const result: UpdateOpParam = {};
-
-  Object.entries(params).forEach(([key, value]) => {
-    result[key] = {
-      value: body[key],
-      operator: value
+  const result = Object.entries(params).reduce((acc, [key, value]) => {
+    if (!body[key]) return { ...acc };
+    return {
+      ...acc,
+      [key]: {
+        value: body[key],
+        operator: value
+      }
     };
-  });
+  }, {} as UpdateOpParam);
 
   return result;
 };
@@ -56,6 +59,10 @@ export const formatReadFilter = (
       ) as Record<string, FilterParam>;
     } else {
       const valueFormatter = formatter[(param as GetFilterParam).value];
+
+      if (!valueFormatter)
+        throw new HttpError('Invalid filter value type', 500);
+
       result[key] = {
         operator: param.operator as FilterOps,
         value: valueFormatter(queryParams[key])
