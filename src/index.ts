@@ -25,7 +25,7 @@ export function isDbReady() {
   return !!config.db;
 }
 
-export default function createHoney(
+export function createHoney(
   port: string,
   dbOptions: string | DBOptions,
   metadata?: Metadata
