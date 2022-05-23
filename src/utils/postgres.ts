@@ -1,7 +1,11 @@
-import { Filter, FilterParam } from '@src/shared/interface';
+import { Filter, FilterParam, UpdateOpParam } from '@src/shared/interface';
 
 const buildFilter = (field: string, { operator }: FilterParam) => {
-  return `"${field}" ${operator} ?`;
+  return `"${field}" ${
+    ['like', 'not like'].includes(operator)
+      ? operator.replace('like', 'ilike')
+      : operator
+  } ?`;
 };
 
 const formatFields = (fields: string[]) => {
@@ -18,7 +22,10 @@ export const generateWhere = (filter: Filter = {}) => {
       const orQuery = Object.entries(data).reduce(
         (orAcc, [orField, orData]) => {
           const pre = orAcc ? `${orAcc} OR ` : '';
-          result.replacements.push(orData.value);
+          const replacement = ['like', 'notLike'].includes(orData.operator)
+            ? `%${orData.value}%`
+            : orData.value;
+          result.replacements.push(replacement);
           return `${pre}${buildFilter(orField, orData)}`;
         },
         ''
@@ -27,6 +34,12 @@ export const generateWhere = (filter: Filter = {}) => {
       return `${pre}(${orQuery})`;
     } else {
       const pre = acc ? `${acc} AND ` : '';
+      const replacement = ['like', 'notLike'].includes(
+        (data as FilterParam).operator
+      )
+        ? `%${(data as FilterParam).value}%`
+        : (data as FilterParam).value;
+      result.replacements.push(replacement);
       result.replacements.push((data as FilterParam).value);
       return `${pre}${buildFilter(field, data as FilterParam)}`;
     }
@@ -51,17 +64,27 @@ export const generateCreateQuery = (
 export const generateReadQuery = (
   table: string,
   fields: string[],
-  filter?: Filter
+  filter?: Filter,
+  paginate?: { page: number; limit: number },
+  format?: { sort: 'ASC' | 'DESC'; sortField: string }
 ) => {
   const { where, replacements } = generateWhere(filter);
   const whereSegment = filter ? `WHERE ${where}` : '';
-  const query = `SELECT ${formatFields(fields)} FROM ${table} ${whereSegment}`;
+  let query = `SELECT ${formatFields(fields)} FROM ${table} ${whereSegment}`;
+  if (format?.sort && format.sortField) {
+    query += ` ORDER BY "${format.sortField}" ${format.sort}`;
+  }
+  if (paginate) {
+    query += ` LIMIT ${paginate.limit} OFFSET ${
+      paginate.limit * (paginate.page - 1)
+    }`;
+  }
 
   return { query, replacements };
 };
 export const generateUpdateQuery = (
   table: string,
-  data: Filter,
+  data: UpdateOpParam,
   filter?: Filter
 ) => {
   const replacements = [];

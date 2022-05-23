@@ -6,12 +6,24 @@ import {
   generateUpdateQuery
 } from '@src/utils/postgres';
 import { QueryTypes } from 'sequelize';
-import { Filter } from '../shared/interface';
+import { Filter, UpdateOpParam } from '../shared/interface';
 
 export default class Postgres {
-  public async read(table: string, fields: string[], filter?: Filter) {
+  public async read(
+    table: string,
+    fields: string[],
+    filter?: Filter,
+    paginate?: { page: number; limit: number },
+    format?: { sort: 'ASC' | 'DESC'; sortField: string }
+  ) {
     try {
-      const { query, replacements } = generateReadQuery(table, fields, filter);
+      const { query, replacements } = generateReadQuery(
+        table,
+        fields,
+        filter,
+        paginate,
+        format
+      );
 
       const result = await config.db.query(query, {
         type: QueryTypes.SELECT,
@@ -41,7 +53,7 @@ export default class Postgres {
     }
   }
 
-  public async update(table: string, data: Filter, filter?: Filter) {
+  public async update(table: string, data: UpdateOpParam, filter?: Filter) {
     try {
       const { query, replacements } = generateUpdateQuery(table, data, filter);
 
