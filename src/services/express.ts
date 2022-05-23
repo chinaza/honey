@@ -4,7 +4,7 @@ import logger from 'morgan';
 import cors from 'cors';
 import http from 'http';
 import '../config';
-import HttpError from '../utils/http';
+import HttpError from '../utils/error';
 import { AddressInfo } from 'net';
 
 export type Middleware = (

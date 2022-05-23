@@ -1,7 +1,11 @@
-import { Filter, FilterParam } from '@src/services/interface';
+import { Filter, FilterParam } from '@src/shared/interface';
 
 const buildFilter = (field: string, { operator }: FilterParam) => {
-  return `${field} ${operator} ?`;
+  return `"${field}" ${operator} ?`;
+};
+
+const formatFields = (fields: string[]) => {
+  return fields.map((field) => `"${field}"`).join(', ');
 };
 
 export const generateWhere = (filter: Filter = {}) => {
@@ -36,11 +40,11 @@ export const generateCreateQuery = (
   data: Record<string, string | number | boolean>
 ) => {
   const replacements = Object.values(data);
-  const query = `INSERT INTO ${table} (${Object.keys(data).join(
-    ', '
-  )}) VALUES (${Object.keys(data)
-    .map(() => '?')
-    .join(', ')})`;
+  const query = `INSERT INTO ${table} 
+  (${formatFields(Object.keys(data))}) 
+    VALUES (${Object.keys(data)
+      .map(() => '?')
+      .join(', ')})`;
 
   return { query, replacements };
 };
@@ -51,20 +55,33 @@ export const generateReadQuery = (
 ) => {
   const { where, replacements } = generateWhere(filter);
   const whereSegment = filter ? `WHERE ${where}` : '';
-  const query = `SELECT ${fields.join(', ')} FROM ${table} ${whereSegment}`;
+  const query = `SELECT ${formatFields(fields)} FROM ${table} ${whereSegment}`;
 
   return { query, replacements };
 };
 export const generateUpdateQuery = (
   table: string,
-  data: Record<string, string | number | boolean>,
+  data: Filter,
   filter?: Filter
 ) => {
-  const { where, replacements } = generateWhere(filter);
-  const whereSegment = filter ? `WHERE ${where}` : '';
-  const query = `UPDATE ${table} SET ${Object.keys(data)
-    .map((f) => `${f} = ?`)
-    .join(', ')} ${whereSegment}`;
+  const replacements = [];
+
+  let query = `UPDATE ${table} SET ${Object.keys(data)
+    .map((field) => {
+      replacements.push(data[field].value);
+
+      if (data[field].operator === 'inc') return `"${field}" = "${field}" + ?`;
+      else if (data[field].operator === 'dec')
+        return `"${field}" = "${field}" - ?`;
+      else return `"${field}" = ?`;
+    })
+    .join(', ')}`;
+
+  const { where, replacements: whereReplacements } = generateWhere(filter);
+  const whereSegment = filter ? ` WHERE ${where}` : '';
+
+  query += whereSegment;
+  replacements.push(...whereReplacements);
 
   return { query, replacements };
 };

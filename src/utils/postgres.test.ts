@@ -18,6 +18,6 @@ test('generate where segment of sql query', () => {
     }
   });
 
-  expect(where).toBe(`name = ? AND (age > ? OR nationality = ?)`);
+  expect(where).toBe(`"name" = ? AND ("age" > ? OR "nationality" = ?)`);
   expect(replacements).toEqual(['test', 20, 'nigeria']);
 });

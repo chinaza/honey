@@ -6,7 +6,7 @@ dotenv.config();
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 class Config {
-  public db: Sequelize = null!;
+  private _db: Sequelize = null!;
 
   public getEnv = (key: string) => {
     return process.env[key];
@@ -14,6 +14,13 @@ class Config {
 
   get isLive() {
     return process.env.NODE_ENV === 'production';
+  }
+
+  get db() {
+    return this._db;
+  }
+  set db(instance: Sequelize) {
+    this._db = instance;
   }
 
   public async setupDB(options?: DBOptions | string) {

@@ -15,7 +15,9 @@ export default async function initDB(options: string | DBOptions) {
   } else {
     uri = `postgres://${options.user}:${options.password}@${options.host}:${options.port}/${options.database}`;
   }
-  const sequelize = new Sequelize(uri);
+  const sequelize = new Sequelize(uri, {
+    logging: false
+  });
 
   await sequelize.authenticate();
   console.error('DB Connection established successfully');

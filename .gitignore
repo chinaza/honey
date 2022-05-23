@@ -5,3 +5,4 @@ node_modules
 db
 .npmrc
 coverage
+./verify.js

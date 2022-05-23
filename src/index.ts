@@ -7,6 +7,7 @@ import config from './config';
 import { DBOptions } from './config/database';
 import ExpressApp from './services/express';
 import Honey from './services/honey';
+import Postgres from './services/postgres';
 import { normalizePort } from './utils/port';
 
 interface Metadata {
@@ -20,7 +21,11 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-export = function createHoney(
+export function isDbReady() {
+  return !!config.db;
+}
+
+export default function createHoney(
   port: string,
   dbOptions: string | DBOptions,
   metadata?: Metadata
@@ -31,7 +36,8 @@ export = function createHoney(
   const express = new ExpressApp(portVal, {
     fallbackErrorMessage: metadata?.fallbackErrorMessage
   });
-  const honey = new Honey(express);
+  const postgres = new Postgres();
+  const honey = new Honey(express, postgres);
 
   return honey;
-};
+}

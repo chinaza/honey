@@ -5,8 +5,8 @@ import {
   generateReadQuery,
   generateUpdateQuery
 } from '@src/utils/postgres';
-import { QueryTypes } from 'sequelize/types';
-import { Filter } from './interface';
+import { QueryTypes } from 'sequelize';
+import { Filter } from '../shared/interface';
 
 export default class Postgres {
   public async read(table: string, fields: string[], filter?: Filter) {
@@ -41,16 +41,12 @@ export default class Postgres {
     }
   }
 
-  public async update(
-    table: string,
-    data: Record<string, string | number | boolean>,
-    filter?: Filter
-  ) {
+  public async update(table: string, data: Filter, filter?: Filter) {
     try {
       const { query, replacements } = generateUpdateQuery(table, data, filter);
 
       await config.db.query(query, {
-        type: QueryTypes.SELECT,
+        type: QueryTypes.UPDATE,
         raw: true,
         replacements
       });
@@ -64,7 +60,7 @@ export default class Postgres {
       const { query, replacements } = generateDeleteQuery(table, filter);
 
       await config.db.query(query, {
-        type: QueryTypes.SELECT,
+        type: QueryTypes.DELETE,
         raw: true,
         replacements
       });
