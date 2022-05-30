@@ -8,6 +8,13 @@
   "author": "zhap",
   "license": "MIT",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chinaza/honey.git"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "parcel build",
     "build:dev": "tsc --watch",
@@ -18,7 +25,8 @@
     "test-watch": "jest --watch --passWithNoTests",
     "start": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node --transpile-only ./src/index.ts",
-    "prepare": "husky install"
+    "prepare": "npm run build",
+    "prepare:dev": "husky install"
   },
   "alias": {
     "@src/*": "./src/$1"
