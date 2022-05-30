@@ -52,20 +52,38 @@ export function getByQueryController(
 
       const filter = formatReadFilter(req.query, filterQuery);
 
-      const data = await postgres.read(
+      let data: Record<string, any>[] = await postgres.read(
         resource,
         fields,
         filter,
         paginate,
         format
       );
+      let total = 0;
+      if (paginate) {
+        total = Number(data[0]?.['honey_total_count'] || 0);
+        data = data.map((item: Record<string, any>) => {
+          delete item['honey_total_count'];
+          return item;
+        });
+      }
 
       if (!data?.length) {
         throw new HttpError('No records found', 404);
       }
-
-      res.send({ data });
-      next({ data });
+      const response = {
+        data,
+        meta: {
+          pagination: {
+            total,
+            pageSize: limit,
+            page,
+            pageCount: Math.ceil(total / limit)
+          }
+        }
+      };
+      res.send(response);
+      next(response);
     } catch (error: any) {
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });

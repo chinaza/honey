@@ -69,7 +69,12 @@ export const generateReadQuery = (
 ) => {
   const { where, replacements } = generateWhere(filter);
   const whereSegment = filter ? `WHERE ${where}` : '';
-  let query = `SELECT ${formatFields(fields)} FROM ${table} ${whereSegment}`;
+  let query = `SELECT ${formatFields(fields)}`;
+  query += !!paginate
+    ? `, count(${fields[0]}) OVER() AS honey_total_count`
+    : '';
+
+  query += ` FROM ${table} ${whereSegment}`;
   if (format?.sort && format.sortField) {
     query += ` ORDER BY "${format.sortField}" ${format.sort}`;
   }
