@@ -1,11 +1,11 @@
 {
-  "name": "@zhap/honey",
+  "name": "@chinaza/honey",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/module.js",
   "source": "src/index.ts",
-  "author": "zhap",
+  "author": "chinaza",
   "license": "MIT",
   "private": false,
   "repository": {
