@@ -56,6 +56,10 @@ export default class Honey {
     return this.express.appRoutes;
   }
 
+  get db() {
+    return config.db;
+  }
+
   private crud(
     method: 'get' | 'post' | 'put' | 'delete',
     path: string,
