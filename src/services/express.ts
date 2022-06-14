@@ -15,6 +15,7 @@ export type Middleware = (
 
 interface Metadata {
   fallbackErrorMessage?: string;
+  routePrefix?: string;
 }
 
 /**
@@ -64,6 +65,7 @@ class ExpressApp {
   public appRoutes = express.Router();
   private server: http.Server;
   private fallbackErrMessage = 'Endpoint does not exist';
+  private routePrefix = '/';
 
   constructor(port: string | number, private metadata?: Metadata) {
     this.initMiddlewares();
@@ -74,6 +76,7 @@ class ExpressApp {
     this.server.on('listening', onListening(this.server));
     this.fallbackErrMessage =
       this.metadata?.fallbackErrorMessage || this.fallbackErrMessage;
+    this.routePrefix = this.metadata?.routePrefix || this.routePrefix;
   }
 
   public listen() {
@@ -86,7 +89,7 @@ class ExpressApp {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(cookieParser());
-    this.app.use(this.appRoutes);
+    this.app.use(this.routePrefix, this.appRoutes);
     this.app.use((_, res) => {
       const err = new HttpError(this.fallbackErrMessage, 404);
 
