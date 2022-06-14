@@ -22,7 +22,8 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@chinaza'
-      - run: yarn
+      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}\n @chinaza:registry=https://npm.pkg.github.com" > ~/.npmrc
+      - run: yarn install --frozen-lockfile
       - run: yarn test
       - run: yarn publish
         env:
