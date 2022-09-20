@@ -38,7 +38,7 @@ export default class Postgres {
 
   public async create(
     table: string,
-    data: Record<string, string | number | boolean>
+    data: Record<string, string | number | boolean | Date>
   ) {
     try {
       const { query, replacements } = generateCreateQuery(table, data);

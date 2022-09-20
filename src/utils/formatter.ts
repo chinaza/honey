@@ -1,3 +1,4 @@
+import { ICreate, IUpdateById } from '@src/interfaces/crud';
 import {
   Filter,
   FilterOps,
@@ -16,11 +17,15 @@ const formatter = {
 
 export const extractInsertData = (
   body: Record<string, any>,
-  params: Record<string, 'string' | 'number' | 'boolean'>
+  params: ICreate['params']
 ) => {
-  const result: Record<string, string | number | boolean> = {};
+  const result: Record<string, string | number | boolean | Date> = {};
 
   Object.entries(params).forEach(([key, value]) => {
+    if (value === '@updatedAt') {
+      result[key] = new Date();
+      return;
+    }
     result[key] = formatter[value](body[key]);
   });
 
@@ -29,15 +34,16 @@ export const extractInsertData = (
 
 export const generateUpdateData = (
   body: Record<string, any>,
-  params: Record<string, 'replace' | 'inc' | 'dec'>
+  params: IUpdateById['params']
 ) => {
   const result = Object.entries(params).reduce((acc, [key, value]) => {
     if (!body[key]) return { ...acc };
+
     return {
       ...acc,
       [key]: {
-        value: body[key],
-        operator: value
+        value: value === '@updatedAt' ? new Date() : body[key],
+        operator: value === '@updatedAt' ? 'replace' : value
       }
     };
   }, {} as UpdateOpParam);

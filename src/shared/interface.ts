@@ -8,10 +8,10 @@ export type FilterOps =
   | 'like'
   | 'not like';
 
-type UpdateOp = 'inc' | 'dec' | 'replace';
+type UpdateOp = 'inc' | 'dec' | 'replace' | '@updatedAt';
 
 interface OperationParam<T> {
-  value: string | number | boolean;
+  value: string | number | boolean | Date;
   operator: T;
 }
 

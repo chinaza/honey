@@ -15,7 +15,7 @@ const formatFields = (fields: string[]) => {
 export const generateWhere = (filter: Filter = {}) => {
   const result = {
     where: '',
-    replacements: [] as Array<string | number | boolean>
+    replacements: [] as Array<string | number | boolean | Date>
   };
   result.where = Object.entries(filter).reduce((acc, [field, data]) => {
     if (['$or'].includes(field)) {
@@ -49,7 +49,7 @@ export const generateWhere = (filter: Filter = {}) => {
 
 export const generateCreateQuery = (
   table: string,
-  data: Record<string, string | number | boolean>
+  data: Record<string, string | number | boolean | Date>
 ) => {
   const replacements = Object.values(data);
   const query = `INSERT INTO ${table} 

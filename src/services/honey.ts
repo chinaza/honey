@@ -7,17 +7,11 @@ import {
   getByQueryController,
   updateByIdController
 } from '@src/controllers';
+import { ICreate, IUpdateById } from '@src/interfaces/crud';
 import { GetQueryFilter } from '@src/shared/interface';
 import { NextFunction, Request, Response } from 'express';
 import ExpressApp, { Middleware } from './express';
 import Postgres from './postgres';
-
-interface ICreate {
-  resource: string;
-  params: Record<string, 'string' | 'number' | 'boolean'>;
-  message: string;
-  middleware?: Middleware[];
-}
 
 interface IGet {
   resource: string;
@@ -33,13 +27,6 @@ interface IGet {
 interface IGetById {
   resource: string;
   fields: string[];
-  middleware?: Middleware[];
-}
-
-interface IUpdateById {
-  resource: string;
-  params: Record<string, 'replace' | 'inc' | 'dec'>;
-  message: string;
   middleware?: Middleware[];
 }
 

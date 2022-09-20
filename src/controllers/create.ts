@@ -1,3 +1,4 @@
+import { ICreate } from '@src/interfaces/crud';
 import Postgres from '@src/services/postgres';
 import HttpError, { handleHttpError } from '@src/utils/error';
 import { extractInsertData } from '@src/utils/formatter';
@@ -7,7 +8,7 @@ import { Controller } from './interfaces';
 export default function createController(
   postgres: Postgres,
   resource: string,
-  params: Record<string, 'string' | 'number' | 'boolean'>,
+  params: ICreate['params'],
   message: string
 ): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {

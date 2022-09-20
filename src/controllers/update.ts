@@ -1,3 +1,4 @@
+import { IUpdateById } from '@src/interfaces/crud';
 import Postgres from '@src/services/postgres';
 import { Filter } from '@src/shared/interface';
 import HttpError, { handleHttpError } from '@src/utils/error';
@@ -8,7 +9,7 @@ import { Controller } from './interfaces';
 export function updateByIdController(
   postgres: Postgres,
   resource: string,
-  params: Record<string, 'replace' | 'inc' | 'dec'>,
+  params: IUpdateById['params'],
   message: string
 ): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
