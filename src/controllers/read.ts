@@ -8,14 +8,15 @@ import { Controller } from './interfaces';
 export function getByIdController(
   postgres: Postgres,
   resource: string,
-  fields: string[]
+  fields: string[],
+  idField = 'id'
 ): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
 
       const data = await postgres.read(resource, fields, {
-        id: {
+        [idField]: {
           value: id,
           operator: '='
         }

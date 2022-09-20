@@ -28,6 +28,7 @@ interface IGetById {
   resource: string;
   fields: string[];
   middleware?: Middleware[];
+  idField?: string;
 }
 
 interface IDeleteById {
@@ -98,10 +99,15 @@ export default class Honey {
     this.crud('get', path, controller, middleware);
   }
 
-  public getById({ resource, fields, middleware }: IGetById) {
+  public getById({ resource, fields, idField, middleware }: IGetById) {
     const path = `/api/${resource}/:id`;
 
-    const controller = getByIdController(this.postgres, resource, fields);
+    const controller = getByIdController(
+      this.postgres,
+      resource,
+      fields,
+      idField || 'id'
+    );
 
     this.crud('get', path, controller, middleware);
   }
