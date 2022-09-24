@@ -10,6 +10,7 @@ import Honey from './services/honey';
 import Postgres from './services/postgres';
 import { normalizePort } from './utils/port';
 
+export { QueryTypes } from 'sequelize';
 interface Metadata {
   fallbackErrorMessage?: string;
 }
