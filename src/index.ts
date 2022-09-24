@@ -43,4 +43,6 @@ export function createHoney(
   return honey;
 }
 
-export { QueryTypes };
+export function getQueryTypes() {
+  return QueryTypes;
+}
