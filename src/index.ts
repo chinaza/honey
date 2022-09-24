@@ -44,5 +44,7 @@ export function createHoney(
 }
 
 export function getQueryTypes() {
-  return QueryTypes;
+  const { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT } = QueryTypes;
+
+  return { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT };
 }
