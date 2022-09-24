@@ -10,7 +10,7 @@ import Honey from './services/honey';
 import Postgres from './services/postgres';
 import { normalizePort } from './utils/port';
 
-import { QueryTypes } from 'sequelize';
+import { QueryTypes as QTypes } from 'sequelize';
 interface Metadata {
   fallbackErrorMessage?: string;
 }
@@ -43,9 +43,11 @@ export function createHoney(
   return honey;
 }
 
-export function getQueryTypes() {
-  const { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT } = QueryTypes;
+const QueryTypes = function getQueryTypes() {
+  const { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT } = QTypes;
 
   const exposedTypes = { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT };
   return exposedTypes;
-}
+};
+
+export { QueryTypes };
