@@ -47,6 +47,5 @@ export function getQueryTypes() {
   const { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT } = QueryTypes;
 
   const exposedTypes = { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT };
-  const test = 25;
-  return { test, exposedTypes };
+  return exposedTypes;
 }
