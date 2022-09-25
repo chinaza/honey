@@ -43,11 +43,13 @@ export function createHoney(
   return honey;
 }
 
-const QueryTypes = function getQueryTypes() {
+function getQueryTypes() {
   const { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT } = QTypes;
 
   const exposedTypes = { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT };
   return exposedTypes;
-};
+}
+
+const QueryTypes = getQueryTypes();
 
 export { QueryTypes };
