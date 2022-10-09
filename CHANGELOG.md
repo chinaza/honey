@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.3.2
+
+### Patch Changes
+
+- change metadata interface for createHoney to include routePrefix
+
 ## 1.3.1
 
 ### Patch Changes

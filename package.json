@@ -1,6 +1,6 @@
 {
   "name": "@chinaza/honey",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "An expressJS based library for simplifying the development of CRUD APIs using Postgres",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,7 +31,8 @@
     "start": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node --transpile-only ./src/index.ts",
     "prepare": "npm run build",
-    "prepare:dev": "husky install"
+    "prepare:dev": "husky install",
+    "bump": "yarn changeset; yarn changeset version"
   },
   "alias": {
     "@src/*": "./src/$1"

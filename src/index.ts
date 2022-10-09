@@ -11,9 +11,7 @@ import Postgres from './services/postgres';
 import { normalizePort } from './utils/port';
 
 import { QueryTypes as QTypes } from 'sequelize';
-interface Metadata {
-  fallbackErrorMessage?: string;
-}
+import { Metadata } from './interfaces/express';
 
 process.on('SIGINT', () => {
   // process reload ongoing
