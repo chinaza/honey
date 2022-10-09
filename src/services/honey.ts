@@ -62,7 +62,7 @@ export default class Honey {
     middleware,
     pathOverride
   }: ICreate) {
-    const path = pathOverride || `/api/${resource}`;
+    const path = pathOverride || `/${resource}`;
 
     const controller = createController(
       this.postgres,
@@ -82,7 +82,7 @@ export default class Honey {
     middleware,
     pathOverride
   }: IGet) {
-    const path = pathOverride || `/api/${resource}`;
+    const path = pathOverride || `/${resource}`;
     const controller = getByQueryController(
       this.postgres,
       resource,
@@ -100,7 +100,7 @@ export default class Honey {
     middleware,
     pathOverride
   }: IGetById) {
-    const path = pathOverride || `/api/${resource}/:id`;
+    const path = pathOverride || `/${resource}/:id`;
 
     const controller = getByIdController(
       this.postgres,
@@ -119,7 +119,7 @@ export default class Honey {
     middleware,
     pathOverride
   }: IUpdateById) {
-    const path = pathOverride || `/api/${resource}/:id`;
+    const path = pathOverride || `/${resource}/:id`;
 
     const controller = updateByIdController(
       this.postgres,
@@ -136,7 +136,7 @@ export default class Honey {
     middleware,
     pathOverride
   }: IDeleteById) {
-    const path = pathOverride || `/api/${resource}/:id`;
+    const path = pathOverride || `/${resource}/:id`;
     const controller = deleteByIdController(this.postgres, resource, message);
     this.crud('delete', path, controller, middleware);
   }

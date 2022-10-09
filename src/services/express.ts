@@ -6,17 +6,13 @@ import http from 'http';
 import '../config';
 import HttpError from '../utils/error';
 import { AddressInfo } from 'net';
+import { Metadata } from '@src/interfaces/express';
 
 export type Middleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => NextFunction;
-
-interface Metadata {
-  fallbackErrorMessage?: string;
-  routePrefix?: string;
-}
 
 /**
  * Event listener for HTTP server "error" event.
@@ -65,7 +61,7 @@ class ExpressApp {
   public appRoutes = express.Router();
   private server: http.Server;
   private fallbackErrMessage = 'Endpoint does not exist';
-  private routePrefix = '/';
+  private routePrefix = '/api';
 
   constructor(port: string | number, private metadata?: Metadata) {
     this.initMiddlewares();

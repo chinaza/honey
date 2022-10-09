@@ -34,9 +34,7 @@ export function createHoney(
   config.setupDB(dbOptions);
 
   const portVal = normalizePort(port || process.env.PORT || '3000');
-  const express = new ExpressApp(portVal, {
-    fallbackErrorMessage: metadata?.fallbackErrorMessage
-  });
+  const express = new ExpressApp(portVal, metadata);
   const postgres = new Postgres();
   const honey = new Honey(express, postgres);
 
