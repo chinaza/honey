@@ -64,15 +64,15 @@ class ExpressApp {
   private routePrefix = '/api';
 
   constructor(port: string | number, private metadata?: Metadata) {
+    this.fallbackErrMessage =
+      this.metadata?.fallbackErrorMessage || this.fallbackErrMessage;
+    this.routePrefix = this.metadata?.routePrefix || this.routePrefix;
     this.initMiddlewares();
     this.setupErrorFallback();
     this.app.set('port', port);
     this.server = http.createServer(this.app);
     this.server.on('error', onError(port));
     this.server.on('listening', onListening(this.server));
-    this.fallbackErrMessage =
-      this.metadata?.fallbackErrorMessage || this.fallbackErrMessage;
-    this.routePrefix = this.metadata?.routePrefix || this.routePrefix;
   }
 
   public listen() {

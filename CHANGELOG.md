@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.3.3
+
+### Patch Changes
+
+- fix routePrefix declaration
+
 ## 1.3.2
 
 ### Patch Changes
