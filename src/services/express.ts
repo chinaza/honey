@@ -13,6 +13,12 @@ export type Middleware = (
   res: Response,
   next: NextFunction
 ) => NextFunction;
+export type ExitMiddleware = (
+  data: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => NextFunction;
 
 /**
  * Event listener for HTTP server "error" event.

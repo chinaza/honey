@@ -1,12 +1,12 @@
 import { Controller } from '@src/controllers/interfaces';
-import { Middleware } from '@src/services/express';
+import { ExitMiddleware, Middleware } from '@src/services/express';
 import { GetQueryFilter } from '@src/shared/interface';
 
 interface CrudParams {
   resource: string;
   pathOverride?: string;
   middleware?: Middleware[];
-  exitMiddleware?: Middleware[];
+  exitMiddleware?: ExitMiddleware[];
 }
 
 export interface ICrud {
@@ -14,7 +14,7 @@ export interface ICrud {
   path: string;
   controller: Controller;
   middleware?: Middleware[];
-  exitMiddleware?: Middleware[];
+  exitMiddleware?: ExitMiddleware[];
 }
 
 export type ICreate = CrudParams & {

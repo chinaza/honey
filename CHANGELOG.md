@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.4.1
+
+### Patch Changes
+
+- specify exit middleware type
+
 ## 1.4.0
 
 ### Minor Changes
