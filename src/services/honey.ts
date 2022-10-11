@@ -1,6 +1,5 @@
 import config from '@src/config';
 import {
-  Controller,
   createController,
   deleteByIdController,
   getByIdController,
@@ -9,6 +8,7 @@ import {
 } from '@src/controllers';
 import {
   ICreate,
+  ICrud,
   IDeleteById,
   IGet,
   IGetById,
@@ -29,12 +29,13 @@ export default class Honey {
     return config.db;
   }
 
-  private crud(
-    method: 'get' | 'post' | 'put' | 'delete',
-    path: string,
-    controller: Controller,
-    middleware: Middleware[] = []
-  ) {
+  private crud({
+    method,
+    path,
+    controller,
+    middleware = [],
+    exitMiddleware = []
+  }: ICrud) {
     const dbCheck = async (req: Request, res: Response, next: NextFunction) => {
       if (!config.db) {
         return res.status(503).send({
@@ -44,7 +45,13 @@ export default class Honey {
         next();
       }
     };
-    this.express.appRoutes[method](path, dbCheck, ...middleware, controller);
+    this.express.appRoutes[method](
+      path,
+      dbCheck,
+      ...middleware,
+      controller,
+      ...exitMiddleware
+    );
   }
 
   public addMiddleware(middleware: Middleware[]) {
@@ -60,7 +67,8 @@ export default class Honey {
     params,
     message,
     middleware,
-    pathOverride
+    pathOverride,
+    exitMiddleware
   }: ICreate) {
     const path = pathOverride || `/${resource}`;
 
@@ -71,7 +79,7 @@ export default class Honey {
       message
     );
 
-    this.crud('post', path, controller, middleware);
+    this.crud({ method: 'post', path, controller, middleware, exitMiddleware });
   }
 
   public get({
@@ -80,7 +88,8 @@ export default class Honey {
     filter,
     format,
     middleware,
-    pathOverride
+    pathOverride,
+    exitMiddleware
   }: IGet) {
     const path = pathOverride || `/${resource}`;
     const controller = getByQueryController(
@@ -90,7 +99,7 @@ export default class Honey {
       filter,
       format
     );
-    this.crud('get', path, controller, middleware);
+    this.crud({ method: 'get', path, controller, middleware, exitMiddleware });
   }
 
   public getById({
@@ -98,7 +107,8 @@ export default class Honey {
     fields,
     idField,
     middleware,
-    pathOverride
+    pathOverride,
+    exitMiddleware
   }: IGetById) {
     const path = pathOverride || `/${resource}/:id`;
 
@@ -109,7 +119,7 @@ export default class Honey {
       idField || 'id'
     );
 
-    this.crud('get', path, controller, middleware);
+    this.crud({ method: 'get', path, controller, middleware, exitMiddleware });
   }
 
   public updateById({
@@ -117,7 +127,8 @@ export default class Honey {
     params,
     message,
     middleware,
-    pathOverride
+    pathOverride,
+    exitMiddleware
   }: IUpdateById) {
     const path = pathOverride || `/${resource}/:id`;
 
@@ -127,17 +138,24 @@ export default class Honey {
       params,
       message
     );
-    this.crud('put', path, controller, middleware);
+    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
   }
 
   public deleteById({
     resource,
     message,
     middleware,
-    pathOverride
+    pathOverride,
+    exitMiddleware
   }: IDeleteById) {
     const path = pathOverride || `/${resource}/:id`;
     const controller = deleteByIdController(this.postgres, resource, message);
-    this.crud('delete', path, controller, middleware);
+    this.crud({
+      method: 'delete',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 }

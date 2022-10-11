@@ -1,21 +1,30 @@
+import { Controller } from '@src/controllers/interfaces';
 import { Middleware } from '@src/services/express';
 import { GetQueryFilter } from '@src/shared/interface';
 
 interface CrudParams {
   resource: string;
   pathOverride?: string;
+  middleware?: Middleware[];
+  exitMiddleware?: Middleware[];
+}
+
+export interface ICrud {
+  method: 'get' | 'post' | 'put' | 'delete';
+  path: string;
+  controller: Controller;
+  middleware?: Middleware[];
+  exitMiddleware?: Middleware[];
 }
 
 export type ICreate = CrudParams & {
   params: Record<string, 'string' | 'number' | 'boolean' | '@updatedAt'>;
   message: string;
-  middleware?: Middleware[];
 };
 
 export type IUpdateById = CrudParams & {
   params: Record<string, 'replace' | 'inc' | 'dec' | '@updatedAt'>;
   message: string;
-  middleware?: Middleware[];
 };
 
 export type IGet = CrudParams & {
@@ -25,16 +34,13 @@ export type IGet = CrudParams & {
     sort: 'ASC' | 'DESC';
     sortField: string;
   };
-  middleware?: Middleware[];
 };
 
 export type IGetById = CrudParams & {
   fields: string[];
-  middleware?: Middleware[];
   idField?: string;
 };
 
 export type IDeleteById = CrudParams & {
   message: string;
-  middleware?: Middleware[];
 };

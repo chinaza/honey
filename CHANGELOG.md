@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.4.0
+
+### Minor Changes
+
+- add support for exit Middleware
+
 ## 1.3.3
 
 ### Patch Changes
