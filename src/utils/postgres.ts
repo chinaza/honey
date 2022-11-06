@@ -56,7 +56,8 @@ export const generateCreateQuery = (
   (${formatFields(Object.keys(data))}) 
     VALUES (${Object.keys(data)
       .map(() => '?')
-      .join(', ')})`;
+      .join(', ')})
+      RETURNING id`;
 
   return { query, replacements };
 };

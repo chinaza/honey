@@ -15,10 +15,11 @@ export default function createController(
     try {
       const body = extractInsertData(req.body, params);
 
-      await postgres.create(resource, body);
+      const data = await postgres.create(resource, body);
+      const id = data[0].id;
 
-      res.send({ message });
-      next({ message });
+      res.send({ message, id });
+      next({ message, id });
     } catch (error: any) {
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });

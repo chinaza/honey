@@ -16,68 +16,55 @@ export default class Postgres {
     paginate?: { page: number; limit: number },
     format?: { sort: 'ASC' | 'DESC'; sortField: string }
   ) {
-    try {
-      const { query, replacements } = generateReadQuery(
-        table,
-        fields,
-        filter,
-        paginate,
-        format
-      );
+    const { query, replacements } = generateReadQuery(
+      table,
+      fields,
+      filter,
+      paginate,
+      format
+    );
 
-      const result = await config.db.query(query, {
-        type: QueryTypes.SELECT,
-        raw: true,
-        replacements
-      });
-      return result;
-    } catch (error) {
-      throw error;
-    }
+    const result = await config.db.query(query, {
+      type: QueryTypes.SELECT,
+      raw: true,
+      replacements
+    });
+    return result;
   }
 
   public async create(
     table: string,
     data: Record<string, string | number | boolean | Date>
   ) {
-    try {
-      const { query, replacements } = generateCreateQuery(table, data);
+    const { query, replacements } = generateCreateQuery(table, data);
 
-      await config.db.query(query, {
-        type: QueryTypes.INSERT,
-        raw: true,
-        replacements
-      });
-    } catch (error) {
-      throw error;
-    }
+    const res: any = await config.db.query(query, {
+      type: QueryTypes.INSERT,
+      raw: true,
+      replacements
+    });
+
+    // inserted ids
+    return res[0] as { id: string | number }[];
   }
 
   public async update(table: string, data: UpdateOpParam, filter?: Filter) {
-    try {
-      const { query, replacements } = generateUpdateQuery(table, data, filter);
+    const { query, replacements } = generateUpdateQuery(table, data, filter);
 
-      await config.db.query(query, {
-        type: QueryTypes.UPDATE,
-        raw: true,
-        replacements
-      });
-    } catch (error) {
-      throw error;
-    }
+    await config.db.query(query, {
+      type: QueryTypes.UPDATE,
+      raw: true,
+      replacements
+    });
   }
 
   public async delete(table: string, filter?: Filter) {
-    try {
-      const { query, replacements } = generateDeleteQuery(table, filter);
+    const { query, replacements } = generateDeleteQuery(table, filter);
 
-      await config.db.query(query, {
-        type: QueryTypes.DELETE,
-        raw: true,
-        replacements
-      });
-    } catch (error) {
-      throw error;
-    }
+    await config.db.query(query, {
+      type: QueryTypes.DELETE,
+      raw: true,
+      replacements
+    });
   }
 }
