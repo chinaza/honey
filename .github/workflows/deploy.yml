@@ -22,6 +22,19 @@ jobs:
       - run: echo "@chinaza:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn install --frozen-lockfile
       - run: yarn test
+      - run: yarn changeset version
       - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Bump version
+          commit_options: '--no-verify --signoff'
+          file_pattern: 'CHANGELOG.md package.json'
+          status_options: '--untracked-files=no'
+          add_options: '-u'
+          push_options: '--force'
+          skip_dirty_check: true
+          skip_fetch: true
+          skip_checkout: true
+          disable_globbing: true
