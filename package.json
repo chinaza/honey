@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "parcel build",
-    "build:dev": "tsc --watch",
+    "build:dev": "parcel watch",
     "format": "prettier --write .",
     "lint": "eslint . --fix",
     "test": "jest --passWithNoTests",
