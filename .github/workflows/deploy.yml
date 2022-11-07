@@ -1,4 +1,6 @@
 name: Publish Honey to Github Packages
+permissions:
+  contents: write
 on:
   release:
     types: [created]
@@ -33,7 +35,6 @@ jobs:
           file_pattern: 'CHANGELOG.md package.json'
           status_options: '--untracked-files=no'
           add_options: '-u'
-          push_options: '--force'
           skip_dirty_check: true
           skip_fetch: true
           skip_checkout: true
