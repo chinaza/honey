@@ -1,5 +1,15 @@
 # @chinaza/honey
 
+## 1.5.4
+
+### Patch Changes
+
+- 8f255d8: grant write permission to GH action
+- 8cb3cd5: fix GH Actions
+- 8bf547b: fix GH actions
+- 794d0bd: fix GH action
+- d1e2482: extend middleware interface to support data param
+
 ## 1.5.0
 
 ### Minor Changes
