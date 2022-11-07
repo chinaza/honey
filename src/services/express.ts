@@ -8,11 +8,15 @@ import HttpError from '../utils/error';
 import { AddressInfo } from 'net';
 import { Metadata } from '@src/interfaces/express';
 
-export type Middleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => NextFunction;
+export type Middleware =
+  | ((req: Request, res: Response, next: NextFunction) => NextFunction)
+  | ((
+      data: any,
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => NextFunction);
+
 export type ExitMiddleware = (
   data: any,
   req: Request,
