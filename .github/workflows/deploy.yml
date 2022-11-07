@@ -1,6 +1,10 @@
 name: Publish Honey to Github Packages
+
 permissions:
   contents: write
+  packages: write
+  pull-requests: write
+
 on:
   release:
     types: [created]
@@ -13,9 +17,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v3
       # Setup .npmrc file to publish to npm
@@ -28,14 +29,6 @@ jobs:
       - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Bump version
-          commit_options: '--no-verify --signoff'
-          file_pattern: 'CHANGELOG.md package.json'
-          status_options: '--untracked-files=no'
-          add_options: '-u'
-          skip_dirty_check: true
-          skip_fetch: true
-          skip_checkout: true
-          disable_globbing: true
+      - run: git add .changeset
+      - run: git commit -m "bump bersion"
+      - run: git push
