@@ -29,6 +29,18 @@ jobs:
       - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: git add .changeset
-      - run: git commit -m "bump bersion"
-      - run: git push
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Bump version
+          commit_options: '--no-verify --signoff'
+          file_pattern: '.changeset/* CHANGELOG.md package.json'
+          commit_user_name: Naza Bot
+          commit_user_email: bot@chinaza.dev
+          commit_author: Author <actions@github.com>
+          status_options: '--untracked-files=no'
+          add_options: '-u'
+          push_options: '--force'
+          skip_dirty_check: true
+          skip_fetch: true
+          skip_checkout: true
+          disable_globbing: true
