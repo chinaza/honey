@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.5.5
+
+### Patch Changes
+
+- ef81f03: remove duplicate middleware declaration
+
 ## 1.5.4
 
 ### Patch Changes
