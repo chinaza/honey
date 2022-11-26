@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.6.0
+
+### Minor Changes
+
+- 6dc1c38: add jsdoc for fields and fix middleware return type
+
 ## 1.5.5
 
 ### Patch Changes
