@@ -33,6 +33,8 @@ export type IUpdateById = CrudParams & {
   params: Record<string, 'replace' | 'inc' | 'dec' | '@updatedAt'>;
   /** Response message */
   message: string;
+  /** column to run filter by id on */
+  idField?: string;
 };
 
 export type IGet = CrudParams & {

@@ -10,13 +10,14 @@ export function updateByIdController(
   postgres: Postgres,
   resource: string,
   params: IUpdateById['params'],
-  message: string
+  message: string,
+  idField = 'id'
 ): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = generateUpdateData(req.body, params);
       const filter: Filter = {
-        id: {
+        [idField]: {
           operator: '=',
           value: req.params.id
         }

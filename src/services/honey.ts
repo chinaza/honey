@@ -125,6 +125,7 @@ export default class Honey {
   public updateById({
     resource,
     params,
+    idField,
     message,
     middleware,
     pathOverride,
@@ -136,7 +137,8 @@ export default class Honey {
       this.postgres,
       resource,
       params,
-      message
+      message,
+      idField
     );
     this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
   }
