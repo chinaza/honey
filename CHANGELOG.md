@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.7.0
+
+### Minor Changes
+
+- 1157337: add id field support to update by id
+
 ## 1.6.0
 
 ### Minor Changes
