@@ -12,14 +12,14 @@ export type Middleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => NextFunction;
+) => void;
 
 export type ExitMiddleware = (
   data: any,
   req: Request,
   res: Response,
   next: NextFunction
-) => NextFunction;
+) => void;
 
 /**
  * Event listener for HTTP server "error" event.
