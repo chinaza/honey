@@ -2,7 +2,7 @@ import { QueryTypes } from 'sequelize';
 import config from '../config';
 
 interface QueryParams {
-  replacements: any[];
+  replacements?: any[];
   type: QueryTypes;
 }
 export default function runDbQuery(
