@@ -49,3 +49,4 @@ function getQueryTypes() {
 const QueryTypes = getQueryTypes();
 
 export { QueryTypes };
+export { default as runDbQuery } from './utils/db';
