@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.8.1
+
+### Patch Changes
+
+- e5f5e1a: make replacements optional in db query util
+
 ## 1.8.0
 
 ### Minor Changes
