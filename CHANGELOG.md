@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.8.2
+
+### Patch Changes
+
+- 3c958a1: make params in db query optional
+
 ## 1.8.1
 
 ### Patch Changes
