@@ -5,10 +5,9 @@ interface QueryParams {
   replacements?: any[];
   type: QueryTypes;
 }
-export default function runDbQuery(
-  query: string,
-  { replacements, type }: QueryParams
-) {
+export default function runDbQuery(query: string, params?: QueryParams) {
+  const { replacements, type } = params || {};
+
   return config.db.query(query, {
     raw: true,
     replacements,
