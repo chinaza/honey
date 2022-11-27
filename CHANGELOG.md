@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.8.0
+
+### Minor Changes
+
+- 702bf79: add raw db querying utility
+
 ## 1.7.0
 
 ### Minor Changes
