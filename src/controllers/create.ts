@@ -18,8 +18,8 @@ export default function createController(
       const data = await postgres.create(resource, body);
       const id = data[0].id;
 
-      res.send({ message, id });
-      next({ message, id });
+      res.send({ message, data: { id } });
+      next({ message, data: { id } });
     } catch (error: any) {
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
