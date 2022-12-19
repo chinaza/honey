@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.11.0
+
+### Minor Changes
+
+- ff95bcf: fix race condition and remove params from setupDB call
+
 ## 1.10.2
 
 ### Patch Changes
