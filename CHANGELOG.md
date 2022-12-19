@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.10.1
+
+### Patch Changes
+
+- b4bc78d: avoid duplicate db connections
+
 ## 1.10.0
 
 ### Minor Changes
