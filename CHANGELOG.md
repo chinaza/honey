@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.10.2
+
+### Patch Changes
+
+- 5c3e838: fix binding for config export
+
 ## 1.10.1
 
 ### Patch Changes
