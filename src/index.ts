@@ -29,7 +29,8 @@ export function createHoney(
   dbOptions: string | DBOptions,
   metadata?: Metadata
 ) {
-  config.setupDB(dbOptions);
+  config.dbOptions = dbOptions;
+  config.setupDB();
 
   const portVal = normalizePort(port || process.env.PORT || '3000');
   const express = new ExpressApp(portVal, metadata);
