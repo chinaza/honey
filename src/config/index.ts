@@ -25,6 +25,8 @@ class Config {
 
   public async setupDB(options?: DBOptions | string) {
     try {
+      if (this.db) return this.db;
+
       const dbOptions =
         typeof options === 'string'
           ? options
