@@ -39,7 +39,7 @@ export function createHoney(
   return honey;
 }
 
-export const setupDB = config.setupDB;
+export const setupDB = config.setupDB.bind(config);
 
 function getQueryTypes() {
   const { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT } = QTypes;
