@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.10.0
+
+### Minor Changes
+
+- 082e063: expose db setup
+
 ## 1.9.0
 
 ### Minor Changes
