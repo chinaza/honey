@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.9.0
+
+### Minor Changes
+
+- ec2d1ee: change response structure for post requests
+
 ## 1.8.2
 
 ### Patch Changes
