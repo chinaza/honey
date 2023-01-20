@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.12.0
+
+### Minor Changes
+
+- e4a0c22: add data override for create response and expose http error utility methods
+
 ## 1.11.0
 
 ### Minor Changes
