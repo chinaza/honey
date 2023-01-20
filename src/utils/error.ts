@@ -1,10 +1,8 @@
 import { Response } from 'express';
 
 export default class HttpError extends Error {
-  public status: number = 500;
-  constructor(message: string, status?: number) {
+  constructor(message: string, public status?: number) {
     super(message || 'Something went wrong');
-    if (status) this.status = status;
   }
 }
 

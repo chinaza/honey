@@ -18,7 +18,7 @@ export default function createController(
       const data = await postgres.create(resource, body);
       const id = data[0].id;
 
-      res.send({ message, data: { id } });
+      res.send({ message, data: req.body.dataOverride || { id } });
       next({ message, data: { id } });
     } catch (error: any) {
       handleHttpError(error as HttpError, res);

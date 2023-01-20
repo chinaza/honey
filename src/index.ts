@@ -53,3 +53,4 @@ const QueryTypes = getQueryTypes();
 
 export { QueryTypes };
 export { default as runDbQuery } from './utils/db';
+export { default as HttpyError, handleHttpError } from './utils/error';
