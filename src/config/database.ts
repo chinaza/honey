@@ -8,7 +8,7 @@ export interface DBOptions {
   database: string;
 }
 
-export default async function initDB(options: string | DBOptions) {
+export default function initDB(options: string | DBOptions) {
   let uri = '';
   if (typeof options === 'string') {
     uri = options;
@@ -19,8 +19,15 @@ export default async function initDB(options: string | DBOptions) {
     logging: false
   });
 
-  await sequelize.authenticate();
-  console.error('DB Connection established successfully');
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log('DB Connection established successfully');
+    })
+    .catch((err) => {
+      console.log('DB Connection failed');
+      console.error(err);
+    });
 
   return sequelize;
 }

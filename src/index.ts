@@ -3,7 +3,7 @@ import moduleAlias from 'module-alias';
 
 moduleAlias.addAlias('@src', __dirname);
 
-import config from './config';
+import Config from './config';
 import { DBOptions } from './config/database';
 import ExpressApp from './services/express';
 import Honey from './services/honey';
@@ -20,17 +20,12 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-export function isDbReady() {
-  return !!config.db;
-}
-
 export function createHoney(
   port: string,
   dbOptions: string | DBOptions,
   metadata?: Metadata
 ) {
-  config.dbOptions = dbOptions;
-  config.setupDB();
+  new Config(dbOptions);
 
   const portVal = normalizePort(port || process.env.PORT || '3000');
   const express = new ExpressApp(portVal, metadata);
@@ -40,7 +35,7 @@ export function createHoney(
   return honey;
 }
 
-export const setupDB = config.setupDB.bind(config);
+export const defineModel = Config.defineModel.bind(Config);
 
 function getQueryTypes() {
   const { SELECT, INSERT, UPDATE, DELETE, RAW, UPSERT } = QTypes;
