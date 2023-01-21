@@ -49,4 +49,6 @@ const QueryTypes = getQueryTypes();
 export { QueryTypes };
 export { default as runDbQuery } from './utils/db';
 export { default as HttpyError, handleHttpError } from './utils/error';
+export { default as Honey } from './services/honey';
+export type { Middleware, ExitMiddleware } from './services/express';
 export * from 'sequelize';
