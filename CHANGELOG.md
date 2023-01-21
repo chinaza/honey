@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.13.0
+
+### Minor Changes
+
+- bae12c1: refactor for early init of sequelize
+
 ## 1.12.0
 
 ### Minor Changes
