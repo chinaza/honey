@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.13.1
+
+### Patch Changes
+
+- bc6b6a9: expose all sequelize types
+
 ## 1.13.0
 
 ### Minor Changes
