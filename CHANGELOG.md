@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.13.2
+
+### Patch Changes
+
+- 30d38f0: add more exposed types
+
 ## 1.13.1
 
 ### Patch Changes
