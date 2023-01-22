@@ -1,4 +1,4 @@
-import config from '@src/config';
+import Config from '@src/config';
 import {
   createController,
   deleteByIdController,
@@ -19,14 +19,14 @@ import ExpressApp, { Middleware } from './express';
 import Postgres from './postgres';
 
 export default class Honey {
-  constructor(private express: ExpressApp, private postgres: Postgres) {}
+  constructor(public express: ExpressApp, private postgres: Postgres) {}
 
   get routes() {
     return this.express.appRoutes;
   }
 
   get db() {
-    return config.db;
+    return Config.db;
   }
 
   private crud({
@@ -37,7 +37,7 @@ export default class Honey {
     exitMiddleware = []
   }: ICrud) {
     const dbCheck = async (req: Request, res: Response, next: NextFunction) => {
-      if (!config.db) {
+      if (!Config.db) {
         return res.status(503).send({
           message: 'DB Initialization in progress'
         });

@@ -12,7 +12,7 @@ dotenv.config();
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 export default class Config {
-  private static db: Sequelize;
+  public static db: Sequelize;
 
   public static getEnv = (key: string) => {
     return process.env[key];
