@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.13.3
+
+### Patch Changes
+
+- 54aa6f7: expose express
+
 ## 1.13.2
 
 ### Patch Changes
