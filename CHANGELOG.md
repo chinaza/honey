@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.13.5
+
+### Patch Changes
+
+- d8b072d: fix function naming
+
 ## 1.13.4
 
 ### Patch Changes
