@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.15.6
+
+### Patch Changes
+
+- e2289fa: fix table supporting casing
+
 ## 1.15.5
 
 ### Patch Changes
