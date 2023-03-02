@@ -9,7 +9,7 @@ import {
 } from '@src/shared/interface';
 import HttpError from './error';
 
-const formatters = {
+const formatters: Record<string, Function> = {
   string: String,
   number: Number,
   boolean: Boolean
