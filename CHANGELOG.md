@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.15.3
+
+### Patch Changes
+
+- 77ec734: fix typescript error
+
 ## 1.15.2
 
 ### Patch Changes
