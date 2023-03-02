@@ -44,7 +44,7 @@ export type IGet = CrudParams & {
   /** Fields to return in the response object */
   fields: string[];
   /** Filter builder for WHERE clause */
-  filter: GetQueryFilter;
+  filter?: GetQueryFilter;
   format?: {
     sort: 'ASC' | 'DESC';
     /** column to sort by */

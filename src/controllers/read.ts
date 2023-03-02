@@ -39,7 +39,7 @@ export function getByQueryController(
   postgres: Postgres,
   resource: string,
   fields: string[],
-  filterQuery: GetQueryFilter,
+  filterQuery?: GetQueryFilter,
   format?: {
     sort: 'ASC' | 'DESC';
     sortField: string;
@@ -51,7 +51,7 @@ export function getByQueryController(
       const limit = Number(req.query.limit);
       const paginate = page && limit ? { page, limit } : undefined;
 
-      const filter = formatReadFilter(req.query, filterQuery);
+      const filter = filterQuery && formatReadFilter(req.query, filterQuery);
 
       let data: Record<string, any>[] = await postgres.read(
         resource,
