@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.15.2
+
+### Patch Changes
+
+- cc75e3a: do not format json
+
 ## 1.15.1
 
 ### Patch Changes
