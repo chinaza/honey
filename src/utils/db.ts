@@ -22,7 +22,7 @@ export default function runDbQuery(query: string, params?: QueryParams) {
 }
 
 class ModelCreator {
-  private static model: Record<string, ModelStatic<Model>>;
+  private static model: Record<string, ModelStatic<Model>> = {};
 
   public static createModel<
     TModelAttributes extends {} = any,
