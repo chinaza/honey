@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.14.3
+
+### Patch Changes
+
+- ce78005: init model
+
 ## 1.14.2
 
 ### Patch Changes
