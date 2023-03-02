@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.15.5
+
+### Patch Changes
+
+- fc2fd51: make get query filter optional
+
 ## 1.15.4
 
 ### Patch Changes
