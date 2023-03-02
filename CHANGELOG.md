@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.15.4
+
+### Patch Changes
+
+- 61f6c43: fix json formatting for update queriess
+
 ## 1.15.3
 
 ### Patch Changes
