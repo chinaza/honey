@@ -11,7 +11,7 @@ export type FilterOps =
 type UpdateOp = 'inc' | 'dec' | 'replace' | '@updatedAt';
 
 interface OperationParam<T> {
-  value: string | number | boolean | Date;
+  value: string | number | boolean | Date | Object;
   operator: T;
 }
 
@@ -30,7 +30,7 @@ export interface UpdateOpParam {
 }
 
 export type GetFilterParam = {
-  value: 'string' | 'number' | 'boolean';
+  value: 'string' | 'number' | 'boolean' | 'json';
   operator: FilterOps;
 };
 

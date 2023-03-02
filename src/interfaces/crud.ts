@@ -23,7 +23,10 @@ export interface ICrud {
 
 export type ICreate = CrudParams & {
   /** Parameters in request body */
-  params: Record<string, 'string' | 'number' | 'boolean' | '@updatedAt'>;
+  params: Record<
+    string,
+    'string' | 'number' | 'boolean' | '@updatedAt' | 'json'
+  >;
   /** Response message */
   message: string;
 };
