@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.14.0
+
+### Minor Changes
+
+- 3eaaf64: add model creator
+
 ## 1.13.5
 
 ### Patch Changes
