@@ -9,7 +9,7 @@ import {
 } from '@src/shared/interface';
 import HttpError from './error';
 
-const formatter = {
+const formatters = {
   string: String,
   number: Number,
   boolean: Boolean,
@@ -20,14 +20,15 @@ export const extractInsertData = (
   body: Record<string, any>,
   params: ICreate['params']
 ) => {
-  const result: Record<string, string | number | boolean | Date> = {};
+  const result: Record<string, string | number | boolean | Date | Object> = {};
 
   Object.entries(params).forEach(([key, value]) => {
     if (value === '@updatedAt') {
       result[key] = new Date();
       return;
     }
-    result[key] = formatter[value](body[key]);
+    const formatter = formatters[value];
+    result[key] = formatter ? formatter(body[key]) : body[key];
   });
 
   return result;
@@ -65,7 +66,7 @@ export const formatReadFilter = (
         param as Record<string, GetFilterParam>
       ) as Record<string, FilterParam>;
     } else {
-      const valueFormatter = formatter[(param as GetFilterParam).value];
+      const valueFormatter = formatters[(param as GetFilterParam).value];
 
       if (!valueFormatter)
         throw new HttpError('Invalid filter value type', 500);
