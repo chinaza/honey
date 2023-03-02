@@ -52,7 +52,9 @@ export function createModel<
     | ModelOptions<Model<TModelAttributes, TCreationAttributes>>
     | undefined
 ) {
-  return ModelCreator.createModel(modelName, attributes, options).bind(
-    ModelCreator
+  return ModelCreator.createModel.bind(ModelCreator)(
+    modelName,
+    attributes,
+    options
   );
 }
