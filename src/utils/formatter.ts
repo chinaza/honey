@@ -12,8 +12,7 @@ import HttpError from './error';
 const formatters = {
   string: String,
   number: Number,
-  boolean: Boolean,
-  json: JSON.parse
+  boolean: Boolean
 };
 
 export const extractInsertData = (
