@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.15.0
+
+### Minor Changes
+
+- fbfeb34: add support for json datatype
+
 ## 1.14.3
 
 ### Patch Changes
