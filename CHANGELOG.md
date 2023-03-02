@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.14.1
+
+### Patch Changes
+
+- 10bc2ba: bind ModelCreator
+
 ## 1.14.0
 
 ### Minor Changes
