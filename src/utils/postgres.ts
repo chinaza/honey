@@ -52,7 +52,7 @@ export const generateCreateQuery = (
   data: Record<string, string | number | boolean | Date | Object>
 ) => {
   const replacements = Object.values(data);
-  const query = `INSERT INTO ${table} 
+  const query = `INSERT INTO "${table}"
   (${formatFields(Object.keys(data))}) 
     VALUES (${Object.keys(data)
       .map(() => '?')
@@ -75,7 +75,7 @@ export const generateReadQuery = (
     ? `, count(${fields[0]}) OVER() AS honey_total_count`
     : '';
 
-  query += ` FROM ${table} ${whereSegment}`;
+  query += ` FROM "${table}" ${whereSegment}`;
   if (format?.sort && format.sortField) {
     query += ` ORDER BY "${format.sortField}" ${format.sort}`;
   }
@@ -94,7 +94,7 @@ export const generateUpdateQuery = (
 ) => {
   const replacements = [];
 
-  let query = `UPDATE ${table} SET ${Object.keys(data)
+  let query = `UPDATE "${table}" SET ${Object.keys(data)
     .map((field) => {
       replacements.push(data[field].value);
 
@@ -116,7 +116,7 @@ export const generateUpdateQuery = (
 export const generateDeleteQuery = (table: string, filter?: Filter) => {
   const { where, replacements } = generateWhere(filter);
   const whereSegment = filter ? `WHERE ${where}` : '';
-  const query = `DELETE FROM ${table} ${whereSegment}`;
+  const query = `DELETE FROM "${table}" ${whereSegment}`;
 
   return { query, replacements };
 };
