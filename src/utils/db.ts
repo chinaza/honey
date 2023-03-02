@@ -42,10 +42,17 @@ class ModelCreator {
   }
 }
 
-export function createModel(
+export function createModel<
+  TModelAttributes extends {} = any,
+  TCreationAttributes extends {} = TModelAttributes
+>(
   modelName: string,
-  attributes: ModelAttributes<Model<any, any>, any>,
-  options?: ModelOptions<Model<any, any>> | undefined
+  attributes: ModelAttributes<Model<TModelAttributes, TCreationAttributes>>,
+  options?:
+    | ModelOptions<Model<TModelAttributes, TCreationAttributes>>
+    | undefined
 ) {
-  return ModelCreator.createModel(modelName, attributes, options);
+  return ModelCreator.createModel(modelName, attributes, options).bind(
+    ModelCreator
+  );
 }
