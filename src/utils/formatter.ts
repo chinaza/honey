@@ -12,7 +12,9 @@ import HttpError from './error';
 const formatters: Record<string, Function> = {
   string: String,
   number: Number,
-  boolean: Boolean
+  boolean: Boolean,
+  json: JSON.stringify,
+  object: JSON.stringify
 };
 
 export const extractInsertData = (
@@ -38,12 +40,19 @@ export const generateUpdateData = (
   params: IUpdateById['params']
 ) => {
   const result = Object.entries(params).reduce((acc, [key, value]) => {
-    if (!body[key]) return { ...acc };
+    if (!body[key] && value !== '@updatedAt') return { ...acc };
+
+    let formattedValue: any;
+    if (value === '@updatedAt') {
+      formattedValue = new Date();
+    } else {
+      formattedValue = formatters[typeof body[key]](body[key]);
+    }
 
     return {
       ...acc,
       [key]: {
-        value: value === '@updatedAt' ? new Date() : body[key],
+        value: formattedValue,
         operator: value === '@updatedAt' ? 'replace' : value
       }
     };
