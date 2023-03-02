@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.14.2
+
+### Patch Changes
+
+- 874e3e0: fix binding in model creator
+
 ## 1.14.1
 
 ### Patch Changes
