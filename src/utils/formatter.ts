@@ -24,10 +24,13 @@ export const extractInsertData = (
   const result: Record<string, string | number | boolean | Date | Object> = {};
 
   Object.entries(params).forEach(([key, value]) => {
+    if (!body[key]) return;
+
     if (value === '@updatedAt') {
       result[key] = new Date();
       return;
     }
+
     const formatter = formatters[value];
     result[key] = formatter ? formatter(body[key]) : body[key];
   });
