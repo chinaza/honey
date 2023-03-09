@@ -69,11 +69,18 @@ export const formatReadFilter = (
 
   Object.entries(filter).forEach(([key, param]) => {
     if (key === '$or') {
-      result[key] = formatReadFilter(
+      const val = formatReadFilter(
         queryParams,
         param as Record<string, GetFilterParam>
       ) as Record<string, FilterParam>;
+
+      // skip missing query params
+      if (!Object.keys(val).length) return;
+      result[key] = val;
     } else {
+      // skip missing query params
+      if (!queryParams[key]) return;
+
       const valueFormatter = formatters[(param as GetFilterParam).value];
 
       if (!valueFormatter)
