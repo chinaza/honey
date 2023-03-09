@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.16.0
+
+### Minor Changes
+
+- 449a01b: remove GET filters when not present in query params
+
 ## 1.15.6
 
 ### Patch Changes
