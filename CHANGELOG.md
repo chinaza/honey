@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.16.1
+
+### Patch Changes
+
+- f656269: return pagination only when used
+
 ## 1.16.0
 
 ### Minor Changes
