@@ -75,12 +75,14 @@ export function getByQueryController(
       const response = {
         data,
         meta: {
-          pagination: {
-            total,
-            pageSize: limit,
-            page,
-            pageCount: Math.ceil(total / limit)
-          }
+          ...(!!paginate && {
+            pagination: {
+              total,
+              pageSize: limit,
+              page,
+              pageCount: Math.ceil(total / limit)
+            }
+          })
         }
       };
       res.send(response);
