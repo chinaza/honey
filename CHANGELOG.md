@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.17.0
+
+### Minor Changes
+
+- 573a9d1: make update and create params optional
+
 ## 1.16.1
 
 ### Patch Changes
