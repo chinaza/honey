@@ -52,3 +52,4 @@ export { default as HttpError, handleHttpError } from './utils/error';
 export { default as Honey } from './services/honey';
 export type { Middleware, ExitMiddleware } from './services/express';
 export * from 'sequelize';
+export { default as express } from 'express';

@@ -32,23 +32,18 @@ jobs:
           echo "CHANGESET_FOLDER_FILE_COUNT=$number_of_files_changeset_folder" >> $GITHUB_ENV
       - name: Skip step
         if: env.CHANGESET_FOLDER_FILE_COUNT < 3
-        run: echo "No changeset file found, skipping the workflow"
-      - if: env.CHANGESET_FOLDER_FILE_COUNT >= 3
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-      - if: env.CHANGESET_FOLDER_FILE_COUNT >= 3
-        run: echo "@chinaza:registry=https://npm.pkg.github.com" >> ~/.npmrc
-      - if: env.CHANGESET_FOLDER_FILE_COUNT >= 3
-        run: yarn install --frozen-lockfile
-      - if: env.CHANGESET_FOLDER_FILE_COUNT >= 3
-        run: yarn test
-      - if: env.CHANGESET_FOLDER_FILE_COUNT >= 3
-        run: yarn changeset version
-      - if: env.CHANGESET_FOLDER_FILE_COUNT >= 3
-        run: yarn publish
+        run: |
+          echo "No changeset file found, generating empty"
+          yarn changeset --empty;
+      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+      - run: echo "@chinaza:registry=https://npm.pkg.github.com" >> ~/.npmrc
+      - run: yarn install --frozen-lockfile
+      - run: yarn test
+      - run: yarn changeset version
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - if: env.CHANGESET_FOLDER_FILE_COUNT >= 3
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Bump version
           commit_options: '--no-verify --signoff'
