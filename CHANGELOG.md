@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.17.2
+
+### Patch Changes
+
+- 821421e: expose express raw only
+
 ## 1.17.1
 
 ### Patch Changes
