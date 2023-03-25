@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.18.0
+
+### Minor Changes
+
+- e0bfb0f: add full support for raw routes
+
 ## 1.17.2
 
 ### Patch Changes
