@@ -66,6 +66,7 @@ const onListening = (server: http.Server) => {
 class ExpressApp {
   public app = express();
   public appRoutes = express.Router();
+  public rawRoutes = express.Router();
   private server: http.Server;
   private fallbackErrMessage = 'Endpoint does not exist';
   private routePrefix = '/api';
@@ -89,6 +90,8 @@ class ExpressApp {
   private initMiddlewares() {
     this.app.use(logger('dev'));
     this.app.use(cors());
+    this.app.use(express.raw({ type: '*/*' }));
+    this.app.use('/', this.rawRoutes);
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(cookieParser());

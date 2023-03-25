@@ -25,6 +25,10 @@ export default class Honey {
     return this.express.appRoutes;
   }
 
+  get rawRoutes() {
+    return this.express.rawRoutes;
+  }
+
   get db() {
     return Config.db;
   }
