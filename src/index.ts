@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import moduleAlias from 'module-alias';
+import e from 'express';
 
 moduleAlias.addAlias('@src', __dirname);
 
@@ -46,10 +47,11 @@ function getQueryTypes() {
 
 const QueryTypes = getQueryTypes();
 
+export const parseRaw = e.raw;
+
 export { QueryTypes };
 export { default as runDbQuery, createModel } from './utils/db';
 export { default as HttpError, handleHttpError } from './utils/error';
 export { default as Honey } from './services/honey';
 export type { Middleware, ExitMiddleware } from './services/express';
 export * from 'sequelize';
-export { default as express } from 'express';
