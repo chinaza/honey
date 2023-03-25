@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import moduleAlias from 'module-alias';
-import e from 'express';
 
 moduleAlias.addAlias('@src', __dirname);
 
@@ -46,8 +45,6 @@ function getQueryTypes() {
 }
 
 const QueryTypes = getQueryTypes();
-
-export const parseRaw = e.raw;
 
 export { QueryTypes };
 export { default as runDbQuery, createModel } from './utils/db';
