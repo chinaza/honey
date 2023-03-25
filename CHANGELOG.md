@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.18.1
+
+### Patch Changes
+
+- 887a3f3: fix
+
 ## 1.18.0
 
 ### Minor Changes
