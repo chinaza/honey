@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.17.1
+
+### Patch Changes
+
+- 74b8130: expose express
+
 ## 1.17.0
 
 ### Minor Changes
