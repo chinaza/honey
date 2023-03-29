@@ -1,21 +1,24 @@
-import Postgres from '@src/services/postgres';
-import { GetQueryFilter } from '@src/shared/interface';
+import {
+  GetByIdControllerParams,
+  GetByQueryControllerParams
+} from '@src/interfaces/crud';
 import HttpError, { handleHttpError } from '@src/utils/error';
 import { formatReadFilter } from '@src/utils/formatter';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 
-export function getByIdController(
-  postgres: Postgres,
-  resource: string,
-  fields: string[],
-  idField = 'id'
-): Controller {
+export function getByIdController({
+  db,
+  resource,
+  fields,
+  idField = 'id',
+  processResponseData
+}: GetByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
 
-      const data = await postgres.read(resource, fields, {
+      const data = await db.read(resource, fields, {
         [idField]: {
           value: id,
           operator: '='
@@ -26,7 +29,9 @@ export function getByIdController(
         throw new HttpError('Record does not exist', 404);
       }
 
-      res.send({ data: data[0] });
+      res.send({
+        data: processResponseData ? processResponseData(data[0]) : data[0]
+      });
       next({ data });
     } catch (error: any) {
       handleHttpError(error as HttpError, res);
@@ -35,16 +40,14 @@ export function getByIdController(
   };
 }
 
-export function getByQueryController(
-  postgres: Postgres,
-  resource: string,
-  fields: string[],
-  filterQuery?: GetQueryFilter,
-  format?: {
-    sort: 'ASC' | 'DESC';
-    sortField: string;
-  }
-): Controller {
+export function getByQueryController({
+  db,
+  resource,
+  fields,
+  filterQuery,
+  format,
+  processResponseData
+}: GetByQueryControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = Number(req.query.page);
@@ -53,7 +56,7 @@ export function getByQueryController(
 
       const filter = filterQuery && formatReadFilter(req.query, filterQuery);
 
-      let data: Record<string, any>[] = await postgres.read(
+      let data: Record<string, any>[] = await db.read(
         resource,
         fields,
         filter,
@@ -73,7 +76,7 @@ export function getByQueryController(
         throw new HttpError('No records found', 404);
       }
       const response = {
-        data,
+        data: processResponseData ? processResponseData(data) : data,
         meta: {
           ...(!!paginate && {
             pagination: {

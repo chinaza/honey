@@ -35,10 +35,10 @@ jobs:
           echo "Number of files: $number_of_files_changeset_folder"
           echo "CHANGESET_FOLDER_FILE_COUNT=$number_of_files_changeset_folder" >> $GITHUB_ENV
       - name: Manually generate changeset
-        if: env.CHANGESET_FOLDER_FILE_COUNT < 3
+        if: env.CHANGESET_FOLDER_FILE_COUNT < 4
         run: |
-          echo "No changeset file found, generating empty"
-          yarn changeset --empty
+          echo "No changeset file found, generating from template"
+          cp .changeset/default.template temp-change-set.md
       - run: yarn changeset version
       - run: yarn publish
         env:

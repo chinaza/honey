@@ -1,5 +1,5 @@
 import cookieParser from 'cookie-parser';
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
 import http from 'http';
@@ -7,19 +7,6 @@ import '../config';
 import HttpError from '../utils/error';
 import { AddressInfo } from 'net';
 import { Metadata } from '@src/interfaces/express';
-
-export type Middleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => void;
-
-export type ExitMiddleware = (
-  data: any,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => void;
 
 /**
  * Event listener for HTTP server "error" event.

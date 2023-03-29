@@ -1,18 +1,18 @@
-import Postgres from '@src/services/postgres';
+import { deleteByIdControllerParams } from '@src/interfaces/crud';
 import HttpError, { handleHttpError } from '@src/utils/error';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 
-export function deleteByIdController(
-  postgres: Postgres,
-  resource: string,
-  message: string
-): Controller {
+export function deleteByIdController({
+  db,
+  resource,
+  message
+}: deleteByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
 
-      await postgres.delete(resource, {
+      await db.delete(resource, {
         id: {
           value: id,
           operator: '='

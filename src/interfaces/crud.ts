@@ -1,6 +1,7 @@
 import { Controller } from '@src/controllers/interfaces';
-import { ExitMiddleware, Middleware } from '@src/services/express';
+import Postgres from '@src/services/postgres';
 import { GetQueryFilter } from '@src/shared/interface';
+import { ExitMiddleware, Middleware } from './express';
 
 interface CrudParams {
   /** Table name which also serves as REST API resource name in path */
@@ -11,6 +12,8 @@ interface CrudParams {
   middleware?: Middleware[];
   /** Middleware to run after CRUD controller returns response */
   exitMiddleware?: ExitMiddleware[];
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any) => any;
 }
 
 export interface ICrud {
@@ -63,3 +66,47 @@ export type IDeleteById = CrudParams & {
   /** Response message */
   message: string;
 };
+
+export interface GetByQueryControllerParams {
+  db: Postgres;
+  resource: string;
+  fields: string[];
+  filterQuery?: GetQueryFilter;
+  format?: {
+    sort: 'ASC' | 'DESC';
+    sortField: string;
+  };
+  processResponseData?: CrudParams['processResponseData'];
+}
+
+export interface GetByIdControllerParams {
+  db: Postgres;
+  resource: string;
+  fields: string[];
+  idField?: string;
+  processResponseData?: CrudParams['processResponseData'];
+}
+
+export interface CreateControllerParams {
+  db: Postgres;
+  resource: string;
+  params: ICreate['params'];
+  message: string;
+  processResponseData?: CrudParams['processResponseData'];
+}
+
+export interface UpdateByIdControllerParams {
+  db: Postgres;
+  resource: string;
+  params: IUpdateById['params'];
+  message: string;
+  idField?: string;
+  processResponseData?: CrudParams['processResponseData'];
+}
+
+export interface deleteByIdControllerParams {
+  db: Postgres;
+  resource: string;
+  message: string;
+  processResponseData?: CrudParams['processResponseData'];
+}
