@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.19.0
+
+### Minor Changes
+
+- 27628ba: add support for response data preprocessing
+
 ## 1.18.1
 
 ### Patch Changes
