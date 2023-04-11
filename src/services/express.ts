@@ -86,11 +86,6 @@ class ExpressApp {
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(cookieParser());
     this.app.use(this.routePrefix, this.appRoutes);
-    this.app.use((_, res) => {
-      const err = new HttpError(this.fallbackErrMessage, 404);
-
-      return res.status(err.status).json({ message: err.message });
-    });
   }
 
   private setupErrorFallback() {

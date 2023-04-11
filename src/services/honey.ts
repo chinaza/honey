@@ -14,10 +14,15 @@ import {
   IGetById,
   IUpdateById
 } from '@src/interfaces/crud';
-import { Middleware } from '@src/interfaces/express';
+import { ExitMiddleware, Middleware } from '@src/interfaces/express';
 import { NextFunction, Request, Response } from 'express';
 import ExpressApp from './express';
 import Postgres from './postgres';
+
+// eslint-disable-next-line
+const defaultExitMiddleware: ExitMiddleware = (data, req, res, next) => {
+  console.log('Response:', data);
+};
 
 export default class Honey {
   constructor(public express: ExpressApp, private postgres: Postgres) {}
@@ -35,7 +40,7 @@ export default class Honey {
     path,
     controller,
     middleware = [],
-    exitMiddleware = []
+    exitMiddleware = [defaultExitMiddleware]
   }: ICrud) {
     const dbCheck = async (req: Request, res: Response, next: NextFunction) => {
       if (!Config.db) {
