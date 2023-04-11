@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.20.0
+
+### Minor Changes
+
+- 3fe7e9f: remove duplicate code and specify default exit middleware for logging response
+
 ## 1.19.0
 
 ### Minor Changes
