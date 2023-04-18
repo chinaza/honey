@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.20.1
+
+### Patch Changes
+
+- 9b7cead: only log response in non-prod to reduce noise
+
 ## 1.20.0
 
 ### Minor Changes
