@@ -21,7 +21,7 @@ import Postgres from './postgres';
 
 // eslint-disable-next-line
 const defaultExitMiddleware: ExitMiddleware = (data, req, res, next) => {
-  console.log('Response:', data);
+  if (process.env.NODE_ENV !== 'production') console.log('Response:', data);
 };
 
 export default class Honey {
