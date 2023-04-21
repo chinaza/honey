@@ -30,7 +30,7 @@ export function getByIdController({
       }
 
       res.send({
-        data: processResponseData ? processResponseData(data[0]) : data[0]
+        data: processResponseData ? processResponseData(data[0], req) : data[0]
       });
       next({ data });
     } catch (error: any) {
@@ -76,7 +76,7 @@ export function getByQueryController({
         throw new HttpError('No records found', 404);
       }
       const response = {
-        data: processResponseData ? processResponseData(data) : data,
+        data: processResponseData ? processResponseData(data, req) : data,
         meta: {
           ...(!!paginate && {
             pagination: {

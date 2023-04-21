@@ -2,6 +2,7 @@ import { Controller } from '@src/controllers/interfaces';
 import Postgres from '@src/services/postgres';
 import { GetQueryFilter } from '@src/shared/interface';
 import { ExitMiddleware, Middleware } from './express';
+import { Request } from 'express';
 
 interface CrudParams {
   /** Table name which also serves as REST API resource name in path */
@@ -13,7 +14,7 @@ interface CrudParams {
   /** Middleware to run after CRUD controller returns response */
   exitMiddleware?: ExitMiddleware[];
   /** A function that is called to transform your response data */
-  processResponseData?: (data: any) => any;
+  processResponseData?: (data: any, req?: Request) => any;
 }
 
 export interface ICrud {
