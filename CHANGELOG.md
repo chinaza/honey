@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.21.0
+
+### Minor Changes
+
+- e9ae5d5: add request object to process response data
+
 ## 1.20.1
 
 ### Patch Changes
