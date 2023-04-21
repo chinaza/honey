@@ -14,7 +14,7 @@ interface CrudParams {
   /** Middleware to run after CRUD controller returns response */
   exitMiddleware?: ExitMiddleware[];
   /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req?: Request) => any;
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface ICrud {
