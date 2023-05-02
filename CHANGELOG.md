@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.21.2
+
+### Patch Changes
+
+- 9bb4921: fix
+
 ## 1.21.1
 
 ### Patch Changes
