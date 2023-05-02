@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.21.1
+
+### Patch Changes
+
+- 1c456d7: make req param in processResponseData compulsory
+
 ## 1.21.0
 
 ### Minor Changes
