@@ -27,7 +27,7 @@ export const extractInsertData = (
     if (!body[key]) return;
 
     if (value === '@updatedAt') {
-      result[key] = new Date();
+      result[key] = new Date().toUTCString();
       return;
     }
 
@@ -47,7 +47,7 @@ export const generateUpdateData = (
 
     let formattedValue: any;
     if (value === '@updatedAt') {
-      formattedValue = new Date();
+      formattedValue = new Date().toUTCString();
     } else {
       formattedValue = formatters[typeof body[key]](body[key]);
     }
