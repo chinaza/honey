@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.21.3
+
+### Patch Changes
+
+- 36a36f3: fix unreachable code
+
 ## 1.21.2
 
 ### Patch Changes
