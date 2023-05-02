@@ -24,12 +24,12 @@ export const extractInsertData = (
   const result: Record<string, string | number | boolean | Date | Object> = {};
 
   Object.entries(params).forEach(([key, value]) => {
-    if (!body[key]) return;
-
     if (value === '@updatedAt') {
-      result[key] = new Date().toUTCString();
+      result[key] = new Date();
       return;
     }
+
+    if (!body[key]) return;
 
     const formatter = formatters[value];
     result[key] = formatter ? formatter(body[key]) : body[key];
@@ -47,7 +47,7 @@ export const generateUpdateData = (
 
     let formattedValue: any;
     if (value === '@updatedAt') {
-      formattedValue = new Date().toUTCString();
+      formattedValue = new Date();
     } else {
       formattedValue = formatters[typeof body[key]](body[key]);
     }
