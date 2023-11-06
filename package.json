@@ -80,6 +80,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "express-oas-generator": "^1.0.46",
     "joi": "^17.5.0",
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
