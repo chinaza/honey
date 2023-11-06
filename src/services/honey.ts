@@ -4,7 +4,8 @@ import {
   deleteByIdController,
   getByIdController,
   getByQueryController,
-  updateByIdController
+  updateByIdController,
+  upsertByIdController
 } from '@src/controllers';
 import {
   ICreate,
@@ -147,6 +148,29 @@ export default class Honey {
     const path = pathOverride || `/${resource}/:id`;
 
     const controller = updateByIdController({
+      db: this.postgres,
+      resource,
+      params,
+      message,
+      idField,
+      processResponseData
+    });
+    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
+  }
+
+  public upsertById({
+    resource,
+    params,
+    idField,
+    message,
+    middleware,
+    pathOverride,
+    exitMiddleware,
+    processResponseData
+  }: IUpdateById) {
+    const path = pathOverride || `/${resource}/:id/upsert`;
+
+    const controller = upsertByIdController({
       db: this.postgres,
       resource,
       params,

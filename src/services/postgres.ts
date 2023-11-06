@@ -3,7 +3,8 @@ import {
   generateCreateQuery,
   generateDeleteQuery,
   generateReadQuery,
-  generateUpdateQuery
+  generateUpdateQuery,
+  generateUpsertQuery
 } from '@src/utils/postgres';
 import { QueryTypes } from 'sequelize';
 import { Filter, UpdateOpParam } from '../shared/interface';
@@ -63,6 +64,24 @@ export default class Postgres {
 
     await config.db.query(query, {
       type: QueryTypes.DELETE,
+      raw: true,
+      replacements
+    });
+  }
+
+  public async upsert(
+    table: string,
+    data: UpdateOpParam,
+    conflictTarget: string
+  ) {
+    const { query, replacements } = generateUpsertQuery(
+      table,
+      data,
+      conflictTarget
+    );
+
+    await config.db.query(query, {
+      type: QueryTypes.INSERT,
       raw: true,
       replacements
     });

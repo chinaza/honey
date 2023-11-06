@@ -92,7 +92,7 @@ export const generateUpdateQuery = (
   data: UpdateOpParam,
   filter?: Filter
 ) => {
-  const replacements = [];
+  const replacements: any[] = [];
 
   let query = `UPDATE "${table}" SET ${Object.keys(data)
     .map((field) => {
@@ -117,6 +117,40 @@ export const generateDeleteQuery = (table: string, filter?: Filter) => {
   const { where, replacements } = generateWhere(filter);
   const whereSegment = filter ? `WHERE ${where}` : '';
   const query = `DELETE FROM "${table}" ${whereSegment}`;
+
+  return { query, replacements };
+};
+
+export const generateUpsertQuery = (
+  table: string,
+  data: UpdateOpParam,
+  conflictTarget: string
+) => {
+  const replacements: any[] = [];
+
+  const query = `INSERT INTO "${table}" (${Object.keys(data)
+    .map((field) => `"${field}"`)
+    .join(', ')}) 
+    VALUES (${Object.keys(data)
+      .map((field) => {
+        replacements.push(data[field].value);
+        return '?';
+      })
+      .join(', ')}) 
+    ON CONFLICT ("${conflictTarget}") DO UPDATE SET ${Object.keys(data)
+    .map((field) => {
+      if (data[field].operator === 'inc') {
+        replacements.push(data[field].value);
+        return `"${field}" = "${table}"."${field}" + ?`;
+      } else if (data[field].operator === 'dec') {
+        replacements.push(data[field].value);
+        return `"${field}" = "${table}"."${field}" - ?`;
+      } else {
+        replacements.push(data[field].value);
+        return `"${field}" = ?`;
+      }
+    })
+    .join(', ')}`;
 
   return { query, replacements };
 };
