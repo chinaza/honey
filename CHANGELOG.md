@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.22.0
+
+### Minor Changes
+
+- d28cd30: add support for upsert
+
 ## 1.21.3
 
 ### Patch Changes
