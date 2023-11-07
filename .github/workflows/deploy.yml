@@ -27,6 +27,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '>=16.14.2'
+          cache: 'yarn'
       - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
       - run: echo "@chinaza:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run: yarn install --frozen-lockfile
