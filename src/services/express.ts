@@ -3,6 +3,7 @@ import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
 import http from 'http';
+import expressOasGenerator from 'express-oas-generator';
 import '../config';
 import HttpError from '../utils/error';
 import { AddressInfo } from 'net';
@@ -70,10 +71,12 @@ class ExpressApp {
   }
 
   public listen() {
+    expressOasGenerator.handleRequests();
     this.server.listen(this.app.get('port'));
   }
 
   private initMiddlewares() {
+    expressOasGenerator.handleResponses(this.app, {} as any);
     this.app.use(logger('dev'));
     this.app.use(cors());
     this.app.use(
