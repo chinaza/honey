@@ -46,7 +46,7 @@ jobs:
         if: env.CHANGESET_FOLDER_FILE_COUNT < 4
         run: |
           echo "No changeset file found, generating from template"
-          cp .changeset/default.template temp-change-set.md
+          cp .changeset/default.template .changeset/temp-change-set.md
       - run: yarn changeset version
       - run: yarn publish
         env:
