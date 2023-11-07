@@ -13,6 +13,8 @@ export function upsertByIdController({
 }: UpdateByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
+      req.body[idField] = req.params.id;
+      params = { ...params, [idField]: 'replace' };
       const body = generateUpdateData(req.body, params);
 
       await db.upsert(resource, body, idField);

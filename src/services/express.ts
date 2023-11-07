@@ -54,7 +54,6 @@ const onListening = (server: http.Server) => {
 class ExpressApp {
   public app = express();
   public appRoutes = express.Router();
-  private server: http.Server;
   private fallbackErrMessage = 'Endpoint does not exist';
   private routePrefix = '/api';
 
@@ -65,14 +64,14 @@ class ExpressApp {
     this.initMiddlewares();
     this.setupErrorFallback();
     this.app.set('port', port);
-    this.server = http.createServer(this.app);
-    this.server.on('error', onError(port));
-    this.server.on('listening', onListening(this.server));
   }
 
   public listen() {
     expressOasGenerator.handleRequests();
-    this.server.listen(this.app.get('port'));
+    const port = Number(this.app.get('port'));
+    const server = this.app.listen(port);
+    server.on('error', onError(port));
+    server.on('listening', onListening(server));
   }
 
   private initMiddlewares() {
@@ -81,7 +80,7 @@ class ExpressApp {
     this.app.use(cors());
     this.app.use(
       express.json({
-        verify(req: any, res, buf) {
+        verify(req: any, _res, buf) {
           req.rawBody = buf;
         }
       })
