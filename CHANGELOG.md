@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.22.3
+
+### Patch Changes
+
+- 1d537f5: fix issue with upsert
+
 ## 1.22.2
 
 ### Patch Changes
