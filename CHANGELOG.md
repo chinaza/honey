@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.23.0
+
+### Minor Changes
+
+- 6d54494: add upsert and update controllers
+
 ## 1.22.3
 
 ### Patch Changes
