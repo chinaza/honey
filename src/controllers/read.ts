@@ -72,11 +72,13 @@ export function getByQueryController({
         });
       }
 
-      if (!data?.length) {
+      if (processResponseData) {
+        data = processResponseData(data, req);
+      } else if (!data?.length) {
         throw new HttpError('No records found', 404);
       }
       const response = {
-        data: processResponseData ? processResponseData(data, req) : data,
+        data,
         meta: {
           ...(!!paginate && {
             pagination: {
