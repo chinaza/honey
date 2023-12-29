@@ -44,6 +44,33 @@ export type IUpdateById = CrudParams & {
   idField?: string;
 };
 
+export type IUpdate = CrudParams & {
+  /** Parameters in request body */
+  params: Record<string, 'replace' | 'inc' | 'dec' | '@updatedAt'>;
+  /** Response message */
+  message: string;
+  /** Filter builder for WHERE clause */
+  filter: GetQueryFilter;
+};
+
+export type IUpsertById = CrudParams & {
+  /** Parameters in request body */
+  params: Record<string, 'replace' | 'inc' | 'dec' | '@updatedAt'>;
+  /** Response message */
+  message: string;
+  /** column to run filter by id on */
+  idField: string;
+};
+
+export type IUpsert = CrudParams & {
+  /** Parameters in request body */
+  params: Record<string, 'replace' | 'inc' | 'dec' | '@updatedAt'>;
+  /** Response message */
+  message: string;
+  /** column to use to determine conflict */
+  conflictTarget: string[];
+};
+
 export type IGet = CrudParams & {
   /** Fields to return in the response object */
   fields: string[];
@@ -102,7 +129,30 @@ export interface UpdateByIdControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField?: string;
-  processResponseData?: CrudParams['processResponseData'];
+}
+
+export interface UpdateControllerParams {
+  db: Postgres;
+  resource: string;
+  params: IUpdateById['params'];
+  message: string;
+  filterQuery?: GetQueryFilter;
+}
+
+export interface UpsertByIdControllerParams {
+  db: Postgres;
+  resource: string;
+  params: IUpdateById['params'];
+  message: string;
+  idField: string;
+}
+
+export interface UpsertControllerParams {
+  db: Postgres;
+  resource: string;
+  params: IUpdateById['params'];
+  message: string;
+  conflictTarget: string[];
 }
 
 export interface deleteByIdControllerParams {

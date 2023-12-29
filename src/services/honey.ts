@@ -13,12 +13,17 @@ import {
   IDeleteById,
   IGet,
   IGetById,
-  IUpdateById
+  IUpdate,
+  IUpdateById,
+  IUpsert,
+  IUpsertById
 } from '@src/interfaces/crud';
 import { ExitMiddleware, Middleware } from '@src/interfaces/express';
 import { NextFunction, Request, Response } from 'express';
 import ExpressApp from './express';
 import Postgres from './postgres';
+import { upsertController } from '@src/controllers/upsert';
+import { updateController } from '@src/controllers/update';
 
 // eslint-disable-next-line
 const defaultExitMiddleware: ExitMiddleware = (data, req, res, next) => {
@@ -142,8 +147,7 @@ export default class Honey {
     message,
     middleware,
     pathOverride,
-    exitMiddleware,
-    processResponseData
+    exitMiddleware
   }: IUpdateById) {
     const path = pathOverride || `/${resource}/:id`;
 
@@ -152,8 +156,28 @@ export default class Honey {
       resource,
       params,
       message,
-      idField,
-      processResponseData
+      idField
+    });
+    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
+  }
+
+  public update({
+    resource,
+    params,
+    filter,
+    message,
+    middleware,
+    pathOverride,
+    exitMiddleware
+  }: IUpdate) {
+    const path = pathOverride || `/${resource}/:id`;
+
+    const controller = updateController({
+      db: this.postgres,
+      resource,
+      params,
+      message,
+      filterQuery: filter
     });
     this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
   }
@@ -165,9 +189,8 @@ export default class Honey {
     message,
     middleware,
     pathOverride,
-    exitMiddleware,
-    processResponseData
-  }: IUpdateById) {
+    exitMiddleware
+  }: IUpsertById) {
     const path = pathOverride || `/${resource}/:id/upsert`;
 
     const controller = upsertByIdController({
@@ -175,8 +198,28 @@ export default class Honey {
       resource,
       params,
       message,
-      idField,
-      processResponseData
+      idField
+    });
+    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
+  }
+
+  public upsert({
+    resource,
+    params,
+    message,
+    middleware,
+    pathOverride,
+    exitMiddleware,
+    conflictTarget
+  }: IUpsert) {
+    const path = pathOverride || `/${resource}/:id/upsert`;
+
+    const controller = upsertController({
+      db: this.postgres,
+      resource,
+      params,
+      message,
+      conflictTarget
     });
     this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
   }

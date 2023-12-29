@@ -124,7 +124,7 @@ export const generateDeleteQuery = (table: string, filter?: Filter) => {
 export const generateUpsertQuery = (
   table: string,
   data: UpdateOpParam,
-  conflictTarget: string
+  conflictTarget: string[]
 ) => {
   const replacements: any[] = [];
 
@@ -137,7 +137,9 @@ export const generateUpsertQuery = (
         return '?';
       })
       .join(', ')}) 
-    ON CONFLICT ("${conflictTarget}") DO UPDATE SET ${Object.keys(data)
+    ON CONFLICT (${conflictTarget
+      .map((c) => `"${c}"`)
+      .join(',')}) DO UPDATE SET ${Object.keys(data)
     .map((field) => {
       if (data[field].operator === 'inc') {
         replacements.push(data[field].value);
