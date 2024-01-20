@@ -10,7 +10,7 @@
   "license": "MIT",
   "private": false,
   "engines": {
-    "node": ">=16.14.2"
+    "node": ">=20.9.0"
   },
   "engineStrict": true,
   "repository": {
@@ -35,7 +35,7 @@
     "bump": "yarn changeset; yarn changeset version"
   },
   "alias": {
-    "@src/*": "./src/$1"
+    "@src/*": "./$1"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
