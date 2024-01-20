@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-import moduleAlias from 'module-alias';
-
-moduleAlias.addAlias('@src', __dirname);
 
 import Config from './config';
 import { DBOptions } from './config/database';
