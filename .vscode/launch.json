@@ -8,7 +8,7 @@
       "name": "Start Example",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/../honey-verify/index.js",
+      "program": "${workspaceFolder}/example/index.js",
       "runtimeExecutable": "nodemon",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
