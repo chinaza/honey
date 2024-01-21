@@ -57,7 +57,10 @@ class ExpressApp {
   private fallbackErrMessage = 'Endpoint does not exist';
   private routePrefix = '/api';
 
-  constructor(port: string | number, private metadata?: Metadata) {
+  constructor(
+    port: string | number,
+    private metadata?: Metadata
+  ) {
     this.fallbackErrMessage =
       this.metadata?.fallbackErrorMessage || this.fallbackErrMessage;
     this.routePrefix = this.metadata?.routePrefix || this.routePrefix;

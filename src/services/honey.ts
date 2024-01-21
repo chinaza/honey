@@ -31,7 +31,10 @@ const defaultExitMiddleware: ExitMiddleware = (data, req, res, next) => {
 };
 
 export default class Honey {
-  constructor(public express: ExpressApp, private postgres: Postgres) {}
+  constructor(
+    public express: ExpressApp,
+    private postgres: Postgres
+  ) {}
 
   get routes() {
     return this.express.appRoutes;

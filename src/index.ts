@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+import { QueryTypes as QTypes } from 'sequelize';
 
 import Config from './config';
 import { DBOptions } from './config/database';
@@ -6,8 +6,6 @@ import ExpressApp from './services/express';
 import Honey from './services/honey';
 import Postgres from './services/postgres';
 import { normalizePort } from './utils/port';
-
-import { QueryTypes as QTypes } from 'sequelize';
 import { Metadata } from './interfaces/express';
 
 process.on('SIGINT', () => {

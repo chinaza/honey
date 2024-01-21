@@ -140,19 +140,19 @@ export const generateUpsertQuery = (
     ON CONFLICT (${conflictTarget
       .map((c) => `"${c}"`)
       .join(',')}) DO UPDATE SET ${Object.keys(data)
-    .map((field) => {
-      if (data[field].operator === 'inc') {
-        replacements.push(data[field].value);
-        return `"${field}" = "${table}"."${field}" + ?`;
-      } else if (data[field].operator === 'dec') {
-        replacements.push(data[field].value);
-        return `"${field}" = "${table}"."${field}" - ?`;
-      } else {
-        replacements.push(data[field].value);
-        return `"${field}" = ?`;
-      }
-    })
-    .join(', ')}`;
+      .map((field) => {
+        if (data[field].operator === 'inc') {
+          replacements.push(data[field].value);
+          return `"${field}" = "${table}"."${field}" + ?`;
+        } else if (data[field].operator === 'dec') {
+          replacements.push(data[field].value);
+          return `"${field}" = "${table}"."${field}" - ?`;
+        } else {
+          replacements.push(data[field].value);
+          return `"${field}" = ?`;
+        }
+      })
+      .join(', ')}`;
 
   return { query, replacements };
 };
