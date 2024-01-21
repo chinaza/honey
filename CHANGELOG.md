@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.24.0
+
+### Minor Changes
+
+- 7a4e415: update dependencies
+
 ## 1.23.1
 
 ### Patch Changes
