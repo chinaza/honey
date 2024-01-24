@@ -29,7 +29,7 @@ export const extractInsertData = (
       return;
     }
 
-    if (!body[key]) return;
+    if (!Object.keys(body).includes(key)) return;
 
     const formatter = formatters[value];
     result[key] = formatter ? formatter(body[key]) : body[key];
@@ -83,7 +83,7 @@ export const formatReadFilter = (
       result[key] = val;
     } else {
       // skip missing query params
-      if (!queryParams[key]) return;
+      if (!Object.keys(queryParams).includes(key)) return;
 
       const valueFormatter = formatters[(param as GetFilterParam).value];
 
