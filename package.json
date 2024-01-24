@@ -1,6 +1,6 @@
 {
   "name": "@chinaza/honey",
-  "version": "1.24.1",
+  "version": "1.24.2",
   "description": "An expressJS based library for simplifying the development of CRUD APIs using Postgres",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
