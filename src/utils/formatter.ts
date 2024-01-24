@@ -43,7 +43,8 @@ export const generateUpdateData = (
   params: IUpdateById['params']
 ) => {
   const result = Object.entries(params).reduce((acc, [key, value]) => {
-    if (!body[key] && value !== '@updatedAt') return { ...acc };
+    if (!Object.keys(body).includes(key) && value !== '@updatedAt')
+      return { ...acc };
 
     let formattedValue: any;
     if (value === '@updatedAt') {
