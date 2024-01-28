@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.24.4
+
+### Patch Changes
+
+- Patch
+
 ## 1.24.3
 
 ### Patch Changes

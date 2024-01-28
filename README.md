@@ -2,7 +2,7 @@
 
 ## Overview
 
-This TypeScript-based Node.js application provides a library for building RESTful APIs with seamless integration to a PostgreSQL database using Sequelize ORM. It is designed to streamline the process of creating, reading, updating, deleting, and upserting data with a focus on simplicity and reusability.
+TypeScript-based Node.js library for building RESTful APIs with seamless integration to a PostgreSQL database using Sequelize ORM. It is designed to streamline the process of creating, reading, updating, deleting, and upserting data with a focus on simplicity and reusability.
 
 ## Prerequisites
 
