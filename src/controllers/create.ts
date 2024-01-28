@@ -22,7 +22,9 @@ export default function createController({
         message,
         data:
           req.body.dataOverride ||
-          (processResponseData ? processResponseData({ id }, req) : { id })
+          (processResponseData
+            ? await processResponseData({ id }, req)
+            : { id })
       });
       next({ message, data: { id } });
     } catch (error: any) {

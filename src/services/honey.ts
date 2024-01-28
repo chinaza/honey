@@ -232,15 +232,13 @@ export default class Honey {
     message,
     middleware,
     pathOverride,
-    exitMiddleware,
-    processResponseData
+    exitMiddleware
   }: IDeleteById) {
     const path = pathOverride || `/${resource}/:id`;
     const controller = deleteByIdController({
       db: this.postgres,
       resource,
-      message,
-      processResponseData
+      message
     });
     this.crud({
       method: 'delete',

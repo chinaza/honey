@@ -13,8 +13,6 @@ interface CrudParams {
   middleware?: Middleware[];
   /** Middleware to run after CRUD controller returns response */
   exitMiddleware?: ExitMiddleware[];
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface ICrud {
@@ -33,6 +31,8 @@ export type ICreate = CrudParams & {
   >;
   /** Response message */
   message: string;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 };
 
 export type IUpdateById = CrudParams & {
@@ -81,6 +81,8 @@ export type IGet = CrudParams & {
     /** column to sort by */
     sortField: string;
   };
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 };
 
 export type IGetById = CrudParams & {
@@ -88,6 +90,8 @@ export type IGetById = CrudParams & {
   fields: string[];
   /** column to run filter by id on */
   idField?: string;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 };
 
 export type IDeleteById = CrudParams & {
@@ -104,7 +108,8 @@ export interface GetByQueryControllerParams {
     sort: 'ASC' | 'DESC';
     sortField: string;
   };
-  processResponseData?: CrudParams['processResponseData'];
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface GetByIdControllerParams {
@@ -112,7 +117,8 @@ export interface GetByIdControllerParams {
   resource: string;
   fields: string[];
   idField?: string;
-  processResponseData?: CrudParams['processResponseData'];
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface CreateControllerParams {
@@ -120,7 +126,8 @@ export interface CreateControllerParams {
   resource: string;
   params: ICreate['params'];
   message: string;
-  processResponseData?: CrudParams['processResponseData'];
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpdateByIdControllerParams {
@@ -159,5 +166,4 @@ export interface deleteByIdControllerParams {
   db: Postgres;
   resource: string;
   message: string;
-  processResponseData?: CrudParams['processResponseData'];
 }

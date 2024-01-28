@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@chinaza/eslint-config": "^1.2.2",
+    "@chinaza/eslint-config": "^1.2.3",
     "@parcel/compressor-brotli": "2.8.3",
     "@parcel/compressor-gzip": "2.8.3",
     "@parcel/packager-ts": "2.8.3",

@@ -30,7 +30,9 @@ export function getByIdController({
       }
 
       res.send({
-        data: processResponseData ? processResponseData(data[0], req) : data[0]
+        data: processResponseData
+          ? await processResponseData(data[0], req)
+          : data[0]
       });
       next({ data });
     } catch (error: any) {
@@ -73,7 +75,7 @@ export function getByQueryController({
       }
 
       if (processResponseData) {
-        data = processResponseData(data, req);
+        data = await processResponseData(data, req);
       } else if (!data?.length) {
         throw new HttpError('No records found', 404);
       }
