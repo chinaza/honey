@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.24.5
+
+### Patch Changes
+
+- 530dbd3: fix misuse of processResponseData
+
 ## 1.24.4
 
 ### Patch Changes
