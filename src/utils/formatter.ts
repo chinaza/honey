@@ -32,7 +32,10 @@ export const extractInsertData = (
     if (!Object.keys(body).includes(key)) return;
 
     const formatter = formatters[value];
-    result[key] = formatter ? formatter(body[key]) : body[key];
+    result[key] =
+      formatter && ![null, undefined].includes(body[key])
+        ? formatter(body[key])
+        : body[key];
   });
 
   return result;
@@ -50,7 +53,9 @@ export const generateUpdateData = (
     if (value === '@updatedAt') {
       formattedValue = new Date();
     } else {
-      formattedValue = formatters[typeof body[key]](body[key]);
+      formattedValue = ![null, undefined].includes(body[key])
+        ? formatters[typeof body[key]](body[key])
+        : body[key];
     }
 
     return {
