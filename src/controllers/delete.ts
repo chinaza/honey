@@ -6,11 +6,12 @@ import { Controller } from './interfaces';
 export function deleteByIdController({
   db,
   resource,
-  message
+  message,
+  idField = 'id'
 }: deleteByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = req.params.id;
+      const id = req.params[idField || 'id'];
 
       await db.delete(resource, {
         id: {

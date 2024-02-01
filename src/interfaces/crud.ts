@@ -97,6 +97,8 @@ export type IGetById = CrudParams & {
 export type IDeleteById = CrudParams & {
   /** Response message */
   message: string;
+  /** column to run filter by id on */
+  idField?: string;
 };
 
 export interface GetByQueryControllerParams {
@@ -166,4 +168,5 @@ export interface deleteByIdControllerParams {
   db: Postgres;
   resource: string;
   message: string;
+  idField?: string;
 }
