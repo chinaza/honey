@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.25.0
+
+### Minor Changes
+
+- 0231e1d: add support for custom id field on delete endpoints
+
 ## 1.24.6
 
 ### Patch Changes
