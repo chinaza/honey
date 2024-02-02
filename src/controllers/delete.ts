@@ -14,7 +14,7 @@ export function deleteByIdController({
       const id = req.params[idField || 'id'];
 
       await db.delete(resource, {
-        id: {
+        [id]: {
           value: id,
           operator: '='
         }
