@@ -173,7 +173,7 @@ export default class Honey {
     pathOverride,
     exitMiddleware
   }: IUpdate) {
-    const path = pathOverride || `/${resource}/:id`;
+    const path = pathOverride || `/${resource}`;
 
     const controller = updateController({
       db: this.postgres,
