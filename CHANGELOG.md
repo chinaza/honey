@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.25.4
+
+### Patch Changes
+
+- eb1f657: bug fix: remove id from request path for update method
+
 ## 1.25.2
 
 ### Patch Changes
