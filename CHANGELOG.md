@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.26.0
+
+### Minor Changes
+
+- 183512a: add support for table name override
+
 ## 1.25.4
 
 ### Patch Changes
