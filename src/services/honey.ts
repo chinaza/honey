@@ -84,9 +84,11 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
-    processResponseData
+    processResponseData,
+    table
   }: ICreate) {
     const path = pathOverride || `/${resource}`;
+    resource = table || resource;
 
     const controller = createController({
       db: this.postgres,
@@ -107,9 +109,12 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
-    processResponseData
+    processResponseData,
+    table
   }: IGet) {
     const path = pathOverride || `/${resource}`;
+    resource = table || resource;
+
     const controller = getByQueryController({
       db: this.postgres,
       resource,
@@ -128,9 +133,11 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
-    processResponseData
+    processResponseData,
+    table
   }: IGetById) {
     const path = pathOverride || `/${resource}/:id`;
+    resource = table || resource;
 
     const controller = getByIdController({
       db: this.postgres,
@@ -150,9 +157,11 @@ export default class Honey {
     message,
     middleware,
     pathOverride,
-    exitMiddleware
+    exitMiddleware,
+    table
   }: IUpdateById) {
     const path = pathOverride || `/${resource}/:id`;
+    resource = table || resource;
 
     const controller = updateByIdController({
       db: this.postgres,
@@ -171,9 +180,11 @@ export default class Honey {
     message,
     middleware,
     pathOverride,
-    exitMiddleware
+    exitMiddleware,
+    table
   }: IUpdate) {
     const path = pathOverride || `/${resource}`;
+    resource = table || resource;
 
     const controller = updateController({
       db: this.postgres,
@@ -192,9 +203,11 @@ export default class Honey {
     message,
     middleware,
     pathOverride,
-    exitMiddleware
+    exitMiddleware,
+    table
   }: IUpsertById) {
     const path = pathOverride || `/${resource}/:id/upsert`;
+    resource = table || resource;
 
     const controller = upsertByIdController({
       db: this.postgres,
@@ -213,9 +226,11 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
-    conflictTarget
+    conflictTarget,
+    table
   }: IUpsert) {
     const path = pathOverride || `/${resource}/:id/upsert`;
+    resource = table || resource;
 
     const controller = upsertController({
       db: this.postgres,
@@ -233,9 +248,12 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
-    idField
+    idField,
+    table
   }: IDeleteById) {
     const path = pathOverride || `/${resource}/:id`;
+    resource = table || resource;
+
     const controller = deleteByIdController({
       db: this.postgres,
       resource,

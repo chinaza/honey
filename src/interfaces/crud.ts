@@ -7,6 +7,8 @@ import { Request } from 'express';
 interface CrudParams {
   /** Table name which also serves as REST API resource name in path */
   resource: string;
+  /** Postgres table name override */
+  table?: string;
   /** Override path to access endpoint */
   pathOverride?: string;
   /** Middleware to run before CRUD controller */
