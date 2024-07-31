@@ -17,3 +17,5 @@ export type ExitMiddleware = (
   res: Response,
   next: NextFunction
 ) => void;
+
+export type { Request, Response };

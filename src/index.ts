@@ -45,5 +45,10 @@ export { QueryTypes };
 export { default as runDbQuery, createModel } from './utils/db';
 export { default as HttpError, handleHttpError } from './utils/error';
 export { default as Honey } from './services/honey';
-export type { Middleware, ExitMiddleware } from './interfaces/express';
+export type {
+  Middleware,
+  ExitMiddleware,
+  Request,
+  Response
+} from './interfaces/express';
 export * from 'sequelize';
