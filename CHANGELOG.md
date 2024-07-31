@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.27.0
+
+### Minor Changes
+
+- 50d7761: expose more types
+
 ## 1.26.0
 
 ### Minor Changes
