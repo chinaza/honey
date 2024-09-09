@@ -78,9 +78,18 @@ class ExpressApp {
   }
 
   private initMiddlewares() {
+    const corsOptions = {
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      allowedHeaders: '*',
+      exposedHeaders: '*',
+      credentials: true,
+      optionsSuccessStatus: 204
+    };
+
     expressOasGenerator.handleResponses(this.app, {} as any);
     this.app.use(logger('dev'));
-    this.app.use(cors());
+    this.app.use(cors(corsOptions));
     this.app.use(
       express.json({
         verify(req: any, _res, buf) {
