@@ -78,7 +78,7 @@ class ExpressApp {
   }
 
   private initMiddlewares() {
-    const corsOptions = {
+    const corsOptions: cors.CorsOptions = {
       origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       allowedHeaders: '*',
