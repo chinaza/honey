@@ -1,6 +1,6 @@
 {
   "name": "@chinaza/honey",
-  "version": "1.27.0",
+  "version": "1.27.1",
   "description": "An expressJS based library for simplifying the development of CRUD APIs using Postgres",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -78,7 +78,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.2",
-    "express": "^4.18.2",
+    "express": "^4.21.0",
     "express-oas-generator": "^1.0.46",
     "joi": "^17.12.0",
     "morgan": "^1.10.0",
