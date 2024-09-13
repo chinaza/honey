@@ -92,12 +92,13 @@ class ExpressApp {
     this.app.use(cors(corsOptions));
     this.app.use(
       express.json({
+        limit: '50mb',
         verify(req: any, _res, buf) {
           req.rawBody = buf;
         }
       })
     );
-    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(express.urlencoded({ limit: '50mb', extended: false }));
     this.app.use(cookieParser());
     this.app.use(this.routePrefix, this.appRoutes);
   }
