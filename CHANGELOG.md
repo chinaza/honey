@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.28.0
+
+### Minor Changes
+
+- 35be0f6: add error response processing function
+
 ## 1.27.3
 
 ### Patch Changes
