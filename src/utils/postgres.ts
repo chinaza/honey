@@ -1,4 +1,4 @@
-import { Filter, FilterParam, UpdateOpParam } from '@src/shared/interface';
+import { Filter, FilterParam, UpdateOpParam } from '../shared/interface';
 
 const buildFilter = (field: string, { operator }: FilterParam) => {
   return `"${field}" ${

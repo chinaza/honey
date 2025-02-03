@@ -1,9 +1,9 @@
 import {
   UpsertByIdControllerParams,
   UpsertControllerParams
-} from '@src/interfaces/crud';
-import HttpError, { handleHttpError } from '@src/utils/error';
-import { generateUpdateData } from '@src/utils/formatter';
+} from '../interfaces/crud';
+import HttpError, { handleHttpError } from '../utils/error';
+import { generateUpdateData } from '../utils/formatter';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 

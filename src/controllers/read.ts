@@ -1,9 +1,9 @@
 import {
   GetByIdControllerParams,
   GetByQueryControllerParams
-} from '@src/interfaces/crud';
-import HttpError, { handleHttpError } from '@src/utils/error';
-import { formatReadFilter } from '@src/utils/formatter';
+} from '../interfaces/crud';
+import HttpError, { handleHttpError } from '../utils/error';
+import { formatReadFilter } from '../utils/formatter';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 

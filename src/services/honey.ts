@@ -1,4 +1,4 @@
-import Config from '@src/config';
+import Config from '../config';
 import {
   createController,
   deleteByIdController,
@@ -6,7 +6,7 @@ import {
   getByQueryController,
   updateByIdController,
   upsertByIdController
-} from '@src/controllers';
+} from '../controllers';
 import {
   ICreate,
   ICrud,
@@ -17,13 +17,13 @@ import {
   IUpdateById,
   IUpsert,
   IUpsertById
-} from '@src/interfaces/crud';
-import { ExitMiddleware, Middleware } from '@src/interfaces/express';
+} from '../interfaces/crud';
+import { ExitMiddleware, Middleware } from '../interfaces/express';
 import { NextFunction, Request, Response } from 'express';
 import ExpressApp from './express';
 import Postgres from './postgres';
-import { upsertController } from '@src/controllers/upsert';
-import { updateController } from '@src/controllers/update';
+import { upsertController } from '../controllers/upsert';
+import { updateController } from '../controllers/update';
 
 // eslint-disable-next-line
 const defaultExitMiddleware: ExitMiddleware = (data, req, res, next) => {

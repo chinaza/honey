@@ -1,6 +1,6 @@
-import { Controller } from '@src/controllers/interfaces';
-import Postgres from '@src/services/postgres';
-import { GetQueryFilter } from '@src/shared/interface';
+import { Controller } from '../controllers/interfaces';
+import Postgres from '../services/postgres';
+import { GetQueryFilter } from '../shared/interface';
 import { ExitMiddleware, Middleware } from './express';
 import { Request } from 'express';
 

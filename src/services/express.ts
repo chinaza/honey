@@ -7,7 +7,7 @@ import expressOasGenerator from 'express-oas-generator';
 import '../config';
 import HttpError from '../utils/error';
 import { AddressInfo } from 'net';
-import { Metadata } from '@src/interfaces/express';
+import { Metadata } from '../interfaces/express';
 
 /**
  * Event listener for HTTP server "error" event.

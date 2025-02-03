@@ -1,6 +1,6 @@
-import { CreateControllerParams } from '@src/interfaces/crud';
-import HttpError, { handleHttpError } from '@src/utils/error';
-import { extractInsertData } from '@src/utils/formatter';
+import { CreateControllerParams } from '../interfaces/crud';
+import HttpError, { handleHttpError } from '../utils/error';
+import { extractInsertData } from '../utils/formatter';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 

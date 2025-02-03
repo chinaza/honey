@@ -34,9 +34,6 @@
     "prepare:dev": "husky install",
     "bump": "yarn changeset; yarn changeset version"
   },
-  "alias": {
-    "@src/*": "./src/$1"
-  },
   "lint-staged": {
     "*.{js,ts}": [
       "eslint --fix",

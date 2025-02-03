@@ -1,10 +1,10 @@
 import {
   UpdateByIdControllerParams,
   UpdateControllerParams
-} from '@src/interfaces/crud';
-import { Filter } from '@src/shared/interface';
-import HttpError, { handleHttpError } from '@src/utils/error';
-import { formatReadFilter, generateUpdateData } from '@src/utils/formatter';
+} from '../interfaces/crud';
+import { Filter } from '../shared/interface';
+import HttpError, { handleHttpError } from '../utils/error';
+import { formatReadFilter, generateUpdateData } from '../utils/formatter';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 

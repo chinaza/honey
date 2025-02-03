@@ -1,11 +1,11 @@
-import config from '@src/config';
+import config from '../config';
 import {
   generateCreateQuery,
   generateDeleteQuery,
   generateReadQuery,
   generateUpdateQuery,
   generateUpsertQuery
-} from '@src/utils/postgres';
+} from '../utils/postgres';
 import { QueryTypes } from 'sequelize';
 import { Filter, UpdateOpParam } from '../shared/interface';
 

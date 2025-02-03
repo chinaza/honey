@@ -1,5 +1,5 @@
-import { deleteByIdControllerParams } from '@src/interfaces/crud';
-import HttpError, { handleHttpError } from '@src/utils/error';
+import { deleteByIdControllerParams } from '../interfaces/crud';
+import HttpError, { handleHttpError } from '../utils/error';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 

@@ -1,4 +1,4 @@
-import { ICreate, IUpdateById } from '@src/interfaces/crud';
+import { ICreate, IUpdateById } from '../interfaces/crud';
 import {
   Filter,
   FilterOps,
@@ -6,7 +6,7 @@ import {
   GetFilterParam,
   GetQueryFilter,
   UpdateOpParam
-} from '@src/shared/interface';
+} from '../shared/interface';
 import HttpError from './error';
 
 const formatters: Record<string, Function> = {
