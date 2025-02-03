@@ -12,7 +12,8 @@ export function upsertByIdController({
   resource,
   params,
   message,
-  idField = 'id'
+  idField = 'id',
+  processErrorResponse
 }: UpsertByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -25,6 +26,9 @@ export function upsertByIdController({
       res.send({ message });
       next({ message });
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }
@@ -36,7 +40,8 @@ export function upsertController({
   resource,
   params,
   message,
-  conflictTarget
+  conflictTarget,
+  processErrorResponse
 }: UpsertControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -47,6 +52,9 @@ export function upsertController({
       res.send({ message });
       next({ message });
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }

@@ -35,6 +35,7 @@ export type ICreate = CrudParams & {
   message: string;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  processErrorResponse?: (err: Error) => Error;
 };
 
 export type IUpdateById = CrudParams & {
@@ -85,6 +86,7 @@ export type IGet = CrudParams & {
   };
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  processErrorResponse?: (err: Error) => Error;
 };
 
 export type IGetById = CrudParams & {
@@ -94,6 +96,7 @@ export type IGetById = CrudParams & {
   idField?: string;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  processErrorResponse?: (err: Error) => Error;
 };
 
 export type IDeleteById = CrudParams & {
@@ -114,6 +117,7 @@ export interface GetByQueryControllerParams {
   };
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export interface GetByIdControllerParams {
@@ -123,6 +127,7 @@ export interface GetByIdControllerParams {
   idField?: string;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export interface CreateControllerParams {
@@ -132,6 +137,7 @@ export interface CreateControllerParams {
   message: string;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export interface UpdateByIdControllerParams {
@@ -140,6 +146,7 @@ export interface UpdateByIdControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField?: string;
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export interface UpdateControllerParams {
@@ -148,6 +155,7 @@ export interface UpdateControllerParams {
   params: IUpdateById['params'];
   message: string;
   filterQuery?: GetQueryFilter;
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export interface UpsertByIdControllerParams {
@@ -156,6 +164,7 @@ export interface UpsertByIdControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField: string;
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export interface UpsertControllerParams {
@@ -164,6 +173,7 @@ export interface UpsertControllerParams {
   params: IUpdateById['params'];
   message: string;
   conflictTarget: string[];
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export interface deleteByIdControllerParams {
@@ -171,4 +181,5 @@ export interface deleteByIdControllerParams {
   resource: string;
   message: string;
   idField?: string;
+  processErrorResponse?: (err: Error) => Error;
 }

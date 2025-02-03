@@ -12,7 +12,8 @@ export function getByIdController({
   resource,
   fields,
   idField = 'id',
-  processResponseData
+  processResponseData,
+  processErrorResponse
 }: GetByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -36,6 +37,9 @@ export function getByIdController({
       });
       next({ data });
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }
@@ -48,7 +52,8 @@ export function getByQueryController({
   fields,
   filterQuery,
   format,
-  processResponseData
+  processResponseData,
+  processErrorResponse
 }: GetByQueryControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -95,6 +100,9 @@ export function getByQueryController({
       res.send(response);
       next(response);
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }

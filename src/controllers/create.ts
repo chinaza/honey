@@ -9,7 +9,8 @@ export default function createController({
   resource,
   params,
   message,
-  processResponseData
+  processResponseData,
+  processErrorResponse
 }: CreateControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -28,6 +29,9 @@ export default function createController({
       });
       next({ message, data: { id } });
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }

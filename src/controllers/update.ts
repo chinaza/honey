@@ -13,7 +13,8 @@ export function updateByIdController({
   resource,
   params,
   message,
-  idField = 'id'
+  idField = 'id',
+  processErrorResponse
 }: UpdateByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -30,6 +31,9 @@ export function updateByIdController({
       res.send({ message });
       next({ message });
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }
@@ -41,7 +45,8 @@ export function updateController({
   resource,
   params,
   message,
-  filterQuery
+  filterQuery,
+  processErrorResponse
 }: UpdateControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -53,6 +58,9 @@ export function updateController({
       res.send({ message });
       next({ message });
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }

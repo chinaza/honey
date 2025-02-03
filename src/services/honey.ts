@@ -85,6 +85,7 @@ export default class Honey {
     pathOverride,
     exitMiddleware,
     processResponseData,
+    processErrorResponse,
     table
   }: ICreate) {
     const path = pathOverride || `/${resource}`;
@@ -95,7 +96,8 @@ export default class Honey {
       resource,
       params,
       message,
-      processResponseData
+      processResponseData,
+      processErrorResponse
     });
 
     this.crud({ method: 'post', path, controller, middleware, exitMiddleware });
@@ -110,6 +112,7 @@ export default class Honey {
     pathOverride,
     exitMiddleware,
     processResponseData,
+    processErrorResponse,
     table
   }: IGet) {
     const path = pathOverride || `/${resource}`;
@@ -121,7 +124,8 @@ export default class Honey {
       fields,
       filterQuery: filter,
       format,
-      processResponseData
+      processResponseData,
+      processErrorResponse
     });
     this.crud({ method: 'get', path, controller, middleware, exitMiddleware });
   }
@@ -134,6 +138,7 @@ export default class Honey {
     pathOverride,
     exitMiddleware,
     processResponseData,
+    processErrorResponse,
     table
   }: IGetById) {
     const path = pathOverride || `/${resource}/:id`;
@@ -144,7 +149,8 @@ export default class Honey {
       resource,
       fields,
       idField: idField || 'id',
-      processResponseData
+      processResponseData,
+      processErrorResponse
     });
 
     this.crud({ method: 'get', path, controller, middleware, exitMiddleware });

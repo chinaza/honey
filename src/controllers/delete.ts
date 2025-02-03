@@ -7,7 +7,8 @@ export function deleteByIdController({
   db,
   resource,
   message,
-  idField = 'id'
+  idField = 'id',
+  processErrorResponse
 }: deleteByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -23,6 +24,9 @@ export function deleteByIdController({
       res.send({ message });
       next({ message });
     } catch (error: any) {
+      if (processErrorResponse) {
+        error = processErrorResponse(error);
+      }
       handleHttpError(error as HttpError, res);
       next({ ...error, isError: true });
     }
