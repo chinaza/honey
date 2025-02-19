@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.29.0
+
+### Minor Changes
+
+- eafc865: add request data validation
+
 ## 1.28.2
 
 ### Patch Changes
