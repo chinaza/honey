@@ -52,3 +52,4 @@ export type {
   Response
 } from './interfaces/express';
 export * from 'sequelize';
+export { validateRequestData } from './utils/validation';
