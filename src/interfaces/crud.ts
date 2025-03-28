@@ -96,6 +96,8 @@ export type IGetById = CrudParams & {
   fields: string[];
   /** column to run filter by id on */
   idField?: string;
+  /** Filter builder for WHERE clause */
+  filter?: GetQueryFilter;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
   processErrorResponse?: (err: Error) => Error;
@@ -129,6 +131,7 @@ export interface GetByIdControllerParams {
   resource: string;
   fields: string[];
   idField?: string;
+  filterQuery?: GetQueryFilter;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
   processErrorResponse?: (err: Error) => Error;

@@ -139,7 +139,8 @@ export default class Honey {
     exitMiddleware,
     processResponseData,
     processErrorResponse,
-    table
+    table,
+    filter
   }: IGetById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -150,7 +151,8 @@ export default class Honey {
       fields,
       idField: idField || 'id',
       processResponseData,
-      processErrorResponse
+      processErrorResponse,
+      filterQuery: filter
     });
 
     this.crud({ method: 'get', path, controller, middleware, exitMiddleware });

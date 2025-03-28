@@ -13,17 +13,21 @@ export function getByIdController({
   fields,
   idField = 'id',
   processResponseData,
-  processErrorResponse
+  processErrorResponse,
+  filterQuery = {}
 }: GetByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
 
+      const filter = filterQuery && formatReadFilter(req.query, filterQuery);
+
       const data = await db.read(resource, fields, {
         [idField]: {
           value: id,
           operator: '='
-        }
+        },
+        ...filter
       });
 
       if (!data?.length) {
