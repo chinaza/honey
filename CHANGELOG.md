@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.32.0
+
+### Minor Changes
+
+- f788ffb: add support for additional filter query to getbyid
+
 ## 1.31.0
 
 ### Minor Changes
