@@ -45,6 +45,8 @@ export type IUpdateById = CrudParams & {
   message: string;
   /** column to run filter by id on */
   idField?: string;
+  /** Filter builder for WHERE clause */
+  filter: GetQueryFilter;
 };
 
 export type IUpdate = CrudParams & {
@@ -148,6 +150,7 @@ export interface UpdateByIdControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField?: string;
+  filterQuery?: GetQueryFilter;
   processErrorResponse?: (err: Error) => Error;
 }
 

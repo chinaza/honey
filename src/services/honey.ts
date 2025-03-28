@@ -164,7 +164,8 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
-    table
+    table,
+    filter
   }: IUpdateById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -174,7 +175,8 @@ export default class Honey {
       resource,
       params,
       message,
-      idField
+      idField,
+      filterQuery: filter
     });
     this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
   }

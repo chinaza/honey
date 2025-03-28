@@ -14,16 +14,20 @@ export function updateByIdController({
   params,
   message,
   idField = 'id',
-  processErrorResponse
+  processErrorResponse,
+  filterQuery = {}
 }: UpdateByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = generateUpdateData(req.body, params);
+      const additionalFilter =
+        filterQuery && formatReadFilter(req.body, filterQuery);
       const filter: Filter = {
         [idField]: {
           operator: '=',
           value: req.params.id
-        }
+        },
+        ...additionalFilter
       };
 
       await db.update(resource, body, filter);
