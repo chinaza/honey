@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.31.0
+
+### Minor Changes
+
+- 01fe775: add support for additional filter query to updatebyid
+
 ## 1.30.1
 
 ### Patch Changes
