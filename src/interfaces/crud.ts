@@ -104,6 +104,8 @@ export type IDeleteById = CrudParams & {
   message: string;
   /** column to run filter by id on */
   idField?: string;
+  /** Filter builder for WHERE clause */
+  filter?: GetQueryFilter;
 };
 
 export interface GetByQueryControllerParams {
@@ -181,5 +183,6 @@ export interface deleteByIdControllerParams {
   resource: string;
   message: string;
   idField?: string;
+  filterQuery?: GetQueryFilter;
   processErrorResponse?: (err: Error) => Error;
 }

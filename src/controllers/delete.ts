@@ -8,7 +8,8 @@ export function deleteByIdController({
   resource,
   message,
   idField = 'id',
-  processErrorResponse
+  processErrorResponse,
+  filterQuery = {}
 }: deleteByIdControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -18,7 +19,8 @@ export function deleteByIdController({
         [idField]: {
           value: id,
           operator: '='
-        }
+        },
+        ...filterQuery
       });
 
       res.send({ message });

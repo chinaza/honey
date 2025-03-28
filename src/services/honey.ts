@@ -255,6 +255,7 @@ export default class Honey {
     pathOverride,
     exitMiddleware,
     idField,
+    filter,
     table
   }: IDeleteById) {
     const path = pathOverride || `/${resource}/:id`;
@@ -264,7 +265,8 @@ export default class Honey {
       db: this.postgres,
       resource,
       message,
-      idField
+      idField,
+      filterQuery: filter
     });
     this.crud({
       method: 'delete',
