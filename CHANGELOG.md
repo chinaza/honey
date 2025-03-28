@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.30.0
+
+### Minor Changes
+
+- e3a1bde: add support for additional filter query to deletion resource
+
 ## 1.29.0
 
 ### Minor Changes
