@@ -10,7 +10,7 @@ export type FilterOps =
 
 type UpdateOp = 'inc' | 'dec' | 'replace' | '@updatedAt';
 
-interface OperationParam<T> {
+export interface OperationParam<T> {
   value: string | number | boolean | Date | Object;
   operator: T;
 }
