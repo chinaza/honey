@@ -2,7 +2,7 @@ import { deleteByIdControllerParams } from '../interfaces/crud';
 import HttpError, { handleHttpError } from '../utils/error';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
-import { formatReadFilter } from 'src/utils/formatter';
+import { formatReadFilter } from '../utils/formatter';
 
 export function deleteByIdController({
   db,
