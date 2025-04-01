@@ -88,7 +88,8 @@ export const formatReadFilter = (
       result[key] = val;
     } else {
       // skip missing query params
-      if (!Object.keys(queryParams).includes(key)) return;
+      if (!Object.keys(queryParams).includes(key) && !param.overrideValue)
+        return;
 
       const valueFormatter = formatters[(param as GetFilterParam).value];
 
