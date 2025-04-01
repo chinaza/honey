@@ -90,7 +90,7 @@ export const formatReadFilter = (
       // skip missing query params
       if (
         !Object.keys(queryParams).includes(key) &&
-        param.overrideValue !== undefined
+        param.overrideValue === undefined
       )
         return;
 
