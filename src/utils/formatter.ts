@@ -88,7 +88,10 @@ export const formatReadFilter = (
       result[key] = val;
     } else {
       // skip missing query params
-      if (!Object.keys(queryParams).includes(key) && !param.overrideValue)
+      if (
+        !Object.keys(queryParams).includes(key) &&
+        param.overrideValue !== undefined
+      )
         return;
 
       const valueFormatter = formatters[(param as GetFilterParam).value];
@@ -96,9 +99,14 @@ export const formatReadFilter = (
       if (!valueFormatter)
         throw new HttpError('Invalid filter value type', 500);
 
+      const valueToUse =
+        param.overrideValue !== undefined
+          ? param.overrideValue
+          : queryParams[key];
+
       result[key] = {
         operator: param.operator as FilterOps,
-        value: valueFormatter(param.overrideValue ?? queryParams[key])
+        value: valueFormatter(valueToUse)
       };
     }
   });
