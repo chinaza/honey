@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.33.0
+
+### Minor Changes
+
+- 84686ff: add support for override values in filters
+
 ## 1.32.1
 
 ### Patch Changes
