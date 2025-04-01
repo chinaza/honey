@@ -97,7 +97,7 @@ export const formatReadFilter = (
 
       result[key] = {
         operator: param.operator as FilterOps,
-        value: valueFormatter(param.overrideValue || queryParams[key])
+        value: valueFormatter(param.overrideValue ?? queryParams[key])
       };
     }
   });
