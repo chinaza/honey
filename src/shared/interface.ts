@@ -31,6 +31,7 @@ export interface UpdateOpParam {
 
 export type GetFilterParam = {
   value: 'string' | 'number' | 'boolean' | 'json';
+  overrideValue?: string | number | boolean | Date | Record<string, any>;
   operator: FilterOps;
 };
 
