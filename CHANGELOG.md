@@ -1,5 +1,11 @@
 # @chinaza/honey
 
+## 1.34.0
+
+### Minor Changes
+
+- a4273b9: switch to knex for query building
+
 ## 1.33.4
 
 ### Patch Changes
