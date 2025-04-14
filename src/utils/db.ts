@@ -5,7 +5,10 @@ import {
   ModelStatic,
   QueryTypes
 } from 'sequelize';
+import Knex from 'knex';
+
 import Config from '../config';
+import createSingleton from './helpers';
 
 interface QueryParams {
   replacements?: any[];
@@ -58,3 +61,8 @@ export function createModel<
     options
   );
 }
+
+export const getKnex = () =>
+  createSingleton('knex', () => {
+    return Knex({ client: 'pg' });
+  });

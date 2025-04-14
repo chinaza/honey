@@ -28,7 +28,7 @@ export default class Postgres {
     const result = await config.db.query(query, {
       type: QueryTypes.SELECT,
       raw: true,
-      replacements
+      replacements: [...replacements]
     });
     return result;
   }
@@ -42,7 +42,7 @@ export default class Postgres {
     const res: any = await config.db.query(query, {
       type: QueryTypes.INSERT,
       raw: true,
-      replacements
+      replacements: [...replacements]
     });
 
     // inserted ids
@@ -55,7 +55,7 @@ export default class Postgres {
     await config.db.query(query, {
       type: QueryTypes.UPDATE,
       raw: true,
-      replacements
+      replacements: [...replacements]
     });
   }
 
@@ -65,7 +65,7 @@ export default class Postgres {
     await config.db.query(query, {
       type: QueryTypes.DELETE,
       raw: true,
-      replacements
+      replacements: [...replacements]
     });
   }
 
@@ -83,7 +83,7 @@ export default class Postgres {
     await config.db.query(query, {
       type: QueryTypes.INSERT,
       raw: true,
-      replacements
+      replacements: [...replacements]
     });
   }
 }

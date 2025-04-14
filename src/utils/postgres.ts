@@ -1,66 +1,53 @@
+import { Knex } from 'knex';
 import { Filter, FilterParam, UpdateOpParam } from '../shared/interface';
+import { getKnex } from './db';
 
-const buildFilter = (field: string, { operator }: FilterParam) => {
-  return `"${field}" ${
-    ['like', 'not like'].includes(operator)
-      ? operator.replace('like', 'ilike')
-      : operator
-  } ?`;
-};
+export const applyFilter = (query: Knex.QueryBuilder, filter: Filter = {}) => {
+  Object.entries(filter).forEach(([field, data]) => {
+    if (field === '$or') {
+      query.where((builder) => {
+        Object.entries(data).forEach(([orField, orData], index) => {
+          const method = index === 0 ? 'where' : 'orWhere';
+          const orParam = orData as FilterParam;
 
-const formatFields = (fields: string[]) => {
-  return fields.map((field) => `"${field}"`).join(', ');
-};
-
-export const generateWhere = (filter: Filter = {}) => {
-  const result = {
-    where: '',
-    replacements: [] as Array<string | number | boolean | Date | Object>
-  };
-  result.where = Object.entries(filter).reduce((acc, [field, data]) => {
-    if (['$or'].includes(field)) {
-      const orQuery = Object.entries(data).reduce(
-        (orAcc, [orField, orData]) => {
-          const pre = orAcc ? `${orAcc} OR ` : '';
-          const replacement = ['like', 'notLike'].includes(orData.operator)
-            ? `%${orData.value}%`
-            : orData.value;
-          result.replacements.push(replacement);
-          return `${pre}${buildFilter(orField, orData)}`;
-        },
-        ''
-      );
-      const pre = acc ? `${acc} AND ` : '';
-      return `${pre}(${orQuery})`;
+          if (['like', 'not like'].includes(orParam.operator)) {
+            builder[method](orField, 'ilike', `%${orParam.value}%`);
+          } else {
+            builder[method](orField, orParam.operator, orParam.value);
+          }
+        });
+      });
     } else {
-      const pre = acc ? `${acc} AND ` : '';
-      const replacement = ['like', 'not like'].includes(
-        (data as FilterParam).operator
-      )
-        ? `%${(data as FilterParam).value}%`
-        : (data as FilterParam).value;
-      result.replacements.push(replacement);
-      return `${pre}${buildFilter(field, data as FilterParam)}`;
-    }
-  }, '');
+      const param = data as FilterParam;
 
-  return result;
+      if (['like', 'not like'].includes(param.operator)) {
+        query.where(
+          field,
+          param.operator === 'like' ? 'ilike' : 'not ilike',
+          `%${param.value}%`
+        );
+      } else {
+        query.where(field, param.operator, param.value);
+      }
+    }
+  });
+
+  return query;
 };
 
 export const generateCreateQuery = (
   table: string,
   data: Record<string, string | number | boolean | Date | Object>
 ) => {
-  const replacements = Object.values(data);
-  const query = `INSERT INTO "${table}"
-  (${formatFields(Object.keys(data))}) 
-    VALUES (${Object.keys(data)
-      .map(() => '?')
-      .join(', ')})
-      RETURNING id`;
+  const knex = getKnex();
+  const { sql: query, bindings: replacements } = knex(table)
+    .insert(data)
+    .returning('id')
+    .toSQL();
 
   return { query, replacements };
 };
+
 export const generateReadQuery = (
   table: string,
   fields: string[],
@@ -68,22 +55,35 @@ export const generateReadQuery = (
   paginate?: { page: number; limit: number },
   format?: { sort: 'ASC' | 'DESC'; sortField: string }
 ) => {
-  const { where, replacements } = generateWhere(filter);
-  const whereSegment = where ? `WHERE ${where}` : '';
-  let query = `SELECT ${formatFields(fields)}`;
-  query += !!paginate
-    ? `, count(${fields[0]}) OVER() AS honey_total_count`
-    : '';
+  const knex = getKnex();
 
-  query += ` FROM "${table}" ${whereSegment}`;
-  if (format?.sort && format.sortField) {
-    query += ` ORDER BY "${format.sortField}" ${format.sort}`;
-  }
+  let q = knex(table).select(fields);
+
+  // Add total count if pagination is needed
   if (paginate) {
-    query += ` LIMIT ${paginate.limit} OFFSET ${
-      paginate.limit * (paginate.page - 1)
-    }`;
+    // Using knex.raw to create the count column with the same name as in original code
+    q = knex(table).select([
+      ...fields.map((field) => knex.raw(`?? as ??`, [field, field])),
+      knex.raw('count(??) OVER() AS honey_total_count', [fields[0]])
+    ]);
   }
+
+  // Apply filters
+  if (filter) {
+    q = applyFilter(q, filter);
+  }
+
+  // Apply sorting
+  if (format?.sort && format.sortField) {
+    q.orderBy(format.sortField, format.sort);
+  }
+
+  // Apply pagination
+  if (paginate) {
+    q.limit(paginate.limit).offset(paginate.limit * (paginate.page - 1));
+  }
+
+  const { sql: query, bindings: replacements } = q.toSQL();
 
   return { query, replacements };
 };
@@ -92,32 +92,42 @@ export const generateUpdateQuery = (
   data: UpdateOpParam,
   filter?: Filter
 ) => {
-  const replacements: any[] = [];
+  const knex = getKnex();
+  let q = knex(table);
 
-  let query = `UPDATE "${table}" SET ${Object.keys(data)
-    .map((field) => {
-      replacements.push(data[field].value);
+  // Build the update object
+  const updateData: Record<string, Knex.Raw> = {};
 
-      if (data[field].operator === 'inc') return `"${field}" = "${field}" + ?`;
-      else if (data[field].operator === 'dec')
-        return `"${field}" = "${field}" - ?`;
-      else return `"${field}" = ?`;
-    })
-    .join(', ')}`;
+  Object.entries(data).forEach(([field, fieldData]) => {
+    const param = fieldData as any;
 
-  const { where, replacements: whereReplacements } = generateWhere(filter);
-  const whereSegment = filter ? ` WHERE ${where}` : '';
+    if (param.operator === 'inc') {
+      updateData[field] = knex.raw('?? + ?', [field, param.value]);
+    } else if (param.operator === 'dec') {
+      updateData[field] = knex.raw('?? - ?', [field, param.value]);
+    } else {
+      updateData[field] = param.value;
+    }
+  });
 
-  query += whereSegment;
-  replacements.push(...whereReplacements);
+  // Apply filter conditions
+  if (filter) {
+    q = applyFilter(q, filter);
+  }
 
+  const { sql: query, bindings: replacements } = q.update(updateData).toSQL();
+  console.log(query, replacements);
   return { query, replacements };
 };
 export const generateDeleteQuery = (table: string, filter?: Filter) => {
-  const { where, replacements } = generateWhere(filter);
-  const whereSegment = filter ? `WHERE ${where}` : '';
-  const query = `DELETE FROM "${table}" ${whereSegment}`;
+  const knex = getKnex();
+  let q = knex(table);
 
+  if (filter) {
+    q = applyFilter(q, filter);
+  }
+
+  const { sql: query, bindings: replacements } = q.delete().toSQL();
   return { query, replacements };
 };
 
@@ -126,33 +136,40 @@ export const generateUpsertQuery = (
   data: UpdateOpParam,
   conflictTarget: string[]
 ) => {
-  const replacements: any[] = [];
+  const knex = getKnex();
 
-  const query = `INSERT INTO "${table}" (${Object.keys(data)
-    .map((field) => `"${field}"`)
-    .join(', ')}) 
-    VALUES (${Object.keys(data)
-      .map((field) => {
-        replacements.push(data[field].value);
-        return '?';
-      })
-      .join(', ')}) 
-    ON CONFLICT (${conflictTarget
-      .map((c) => `"${c}"`)
-      .join(',')}) DO UPDATE SET ${Object.keys(data)
-      .map((field) => {
-        if (data[field].operator === 'inc') {
-          replacements.push(data[field].value);
-          return `"${field}" = "${table}"."${field}" + ?`;
-        } else if (data[field].operator === 'dec') {
-          replacements.push(data[field].value);
-          return `"${field}" = "${table}"."${field}" - ?`;
-        } else {
-          replacements.push(data[field].value);
-          return `"${field}" = ?`;
-        }
-      })
-      .join(', ')}`;
+  // Prepare insert data
+  const insertData: Record<string, UpdateOpParam[string]['value']> = {};
+  Object.entries(data).forEach(([field, fieldData]) => {
+    insertData[field] = fieldData.value;
+  });
+
+  // Prepare update data for conflict resolution
+  const updateData: Record<string, Knex.Raw | UpdateOpParam[string]['value']> =
+    {};
+  Object.entries(data).forEach(([field, fieldData]) => {
+    const param = fieldData;
+
+    if (param.operator === 'inc') {
+      updateData[field] = knex.raw('?? + ?', [
+        `${table}.${field}`,
+        param.value
+      ]);
+    } else if (param.operator === 'dec') {
+      updateData[field] = knex.raw('?? - ?', [
+        `${table}.${field}`,
+        param.value
+      ]);
+    } else {
+      updateData[field] = param.value;
+    }
+  });
+
+  const { sql: query, bindings: replacements } = knex(table)
+    .insert(insertData)
+    .onConflict(conflictTarget)
+    .merge(updateData)
+    .toSQL();
 
   return { query, replacements };
 };

@@ -8,7 +8,7 @@ const honey = createHoney(
 );
 
 honey.get({
-  resource: 'postss',
+  resource: 'posts',
   fields: ['id', 'name'],
   filter: {
     name: {

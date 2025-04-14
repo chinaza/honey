@@ -41,7 +41,7 @@ const honey = createHoney(
 
 // Define routes for the 'posts' resource
 
-// GET /posts - Retrieves a list of posts with optional filtering and sorting
+// GET /api/posts - Retrieves a list of posts with optional filtering and sorting
 honey.get({
   resource: 'posts',
   fields: ['id', 'name'],
@@ -57,13 +57,13 @@ honey.get({
   }
 });
 
-// GET /posts/:id - Retrieves a single post by ID
+// GET /api/posts/:id - Retrieves a single post by ID
 honey.getById({
   resource: 'posts',
   fields: ['id', 'name']
 });
 
-// POST /posts - Creates a new post
+// POST /api/posts - Creates a new post
 honey.create({
   resource: 'posts',
   params: {
@@ -72,7 +72,7 @@ honey.create({
   message: 'Post created'
 });
 
-// PUT /posts/:id - Updates a post by ID
+// PUT /api/posts/:id - Updates a post by ID
 honey.updateById({
   resource: 'posts',
   params: {
@@ -81,7 +81,7 @@ honey.updateById({
   message: 'Post updated'
 });
 
-// PUT /posts/:id/upsert - Upserts a post by ID
+// PUT /api/posts/:id/upsert - Upserts a post by ID
 honey.upsertById({
   resource: 'posts',
   params: {
@@ -90,7 +90,7 @@ honey.upsertById({
   message: 'Post upserted'
 });
 
-// DELETE /posts/:id - Deletes a post by ID
+// DELETE /api/posts/:id - Deletes a post by ID
 honey.deleteById({
   resource: 'posts',
   message: 'Post deleted'
