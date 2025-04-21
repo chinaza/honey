@@ -63,7 +63,8 @@ export function getByQueryController({
     try {
       const page = Number(req.query.page);
       const limit = Number(req.query.limit);
-      const paginate = page && limit ? { page, limit } : undefined;
+      const paginate =
+        limit || page ? { page: page || 1, limit: limit || 10 } : undefined;
 
       const filter = filterQuery && formatReadFilter(req.query, filterQuery);
 
