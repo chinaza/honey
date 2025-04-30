@@ -7,7 +7,7 @@ TypeScript-based Node.js library for building RESTful APIs with seamless integra
 ## Prerequisites
 
 - Create the relevant tables and data models for your Postgres database. You can use the exposed sequelize utility functions and migrations to do this.
-- See <https://github.com/chinaza/honey-example> for a demo
+- See https://github.com/chinaza/generator-honeyjs to generate a project
 
 ## Getting Started
 
