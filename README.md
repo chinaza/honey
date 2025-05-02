@@ -1,9 +1,5 @@
 # HoneyJS
 
-[![NPM Version](https://img.shields.io/npm/v/@chinaza/honey.svg)](https://www.npmjs.com/package/@chinaza/honey)
-[![License](https://img.shields.io/npm/l/@chinaza/honey.svg)](https://github.com/chinaza/honey/blob/main/LICENSE)
-[![Node Version](https://img.shields.io/node/v/@chinaza/honey.svg)](https://nodejs.org)
-
 A TypeScript-based Node.js declarative library for building RESTful APIs with seamless integration to PostgreSQL databases using Sequelize ORM. HoneyJS streamlines the process of creating, reading, updating, deleting, and upserting data with a focus on simplicity and reusability.
 
 ## Table of Contents
