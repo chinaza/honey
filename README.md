@@ -46,10 +46,10 @@ A TypeScript-based Node.js declarative library for building RESTful APIs with se
 
 ```bash
 # Using npm
-npm install @chinaza/honey
+npm install @promind/honey
 
 # Using yarn
-yarn add @chinaza/honey
+yarn add @promind/honey
 ```
 
 ## Quick Start
@@ -57,7 +57,7 @@ yarn add @chinaza/honey
 1. Create a new file (e.g., `server.ts` or `server.js`)
 
 ```typescript
-import { createHoney } from '@chinaza/honey';
+import { createHoney } from '@promind/honey';
 
 // Initialize HoneyJS with port and database connection string
 const honey = createHoney(
@@ -151,7 +151,7 @@ DB_URI=postgresql://username:password@localhost:5432/database
 Then initialize HoneyJS without parameters:
 
 ```typescript
-import { createHoney } from '@chinaza/honey';
+import { createHoney } from '@promind/honey';
 
 const honey = createHoney(process.env.PORT, process.env.DB_URI);
 ```
@@ -412,7 +412,7 @@ HoneyJS provides several utilities for working directly with the database.
 ### Sequelize Model Definition
 
 ```typescript
-import { defineModel, DataTypes } from '@chinaza/honey';
+import { defineModel, DataTypes } from '@promind/honey';
 
 const User = defineModel('users', {
   id: {
@@ -441,7 +441,7 @@ export default User;
 ### Raw Query Execution
 
 ```typescript
-import { runDbQuery, QueryTypes } from '@chinaza/honey';
+import { runDbQuery, QueryTypes } from '@promind/honey';
 
 async function getUsersWithPosts() {
   const query = `
@@ -460,7 +460,7 @@ async function getUsersWithPosts() {
 HoneyJS provides a consistent error handling mechanism:
 
 ```typescript
-import { HttpError, handleHttpError } from '@chinaza/honey';
+import { HttpError, handleHttpError } from '@promind/honey';
 
 // In your middleware or custom controller
 try {
@@ -480,7 +480,7 @@ try {
 HoneyJS includes built-in request validation using Joi:
 
 ```typescript
-import { validateRequestData } from '@chinaza/honey';
+import { validateRequestData } from '@promind/honey';
 import Joi from 'joi';
 
 const userSchema = Joi.object({
@@ -504,7 +504,7 @@ honey.create({
 ### Custom Middleware
 
 ```typescript
-import { Middleware } from '@chinaza/honey';
+import { Middleware } from '@promind/honey';
 
 const authMiddleware: Middleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -530,7 +530,7 @@ honey.addMiddleware([authMiddleware]);
 ### Complete API Example
 
 ```typescript
-import { createHoney, HttpError } from '@chinaza/honey';
+import { createHoney, HttpError } from '@promind/honey';
 
 const honey = createHoney(
   '3000',
@@ -601,7 +601,7 @@ honey.startServer();
 ### Custom Route and Controller
 
 ```typescript
-import { createHoney } from '@chinaza/honey';
+import { createHoney } from '@promind/honey';
 import express from 'express';
 
 const honey = createHoney(
@@ -668,7 +668,7 @@ honey.routes.post('/auth/login', async (req, res) => {
 You can mix declarative HoneyJS endpoints with custom Express routes in the same application:
 
 ```typescript
-import { createHoney } from '@chinaza/honey';
+import { createHoney } from '@promind/honey';
 
 const honey = createHoney(
   '3000',
@@ -745,7 +745,7 @@ honey.routes.get(
 HoneyJS is built with TypeScript and provides comprehensive type definitions:
 
 ```typescript
-import { createHoney, Middleware, HttpError } from '@chinaza/honey';
+import { createHoney, Middleware, HttpError } from '@promind/honey';
 
 // Type-safe middleware
 const loggerMiddleware: Middleware = (req, res, next) => {

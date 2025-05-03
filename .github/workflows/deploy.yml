@@ -62,3 +62,12 @@ jobs:
           skip_fetch: true
           skip_checkout: true
           disable_globbing: true
+      - name: Setup for NPM
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_REG_TOKEN }}" > ~/.npmrc
+          echo "@promind:registry=https://registry.npmjs.org" >> ~/.npmrc
+          jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
+      - name: Publish to NPM
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_REG_TOKEN }}
