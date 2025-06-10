@@ -86,7 +86,8 @@ export default class Honey {
     exitMiddleware,
     processResponseData,
     processErrorResponse,
-    table
+    table,
+    methodOverride
   }: ICreate) {
     const path = pathOverride || `/${resource}`;
     resource = table || resource;
@@ -100,7 +101,13 @@ export default class Honey {
       processErrorResponse
     });
 
-    this.crud({ method: 'post', path, controller, middleware, exitMiddleware });
+    this.crud({
+      method: methodOverride || 'post',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 
   public get({
@@ -111,6 +118,7 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
+    methodOverride,
     processResponseData,
     processErrorResponse,
     table
@@ -127,7 +135,13 @@ export default class Honey {
       processResponseData,
       processErrorResponse
     });
-    this.crud({ method: 'get', path, controller, middleware, exitMiddleware });
+    this.crud({
+      method: methodOverride || 'get',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 
   public getById({
@@ -137,6 +151,7 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
+    methodOverride,
     processResponseData,
     processErrorResponse,
     table,
@@ -155,7 +170,13 @@ export default class Honey {
       filterQuery: filter
     });
 
-    this.crud({ method: 'get', path, controller, middleware, exitMiddleware });
+    this.crud({
+      method: methodOverride || 'get',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 
   public updateById({
@@ -166,6 +187,7 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
+    methodOverride,
     table,
     filter
   }: IUpdateById) {
@@ -180,7 +202,13 @@ export default class Honey {
       idField,
       filterQuery: filter
     });
-    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
+    this.crud({
+      method: methodOverride || 'put',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 
   public update({
@@ -191,6 +219,7 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
+    methodOverride,
     table
   }: IUpdate) {
     const path = pathOverride || `/${resource}`;
@@ -203,7 +232,13 @@ export default class Honey {
       message,
       filterQuery: filter
     });
-    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
+    this.crud({
+      method: methodOverride || 'put',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 
   public upsertById({
@@ -214,6 +249,7 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
+    methodOverride,
     table
   }: IUpsertById) {
     const path = pathOverride || `/${resource}/:id/upsert`;
@@ -226,7 +262,13 @@ export default class Honey {
       message,
       idField
     });
-    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
+    this.crud({
+      method: methodOverride || 'put',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 
   public upsert({
@@ -236,6 +278,7 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
+    methodOverride,
     conflictTarget,
     table
   }: IUpsert) {
@@ -249,7 +292,13 @@ export default class Honey {
       message,
       conflictTarget
     });
-    this.crud({ method: 'put', path, controller, middleware, exitMiddleware });
+    this.crud({
+      method: methodOverride || 'put',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
   }
 
   public deleteById({
@@ -258,6 +307,7 @@ export default class Honey {
     middleware,
     pathOverride,
     exitMiddleware,
+    methodOverride,
     idField,
     filter,
     table
@@ -273,7 +323,7 @@ export default class Honey {
       filterQuery: filter
     });
     this.crud({
-      method: 'delete',
+      method: methodOverride || 'delete',
       path,
       controller,
       middleware,

@@ -4,6 +4,14 @@ import { GetQueryFilter } from '../shared/interface';
 import { ExitMiddleware, Middleware } from './express';
 import { Request } from 'express';
 
+export interface ICrud {
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
+  path: string;
+  controller: Controller;
+  middleware?: Middleware[];
+  exitMiddleware?: ExitMiddleware[];
+}
+
 interface CrudParams {
   /** Table name which also serves as REST API resource name in path */
   resource: string;
@@ -11,17 +19,11 @@ interface CrudParams {
   table?: string;
   /** Override path to access endpoint */
   pathOverride?: string;
+  /** Override method to access endpoint */
+  methodOverride?: ICrud['method'];
   /** Middleware to run before CRUD controller */
   middleware?: Middleware[];
   /** Middleware to run after CRUD controller returns response */
-  exitMiddleware?: ExitMiddleware[];
-}
-
-export interface ICrud {
-  method: 'get' | 'post' | 'put' | 'delete';
-  path: string;
-  controller: Controller;
-  middleware?: Middleware[];
   exitMiddleware?: ExitMiddleware[];
 }
 
