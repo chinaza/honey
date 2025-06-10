@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.35.0
+
+### Minor Changes
+
+- ec2733c: add support for method override
+
 ## 1.34.5
 
 ### Patch Changes
