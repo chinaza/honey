@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.36.0
+
+### Minor Changes
+
+- 7038522: allow all sequelize options for raw query
+
 ## 1.35.0
 
 ### Minor Changes
