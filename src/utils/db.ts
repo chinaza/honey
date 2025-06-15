@@ -3,24 +3,19 @@ import {
   ModelAttributes,
   ModelOptions,
   ModelStatic,
-  QueryTypes
+  QueryOptions
 } from 'sequelize';
 import Knex from 'knex';
 
 import Config from '../config';
 import createSingleton from './helpers';
 
-interface QueryParams {
-  replacements?: any[];
-  type: QueryTypes;
-}
-export default function runDbQuery(query: string, params?: QueryParams) {
-  const { replacements, type } = params || {};
+export default function runDbQuery(query: string, params?: QueryOptions) {
+  params = params || {};
 
   return Config.db.query(query, {
-    raw: true,
-    replacements,
-    type
+    ...params,
+    raw: true
   });
 }
 
