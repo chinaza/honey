@@ -12,10 +12,11 @@ export function deleteByIdController({
   processErrorResponse,
   filterQuery = {}
 }: deleteByIdControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params[idField || 'id'];
-      const filter = filterQuery && formatReadFilter(req.body, filterQuery);
+      const filter =
+        filterQuery && formatReadFilter(req.body, filterQuery, req);
 
       await db.delete(resource, {
         [idField]: {

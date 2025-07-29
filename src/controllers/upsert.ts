@@ -15,7 +15,7 @@ export function upsertByIdController({
   idField = 'id',
   processErrorResponse
 }: UpsertByIdControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       req.body[idField] = req.params.id;
       params = { ...params, [idField]: 'replace' };
@@ -43,7 +43,7 @@ export function upsertController({
   conflictTarget,
   processErrorResponse
 }: UpsertControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const body = generateUpdateData(req.body, params);
 
