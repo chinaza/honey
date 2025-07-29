@@ -16,11 +16,11 @@ export function getByIdController({
   processErrorResponse,
   filterQuery = {}
 }: GetByIdControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
 
-      const filter = filterQuery && formatReadFilter(req.query, filterQuery);
+      const filter = formatReadFilter(req.query, filterQuery, req);
 
       const data = await db.read(resource, fields, {
         [idField]: {
@@ -59,14 +59,15 @@ export function getByQueryController({
   processResponseData,
   processErrorResponse
 }: GetByQueryControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const page = Number(req.query.page);
       const limit = Number(req.query.limit);
       const paginate =
         limit || page ? { page: page || 1, limit: limit || 10 } : undefined;
 
-      const filter = filterQuery && formatReadFilter(req.query, filterQuery);
+      const filter =
+        filterQuery && formatReadFilter(req.query, filterQuery, req);
 
       let data: Record<string, any>[] = await db.read(
         resource,

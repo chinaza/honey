@@ -1,6 +1,8 @@
+import { Request } from 'express';
 import { ICreate, IUpdateById } from '../interfaces/crud';
 import {
   Filter,
+  FilterLocation,
   FilterOps,
   FilterParam,
   GetFilterParam,
@@ -70,40 +72,55 @@ export const generateUpdateData = (
   return result;
 };
 
+const retrieveParamFromLocation = (
+  req: Request,
+  location: FilterLocation,
+  key: string
+) => {
+  if (location === 'request') return (req as any)[key];
+
+  return req[location][key];
+};
+
 export const formatReadFilter = (
-  queryParams: Record<string, any>,
-  filter: GetQueryFilter
+  filterParams: Record<string, any>,
+  filter: GetQueryFilter,
+  req: Request
 ) => {
   const result: Filter = {};
 
   Object.entries(filter).forEach(([key, param]) => {
     if (key === '$or') {
       const val = formatReadFilter(
-        queryParams,
-        param as Record<string, GetFilterParam>
+        filterParams,
+        param as Record<string, GetFilterParam>,
+        req
       ) as Record<string, FilterParam>;
 
-      // skip missing query params
-      if (!Object.keys(val).length) return;
       result[key] = val;
     } else {
-      // skip missing query params
-      if (
-        !Object.keys(queryParams).includes(key) &&
-        param.overrideValue === undefined
-      )
-        return;
+      let valueToUse: any;
+      if (param.overrideValue) {
+        if (typeof param.overrideValue === 'function') {
+          valueToUse = param.overrideValue(req);
+        } else {
+          valueToUse = param.overrideValue;
+        }
+      } else if (!!param.location) {
+        valueToUse = retrieveParamFromLocation(
+          req,
+          param.location as FilterLocation,
+          key
+        );
+      } else {
+        valueToUse = filterParams[key];
+      }
+
+      if (!valueToUse) {
+        throw new HttpError('Missing filter parameter', 400);
+      }
 
       const valueFormatter = formatters[(param as GetFilterParam).value];
-
-      if (!valueFormatter)
-        throw new HttpError('Invalid filter value type', 500);
-
-      const valueToUse =
-        param.overrideValue !== undefined
-          ? param.overrideValue
-          : queryParams[key];
-
       result[key] = {
         operator: param.operator as FilterOps,
         value: valueFormatter(valueToUse)

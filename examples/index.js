@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'development';
 const { createHoney } = require('../dist');
 
 const honey = createHoney(
-  '3000',
+  '6247',
   'postgresql://postgres:12345678@localhost:5432/honey?schema=public'
 );
 
@@ -39,6 +39,21 @@ honey.updateById({
   resource: 'posts',
   params: {
     name: 'replace'
+  },
+  message: 'User updated'
+});
+
+honey.update({
+  resource: 'posts',
+  params: {
+    name: 'replace'
+  },
+  filter: {
+    name: {
+      operator: 'like',
+      value: 'string',
+      location: 'body'
+    }
   },
   message: 'User updated'
 });
