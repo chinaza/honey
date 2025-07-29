@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.38.0
+
+### Minor Changes
+
+- a896341: add standalone delete route
+
 ## 1.37.0
 
 ### Minor Changes
