@@ -1,6 +1,6 @@
 export { Controller } from './interfaces';
 export { default as createController } from './create';
 export { getByIdController, getByQueryController } from './read';
-export { updateByIdController } from './update';
-export { upsertByIdController } from './upsert';
-export { deleteByIdController } from './delete';
+export { updateByIdController, updateController } from './update';
+export { upsertByIdController, upsertController } from './upsert';
+export { deleteByIdController, deleteController } from './delete';

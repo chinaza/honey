@@ -5,7 +5,10 @@ import {
   getByIdController,
   getByQueryController,
   updateByIdController,
-  upsertByIdController
+  upsertByIdController,
+  upsertController,
+  updateController,
+  deleteController
 } from '../controllers';
 import {
   ICreate,
@@ -23,9 +26,6 @@ import { ExitMiddleware, Middleware } from '../interfaces/express';
 import { NextFunction, Request, Response } from 'express';
 import ExpressApp from './express';
 import Postgres from './postgres';
-import { upsertController } from '../controllers/upsert';
-import { updateController } from '../controllers/update';
-import { deleteController } from 'src/controllers/delete';
 
 // eslint-disable-next-line
 const defaultExitMiddleware: ExitMiddleware = (data, req, res, next) => {
