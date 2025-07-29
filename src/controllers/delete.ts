@@ -50,7 +50,8 @@ export function deleteController({
 }: DeleteControllerParams): Controller {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const filter = filterQuery && formatReadFilter(req.body, filterQuery);
+      const filter =
+        filterQuery && formatReadFilter(req.body, filterQuery, req);
 
       await db.delete(resource, filter);
 
