@@ -17,11 +17,11 @@ export function updateByIdController({
   processErrorResponse,
   filterQuery = {}
 }: UpdateByIdControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const body = generateUpdateData(req.body, params);
       const additionalFilter =
-        filterQuery && formatReadFilter(req.body, filterQuery);
+        filterQuery && formatReadFilter(req.body, filterQuery, req);
       const filter: Filter = {
         [idField]: {
           operator: '=',
@@ -52,10 +52,11 @@ export function updateController({
   filterQuery,
   processErrorResponse
 }: UpdateControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const body = generateUpdateData(req.body, params);
-      const filter = filterQuery && formatReadFilter(req.body, filterQuery);
+      const filter =
+        filterQuery && formatReadFilter(req.body, filterQuery, req);
 
       await db.update(resource, body, filter);
 

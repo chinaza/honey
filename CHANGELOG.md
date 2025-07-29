@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.37.0
+
+### Minor Changes
+
+- 660aadb: add support for filter param retrieval location and filter override value callback
+
 ## 1.36.2
 
 ### Patch Changes

@@ -29,12 +29,33 @@ export interface UpdateOpParam {
     | Record<string, OperationParam<UpdateOp>>;
 }
 
+type FilterOverrideValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | Record<string, any>;
+export type FilterLocation =
+  | 'query'
+  | 'body'
+  | 'headers'
+  | 'request'
+  | 'params';
 export type GetFilterParam = {
   value: 'string' | 'number' | 'boolean' | 'json';
-  overrideValue?: string | number | boolean | Date | Record<string, any>;
   operator: FilterOps;
+  /**
+   * Force a value to be used as filter regardless of request value
+   */
+  overrideValue?: FilterOverrideValue;
+  /**
+   * The location of the filter variable
+   */
+  location?: FilterLocation;
 };
 
 export type GetQueryFilter = {
-  [key: string]: GetFilterParam | Record<string, GetFilterParam>;
+  [key: string]: GetFilterParam;
+} & {
+  $or?: Record<string, GetFilterParam>;
 };

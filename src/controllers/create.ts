@@ -12,7 +12,7 @@ export default function createController({
   processResponseData,
   processErrorResponse
 }: CreateControllerParams): Controller {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const body = extractInsertData(req.body, params);
 
