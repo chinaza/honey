@@ -10,6 +10,7 @@ import {
 import {
   ICreate,
   ICrud,
+  IDelete,
   IDeleteById,
   IGet,
   IGetById,
@@ -24,6 +25,7 @@ import ExpressApp from './express';
 import Postgres from './postgres';
 import { upsertController } from '../controllers/upsert';
 import { updateController } from '../controllers/update';
+import { deleteController } from 'src/controllers/delete';
 
 // eslint-disable-next-line
 const defaultExitMiddleware: ExitMiddleware = (data, req, res, next) => {
@@ -189,7 +191,8 @@ export default class Honey {
     exitMiddleware,
     methodOverride,
     table,
-    filter
+    filter,
+    processErrorResponse
   }: IUpdateById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -200,7 +203,8 @@ export default class Honey {
       params,
       message,
       idField,
-      filterQuery: filter
+      filterQuery: filter,
+      processErrorResponse
     });
     this.crud({
       method: methodOverride || 'put',
@@ -220,7 +224,8 @@ export default class Honey {
     pathOverride,
     exitMiddleware,
     methodOverride,
-    table
+    table,
+    processErrorResponse
   }: IUpdate) {
     const path = pathOverride || `/${resource}`;
     resource = table || resource;
@@ -230,7 +235,8 @@ export default class Honey {
       resource,
       params,
       message,
-      filterQuery: filter
+      filterQuery: filter,
+      processErrorResponse
     });
     this.crud({
       method: methodOverride || 'put',
@@ -250,7 +256,8 @@ export default class Honey {
     pathOverride,
     exitMiddleware,
     methodOverride,
-    table
+    table,
+    processErrorResponse
   }: IUpsertById) {
     const path = pathOverride || `/${resource}/:id/upsert`;
     resource = table || resource;
@@ -260,7 +267,8 @@ export default class Honey {
       resource,
       params,
       message,
-      idField
+      idField,
+      processErrorResponse
     });
     this.crud({
       method: methodOverride || 'put',
@@ -280,7 +288,8 @@ export default class Honey {
     exitMiddleware,
     methodOverride,
     conflictTarget,
-    table
+    table,
+    processErrorResponse
   }: IUpsert) {
     const path = pathOverride || `/${resource}/:id/upsert`;
     resource = table || resource;
@@ -290,7 +299,8 @@ export default class Honey {
       resource,
       params,
       message,
-      conflictTarget
+      conflictTarget,
+      processErrorResponse
     });
     this.crud({
       method: methodOverride || 'put',
@@ -310,7 +320,8 @@ export default class Honey {
     methodOverride,
     idField,
     filter,
-    table
+    table,
+    processErrorResponse
   }: IDeleteById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -320,7 +331,38 @@ export default class Honey {
       resource,
       message,
       idField,
-      filterQuery: filter
+      filterQuery: filter,
+      processErrorResponse
+    });
+    this.crud({
+      method: methodOverride || 'delete',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
+  }
+
+  public delete({
+    resource,
+    message,
+    middleware,
+    pathOverride,
+    exitMiddleware,
+    methodOverride,
+    filter,
+    table,
+    processErrorResponse
+  }: IDelete) {
+    const path = pathOverride || `/${resource}/:id`;
+    resource = table || resource;
+
+    const controller = deleteController({
+      db: this.postgres,
+      resource,
+      message,
+      filterQuery: filter,
+      processErrorResponse
     });
     this.crud({
       method: methodOverride || 'delete',

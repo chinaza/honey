@@ -25,6 +25,8 @@ interface CrudParams {
   middleware?: Middleware[];
   /** Middleware to run after CRUD controller returns response */
   exitMiddleware?: ExitMiddleware[];
+  /** A function that is called to transform your error response data */
+  processErrorResponse?: (err: Error) => Error;
 }
 
 export type ICreate = CrudParams & {
@@ -37,7 +39,6 @@ export type ICreate = CrudParams & {
   message: string;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
-  processErrorResponse?: (err: Error) => Error;
 };
 
 export type IUpdateById = CrudParams & {
@@ -90,7 +91,6 @@ export type IGet = CrudParams & {
   };
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
-  processErrorResponse?: (err: Error) => Error;
 };
 
 export type IGetById = CrudParams & {
@@ -102,7 +102,6 @@ export type IGetById = CrudParams & {
   filter?: GetQueryFilter;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
-  processErrorResponse?: (err: Error) => Error;
 };
 
 export type IDeleteById = CrudParams & {
@@ -114,9 +113,20 @@ export type IDeleteById = CrudParams & {
   filter?: GetQueryFilter;
 };
 
-export interface GetByQueryControllerParams {
+export type IDelete = CrudParams & {
+  /** Response message */
+  message: string;
+  /** Filter builder for WHERE clause */
+  filter?: GetQueryFilter;
+};
+
+interface ControllerParams {
   db: Postgres;
   resource: string;
+  processErrorResponse?: (err: Error) => Error;
+}
+
+export interface GetByQueryControllerParams extends ControllerParams {
   fields: string[];
   filterQuery?: GetQueryFilter;
   format?: {
@@ -125,72 +135,55 @@ export interface GetByQueryControllerParams {
   };
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
-  processErrorResponse?: (err: Error) => Error;
 }
 
-export interface GetByIdControllerParams {
-  db: Postgres;
-  resource: string;
+export interface GetByIdControllerParams extends ControllerParams {
   fields: string[];
   idField?: string;
   filterQuery?: GetQueryFilter;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
-  processErrorResponse?: (err: Error) => Error;
 }
 
-export interface CreateControllerParams {
-  db: Postgres;
-  resource: string;
+export interface CreateControllerParams extends ControllerParams {
   params: ICreate['params'];
   message: string;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
-  processErrorResponse?: (err: Error) => Error;
 }
 
-export interface UpdateByIdControllerParams {
-  db: Postgres;
-  resource: string;
+export interface UpdateByIdControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField?: string;
   filterQuery?: GetQueryFilter;
-  processErrorResponse?: (err: Error) => Error;
 }
 
-export interface UpdateControllerParams {
-  db: Postgres;
-  resource: string;
+export interface UpdateControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   filterQuery?: GetQueryFilter;
-  processErrorResponse?: (err: Error) => Error;
 }
 
-export interface UpsertByIdControllerParams {
-  db: Postgres;
-  resource: string;
+export interface UpsertByIdControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField: string;
-  processErrorResponse?: (err: Error) => Error;
 }
 
-export interface UpsertControllerParams {
-  db: Postgres;
-  resource: string;
+export interface UpsertControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   conflictTarget: string[];
-  processErrorResponse?: (err: Error) => Error;
 }
 
-export interface deleteByIdControllerParams {
-  db: Postgres;
-  resource: string;
+export interface DeleteByIdControllerParams extends ControllerParams {
   message: string;
   idField?: string;
   filterQuery?: GetQueryFilter;
-  processErrorResponse?: (err: Error) => Error;
+}
+
+export interface DeleteControllerParams extends ControllerParams {
+  message: string;
+  filterQuery?: GetQueryFilter;
 }
