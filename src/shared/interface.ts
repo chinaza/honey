@@ -55,7 +55,5 @@ export type GetFilterParam = {
 };
 
 export type GetQueryFilter = {
-  [key: string]: GetFilterParam;
-} & {
-  $or?: Record<string, GetFilterParam>;
+  [key: string]: GetFilterParam | Record<string, GetFilterParam>;
 };
