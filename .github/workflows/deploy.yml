@@ -45,7 +45,7 @@ jobs:
           echo "No changeset file found, generating from template"
           cp .changeset/default.template .changeset/temp-change-set.md
       - run: yarn changeset version
-      - run: yarn npm publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: stefanzweifel/git-auto-commit-action@v4
@@ -69,6 +69,6 @@ jobs:
           echo "@promind:registry=https://registry.npmjs.org" >> ~/.npmrc
           jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
       - name: Publish to NPM
-        run: yarn publish --access public
+        run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REG_TOKEN }}
