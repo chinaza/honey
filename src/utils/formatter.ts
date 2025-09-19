@@ -116,7 +116,7 @@ export const formatReadFilter = (
         valueToUse = filterParams[key];
       }
 
-      if (!valueToUse) {
+      if (typeof valueToUse === 'undefined') {
         throw new HttpError('Missing filter parameter', 400);
       }
 
