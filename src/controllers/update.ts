@@ -15,6 +15,7 @@ export function updateByIdController({
   message,
   idField = 'id',
   processErrorResponse,
+  processResponseData,
   filterQuery = {}
 }: UpdateByIdControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
@@ -30,10 +31,14 @@ export function updateByIdController({
         ...additionalFilter
       };
 
-      await db.update(resource, body, filter);
+      const result = await db.update(resource, body, filter);
 
-      res.send({ message });
-      next({ message });
+      const data = processResponseData
+        ? processResponseData(result, req)
+        : undefined;
+
+      res.send({ message, data });
+      next({ message, data });
     } catch (error: any) {
       if (processErrorResponse) {
         error = processErrorResponse(error);
@@ -50,7 +55,8 @@ export function updateController({
   params,
   message,
   filterQuery,
-  processErrorResponse
+  processErrorResponse,
+  processResponseData
 }: UpdateControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -58,10 +64,15 @@ export function updateController({
       const filter =
         filterQuery && formatReadFilter(req.body, filterQuery, req);
 
-      await db.update(resource, body, filter);
+      const result = await db.update(resource, body, filter);
 
-      res.send({ message });
-      next({ message });
+      const data = processResponseData
+        ? processResponseData(result, req)
+        : undefined;
+
+      res.send({ message, data });
+
+      next({ message, data });
     } catch (error: any) {
       if (processErrorResponse) {
         error = processErrorResponse(error);

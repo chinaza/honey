@@ -50,6 +50,8 @@ export type IUpdateById = CrudParams & {
   idField?: string;
   /** Filter builder for WHERE clause */
   filter?: GetQueryFilter;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 };
 
 export type IUpdate = CrudParams & {
@@ -59,6 +61,8 @@ export type IUpdate = CrudParams & {
   message: string;
   /** Filter builder for WHERE clause */
   filter: GetQueryFilter;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 };
 
 export type IUpsertById = CrudParams & {
@@ -68,6 +72,8 @@ export type IUpsertById = CrudParams & {
   message: string;
   /** column to run filter by id on */
   idField: string;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 };
 
 export type IUpsert = CrudParams & {
@@ -77,6 +83,8 @@ export type IUpsert = CrudParams & {
   message: string;
   /** column to use to determine conflict */
   conflictTarget: string[];
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 };
 
 export type IGet = CrudParams & {
@@ -157,24 +165,32 @@ export interface UpdateByIdControllerParams extends ControllerParams {
   message: string;
   idField?: string;
   filterQuery?: GetQueryFilter;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpdateControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   filterQuery?: GetQueryFilter;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpsertByIdControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField: string;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpsertControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   conflictTarget: string[];
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface DeleteByIdControllerParams extends ControllerParams {

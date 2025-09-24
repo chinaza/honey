@@ -52,11 +52,12 @@ export default class Postgres {
   public async update(table: string, data: UpdateOpParam, filter?: Filter) {
     const { query, replacements } = generateUpdateQuery(table, data, filter);
 
-    await config.db.query(query, {
-      type: QueryTypes.UPDATE,
+    const result = await config.db.query(query, {
+      type: QueryTypes.SELECT,
       raw: true,
       replacements: [...replacements]
     });
+    return result;
   }
 
   public async delete(table: string, filter?: Filter) {
@@ -80,10 +81,12 @@ export default class Postgres {
       conflictTarget
     );
 
-    await config.db.query(query, {
-      type: QueryTypes.INSERT,
+    const result = await config.db.query(query, {
+      type: QueryTypes.SELECT,
       raw: true,
       replacements: [...replacements]
     });
+
+    return result;
   }
 }

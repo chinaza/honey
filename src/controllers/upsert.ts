@@ -13,7 +13,8 @@ export function upsertByIdController({
   params,
   message,
   idField = 'id',
-  processErrorResponse
+  processErrorResponse,
+  processResponseData
 }: UpsertByIdControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -21,10 +22,15 @@ export function upsertByIdController({
       params = { ...params, [idField]: 'replace' };
       const body = generateUpdateData(req.body, params);
 
-      await db.upsert(resource, body, [idField]);
+      const result = await db.upsert(resource, body, [idField]);
 
-      res.send({ message });
-      next({ message });
+      const data = processResponseData
+        ? processResponseData(result, req)
+        : undefined;
+
+      res.send({ message, data });
+
+      next({ message, data });
     } catch (error: any) {
       if (processErrorResponse) {
         error = processErrorResponse(error);
@@ -41,16 +47,22 @@ export function upsertController({
   params,
   message,
   conflictTarget,
-  processErrorResponse
+  processErrorResponse,
+  processResponseData
 }: UpsertControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const body = generateUpdateData(req.body, params);
 
-      await db.upsert(resource, body, conflictTarget);
+      const result = await db.upsert(resource, body, conflictTarget);
 
-      res.send({ message });
-      next({ message });
+      const data = processResponseData
+        ? processResponseData(result, req)
+        : undefined;
+
+      res.send({ message, data });
+
+      next({ message, data });
     } catch (error: any) {
       if (processErrorResponse) {
         error = processErrorResponse(error);

@@ -115,7 +115,10 @@ export const generateUpdateQuery = (
     q = applyFilter(q, filter);
   }
 
-  const { sql: query, bindings: replacements } = q.update(updateData).toSQL();
+  const { sql: query, bindings: replacements } = q
+    .update(updateData)
+    .returning('*')
+    .toSQL();
   console.log(query, replacements);
   return { query, replacements };
 };
@@ -169,6 +172,7 @@ export const generateUpsertQuery = (
     .insert(insertData)
     .onConflict(conflictTarget)
     .merge(updateData)
+    .returning('*')
     .toSQL();
 
   return { query, replacements };

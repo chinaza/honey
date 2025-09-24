@@ -192,7 +192,8 @@ export default class Honey {
     methodOverride,
     table,
     filter,
-    processErrorResponse
+    processErrorResponse,
+    processResponseData
   }: IUpdateById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -204,7 +205,8 @@ export default class Honey {
       message,
       idField,
       filterQuery: filter,
-      processErrorResponse
+      processErrorResponse,
+      processResponseData
     });
     this.crud({
       method: methodOverride || 'put',
@@ -225,7 +227,8 @@ export default class Honey {
     exitMiddleware,
     methodOverride,
     table,
-    processErrorResponse
+    processErrorResponse,
+    processResponseData
   }: IUpdate) {
     const path = pathOverride || `/${resource}`;
     resource = table || resource;
@@ -236,7 +239,8 @@ export default class Honey {
       params,
       message,
       filterQuery: filter,
-      processErrorResponse
+      processErrorResponse,
+      processResponseData
     });
     this.crud({
       method: methodOverride || 'put',
@@ -257,7 +261,8 @@ export default class Honey {
     exitMiddleware,
     methodOverride,
     table,
-    processErrorResponse
+    processErrorResponse,
+    processResponseData
   }: IUpsertById) {
     const path = pathOverride || `/${resource}/:id/upsert`;
     resource = table || resource;
@@ -268,7 +273,8 @@ export default class Honey {
       params,
       message,
       idField,
-      processErrorResponse
+      processErrorResponse,
+      processResponseData
     });
     this.crud({
       method: methodOverride || 'put',
@@ -289,7 +295,8 @@ export default class Honey {
     methodOverride,
     conflictTarget,
     table,
-    processErrorResponse
+    processErrorResponse,
+    processResponseData
   }: IUpsert) {
     const path = pathOverride || `/${resource}/:id/upsert`;
     resource = table || resource;
@@ -300,7 +307,8 @@ export default class Honey {
       params,
       message,
       conflictTarget,
-      processErrorResponse
+      processErrorResponse,
+      processResponseData
     });
     this.crud({
       method: methodOverride || 'put',
