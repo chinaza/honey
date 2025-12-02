@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.39.0
+
+### Minor Changes
+
+- dec4f79: introduce joins and custom queries
+
 ## 1.38.8
 
 ### Patch Changes
