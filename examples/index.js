@@ -71,4 +71,17 @@ honey.deleteById({
   message: 'User deleted'
 });
 
+honey.query({
+  resource: 'posts',
+  pathOverride: '/post/custom-query',
+  query: (knex, req) => {
+    const name = req.query.name || '';
+    // Knex automatically handles bindings for standard methods.
+    // For raw SQL fragments, you can pass bindings explicitly as the second argument:
+    return knex('posts')
+      .select('id', 'name')
+      .where(knex.raw('name ILIKE ?', [`%${name}%`]));
+  }
+});
+
 honey.startServer();

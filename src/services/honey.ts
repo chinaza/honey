@@ -8,7 +8,8 @@ import {
   upsertByIdController,
   upsertController,
   updateController,
-  deleteController
+  deleteController,
+  queryController
 } from '../controllers';
 import {
   ICreate,
@@ -20,7 +21,8 @@ import {
   IUpdate,
   IUpdateById,
   IUpsert,
-  IUpsertById
+  IUpsertById,
+  IQuery
 } from '../interfaces/crud';
 import { ExitMiddleware, Middleware } from '../interfaces/express';
 import { NextFunction, Request, Response } from 'express';
@@ -123,7 +125,8 @@ export default class Honey {
     methodOverride,
     processResponseData,
     processErrorResponse,
-    table
+    table,
+    joins
   }: IGet) {
     const path = pathOverride || `/${resource}`;
     resource = table || resource;
@@ -135,7 +138,8 @@ export default class Honey {
       filterQuery: filter,
       format,
       processResponseData,
-      processErrorResponse
+      processErrorResponse,
+      joins
     });
     this.crud({
       method: methodOverride || 'get',
@@ -157,7 +161,8 @@ export default class Honey {
     processResponseData,
     processErrorResponse,
     table,
-    filter
+    filter,
+    joins
   }: IGetById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -169,7 +174,8 @@ export default class Honey {
       idField: idField || 'id',
       processResponseData,
       processErrorResponse,
-      filterQuery: filter
+      filterQuery: filter,
+      joins
     });
 
     this.crud({
@@ -374,6 +380,33 @@ export default class Honey {
     });
     this.crud({
       method: methodOverride || 'delete',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
+  }
+
+  public query({
+    resource,
+    query,
+    middleware,
+    pathOverride,
+    exitMiddleware,
+    methodOverride,
+    processErrorResponse,
+    processResponseData
+  }: IQuery) {
+    const path = pathOverride || `/${resource}`;
+
+    const controller = queryController({
+      db: this.postgres,
+      query,
+      processErrorResponse,
+      processResponseData
+    });
+    this.crud({
+      method: methodOverride || 'get',
       path,
       controller,
       middleware,

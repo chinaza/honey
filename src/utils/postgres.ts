@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Filter, FilterParam, UpdateOpParam } from '../shared/interface';
+import { Filter, FilterParam, UpdateOpParam, Join } from '../shared/interface';
 import { getKnex } from './db';
 
 export const applyFilter = (query: Knex.QueryBuilder, filter: Filter = {}) => {
@@ -53,7 +53,8 @@ export const generateReadQuery = (
   fields: string[],
   filter?: Filter,
   paginate?: { page: number; limit: number },
-  format?: { sort: 'ASC' | 'DESC'; sortField: string }
+  format?: { sort: 'ASC' | 'DESC'; sortField: string },
+  joins?: Join[]
 ) => {
   const knex = getKnex();
 
@@ -66,6 +67,40 @@ export const generateReadQuery = (
       ...fields.map((field) => knex.raw(`?? as ??`, [field, field])),
       knex.raw('count(??) OVER() AS honey_total_count', [fields[0]])
     ]);
+  }
+
+  // Apply joins
+  if (joins && joins.length > 0) {
+    joins.forEach((join) => {
+      const joinTable = join.alias
+        ? `${join.table} as ${join.alias}`
+        : join.table;
+      const joinType = join.type || 'inner';
+      const operator = join.on.operator || '=';
+
+      switch (joinType) {
+        case 'left':
+          q.leftJoin(joinTable, join.on.left, operator, join.on.right);
+          break;
+        case 'right':
+          q.rightJoin(joinTable, join.on.left, operator, join.on.right);
+          break;
+        case 'full':
+          q.fullOuterJoin(joinTable, join.on.left, operator, join.on.right);
+          break;
+        case 'cross':
+          q.crossJoin(
+            join.alias
+              ? knex.raw('?? as ??', [join.table, join.alias])
+              : knex.raw('??', [join.table])
+          );
+          break;
+        case 'inner':
+        default:
+          q.innerJoin(joinTable, join.on.left, operator, join.on.right);
+          break;
+      }
+    });
   }
 
   // Apply filters

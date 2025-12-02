@@ -1,6 +1,7 @@
 import { Controller } from '../controllers/interfaces';
+import Knex from 'knex';
 import Postgres from '../services/postgres';
-import { GetQueryFilter } from '../shared/interface';
+import { GetQueryFilter, Join } from '../shared/interface';
 import { ExitMiddleware, Middleware } from './express';
 import { Request } from 'express';
 
@@ -97,6 +98,8 @@ export type IGet = CrudParams & {
     /** column to sort by */
     sortField: string;
   };
+  /** Join configurations for related tables */
+  joins?: Join[];
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
 };
@@ -108,6 +111,8 @@ export type IGetById = CrudParams & {
   idField?: string;
   /** Filter builder for WHERE clause */
   filter?: GetQueryFilter;
+  /** Join configurations for related tables */
+  joins?: Join[];
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
 };
@@ -128,6 +133,13 @@ export type IDelete = CrudParams & {
   filter?: GetQueryFilter;
 };
 
+export type IQuery = Omit<CrudParams, 'table'> & {
+  /** A function that returns a knex query */
+  query: (knex: Knex.Knex, req: Request) => Knex.Knex.QueryBuilder;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
+};
+
 interface ControllerParams {
   db: Postgres;
   resource: string;
@@ -141,6 +153,7 @@ export interface GetByQueryControllerParams extends ControllerParams {
     sort: 'ASC' | 'DESC';
     sortField: string;
   };
+  joins?: Join[];
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
 }
@@ -149,6 +162,7 @@ export interface GetByIdControllerParams extends ControllerParams {
   fields: string[];
   idField?: string;
   filterQuery?: GetQueryFilter;
+  joins?: Join[];
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
 }
@@ -203,3 +217,9 @@ export interface DeleteControllerParams extends ControllerParams {
   message: string;
   filterQuery?: GetQueryFilter;
 }
+
+export type QueryControllerParams = Omit<ControllerParams, 'resource'> & {
+  query: (knex: Knex.Knex, req: Request) => Knex.Knex.QueryBuilder;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
+};

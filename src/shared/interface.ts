@@ -57,3 +57,23 @@ export type GetFilterParam = {
 export type GetQueryFilter = {
   [key: string]: GetFilterParam | Record<string, GetFilterParam>;
 };
+
+export type JoinType = 'inner' | 'left' | 'right' | 'full' | 'cross';
+
+export interface Join {
+  /** The table to join */
+  table: string;
+  /** The type of join (default: 'inner') */
+  type?: JoinType;
+  /** The join condition - e.g., 'users.id' = 'posts.user_id' */
+  on: {
+    /** Left side of join condition (e.g., 'users.id') */
+    left: string;
+    /** Right side of join condition (e.g., 'posts.user_id') */
+    right: string;
+    /** Operator for join condition (default: '=') */
+    operator?: '=' | '!=' | '<' | '<=' | '>' | '>=';
+  };
+  /** Alias for the joined table (optional) */
+  alias?: string;
+}

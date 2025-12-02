@@ -7,7 +7,7 @@ import {
   generateUpsertQuery
 } from '../utils/postgres';
 import { QueryTypes } from 'sequelize';
-import { Filter, UpdateOpParam } from '../shared/interface';
+import { Filter, UpdateOpParam, Join } from '../shared/interface';
 
 export default class Postgres {
   public async read(
@@ -15,16 +15,27 @@ export default class Postgres {
     fields: string[],
     filter?: Filter,
     paginate?: { page: number; limit: number },
-    format?: { sort: 'ASC' | 'DESC'; sortField: string }
+    format?: { sort: 'ASC' | 'DESC'; sortField: string },
+    joins?: Join[]
   ) {
     const { query, replacements } = generateReadQuery(
       table,
       fields,
       filter,
       paginate,
-      format
+      format,
+      joins
     );
 
+    const result = await config.db.query(query, {
+      type: QueryTypes.SELECT,
+      raw: true,
+      replacements: [...replacements]
+    });
+    return result;
+  }
+
+  public async query(query: string, replacements: any[]) {
     const result = await config.db.query(query, {
       type: QueryTypes.SELECT,
       raw: true,

@@ -14,7 +14,8 @@ export function getByIdController({
   idField = 'id',
   processResponseData,
   processErrorResponse,
-  filterQuery = {}
+  filterQuery = {},
+  joins
 }: GetByIdControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -22,13 +23,20 @@ export function getByIdController({
 
       const filter = formatReadFilter(req.query, filterQuery, req);
 
-      const data = await db.read(resource, fields, {
-        [idField]: {
-          value: id,
-          operator: '='
+      const data = await db.read(
+        resource,
+        fields,
+        {
+          [idField]: {
+            value: id,
+            operator: '='
+          },
+          ...filter
         },
-        ...filter
-      });
+        undefined,
+        undefined,
+        joins
+      );
 
       if (!data?.length) {
         throw new HttpError('Record does not exist', 404);
@@ -57,7 +65,8 @@ export function getByQueryController({
   filterQuery,
   format,
   processResponseData,
-  processErrorResponse
+  processErrorResponse,
+  joins
 }: GetByQueryControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -74,7 +83,8 @@ export function getByQueryController({
         fields,
         filter,
         paginate,
-        format
+        format,
+        joins
       );
       let total = 0;
       if (paginate) {
