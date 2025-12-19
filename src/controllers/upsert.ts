@@ -25,7 +25,7 @@ export function upsertByIdController({
       const result = await db.upsert(resource, body, [idField]);
 
       const data = processResponseData
-        ? processResponseData(result, req)
+        ? processResponseData(result?.[0], req)
         : undefined;
 
       res.send({ message, data });
@@ -57,7 +57,7 @@ export function upsertController({
       const result = await db.upsert(resource, body, conflictTarget);
 
       const data = processResponseData
-        ? processResponseData(result, req)
+        ? processResponseData(result?.[0], req)
         : undefined;
 
       res.send({ message, data });

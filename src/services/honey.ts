@@ -270,7 +270,7 @@ export default class Honey {
     processErrorResponse,
     processResponseData
   }: IUpsertById) {
-    const path = pathOverride || `/${resource}/:id/upsert`;
+    const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
 
     const controller = upsertByIdController({
@@ -304,7 +304,7 @@ export default class Honey {
     processErrorResponse,
     processResponseData
   }: IUpsert) {
-    const path = pathOverride || `/${resource}/:id/upsert`;
+    const path = pathOverride || `/${resource}`;
     resource = table || resource;
 
     const controller = upsertController({
