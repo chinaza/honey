@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.40.0
+
+### Minor Changes
+
+- 2a73ea2: Update the `upsertByIdController` and `upsertController` to handle the response data correctly by accessing the first element of the result. This change ensures proper data formatting in the response.
+
 ## 1.39.1
 
 ### Patch Changes
