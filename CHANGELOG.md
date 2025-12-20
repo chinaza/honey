@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.41.0
+
+### Minor Changes
+
+- 8f82e82: support async query functions in queryController
+
 ## 1.40.0
 
 ### Minor Changes
