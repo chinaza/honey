@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.41.2
+
+### Patch Changes
+
+- afe3d4e: remove async support from query function
+
 ## 1.41.1
 
 ### Patch Changes
