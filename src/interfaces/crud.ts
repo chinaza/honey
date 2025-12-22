@@ -135,10 +135,7 @@ export type IDelete = CrudParams & {
 
 export type IQuery = Omit<CrudParams, 'table'> & {
   /** A function that returns a knex query */
-  query: (
-    knex: Knex.Knex,
-    req: Request
-  ) => Knex.Knex.QueryBuilder | Promise<Knex.Knex.QueryBuilder>;
+  query: (knex: Knex.Knex, req: Request) => Knex.Knex.QueryBuilder;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
 };
@@ -222,10 +219,7 @@ export interface DeleteControllerParams extends ControllerParams {
 }
 
 export type QueryControllerParams = Omit<ControllerParams, 'resource'> & {
-  query: (
-    knex: Knex.Knex,
-    req: Request
-  ) => Knex.Knex.QueryBuilder | Promise<Knex.Knex.QueryBuilder>;
+  query: (knex: Knex.Knex, req: Request) => Knex.Knex.QueryBuilder;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
 };

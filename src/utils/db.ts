@@ -59,5 +59,10 @@ export function createModel<
 
 export const getKnex = () =>
   createSingleton('knex', () => {
-    return Knex({ client: 'pg' });
+    return Knex({
+      client: 'pg', // or 'mysql2', 'sqlite3', etc.
+      // Do not provide connection. Also disable pool to be explicit.
+      connection: undefined as any,
+      pool: { min: 0, max: 0 }
+    });
   });

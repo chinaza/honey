@@ -16,8 +16,7 @@ export function queryController({
         limit || page ? { page: page || 1, limit: limit || 10 } : undefined;
 
       const knex = getKnex();
-      // Support both async and non-async query functions
-      let queryBuilder = await query(knex, req);
+      let queryBuilder = query(knex, req);
       if (paginate) {
         queryBuilder = queryBuilder
           .limit(paginate.limit)
