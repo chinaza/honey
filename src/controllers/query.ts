@@ -17,7 +17,7 @@ export function queryController({
 
       const knex = getKnex();
       // Support both async and non-async query functions
-      let queryBuilder = await Promise.resolve(query(knex, req));
+      let queryBuilder = await query(knex, req);
       if (paginate) {
         queryBuilder = queryBuilder
           .limit(paginate.limit)
