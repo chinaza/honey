@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.41.1
+
+### Patch Changes
+
+- 2c30339: Remove unnecessary Promise.resolve around the query function call
+
 ## 1.41.0
 
 ### Minor Changes
