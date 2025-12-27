@@ -34,7 +34,7 @@ export function updateByIdController({
       const result = await db.update(resource, body, filter);
 
       const data = processResponseData
-        ? processResponseData(result, req)
+        ? await processResponseData(result, req)
         : undefined;
 
       res.send({ message, data });
@@ -67,7 +67,7 @@ export function updateController({
       const result = await db.update(resource, body, filter);
 
       const data = processResponseData
-        ? processResponseData(result, req)
+        ? await processResponseData(result, req)
         : undefined;
 
       res.send({ message, data });

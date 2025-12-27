@@ -27,7 +27,7 @@ export function queryController({
       const result = await db.query(sql, [...bindings]);
 
       if (processResponseData) {
-        return res.send({ data: processResponseData(result, req) });
+        return res.send({ data: await processResponseData(result, req) });
       }
 
       return res.send({ data: result });

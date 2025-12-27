@@ -144,6 +144,8 @@ interface ControllerParams {
   db: Postgres;
   resource: string;
   processErrorResponse?: (err: Error) => Error;
+  /** A function that is called to transform your response data */
+  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface GetByQueryControllerParams extends ControllerParams {
@@ -154,8 +156,6 @@ export interface GetByQueryControllerParams extends ControllerParams {
     sortField: string;
   };
   joins?: Join[];
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface GetByIdControllerParams extends ControllerParams {
@@ -163,15 +163,11 @@ export interface GetByIdControllerParams extends ControllerParams {
   idField?: string;
   filterQuery?: GetQueryFilter;
   joins?: Join[];
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface CreateControllerParams extends ControllerParams {
   params: ICreate['params'];
   message: string;
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpdateByIdControllerParams extends ControllerParams {
@@ -179,47 +175,39 @@ export interface UpdateByIdControllerParams extends ControllerParams {
   message: string;
   idField?: string;
   filterQuery?: GetQueryFilter;
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpdateControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   filterQuery?: GetQueryFilter;
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpsertByIdControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField: string;
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
 export interface UpsertControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   conflictTarget: string[];
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 }
 
-export interface DeleteByIdControllerParams extends ControllerParams {
+export interface DeleteByIdControllerParams
+  extends Omit<ControllerParams, 'processResponseData'> {
   message: string;
   idField?: string;
   filterQuery?: GetQueryFilter;
 }
 
-export interface DeleteControllerParams extends ControllerParams {
+export interface DeleteControllerParams
+  extends Omit<ControllerParams, 'processResponseData'> {
   message: string;
   filterQuery?: GetQueryFilter;
 }
 
 export type QueryControllerParams = Omit<ControllerParams, 'resource'> & {
   query: (knex: Knex.Knex, req: Request) => Knex.Knex.QueryBuilder;
-  /** A function that is called to transform your response data */
-  processResponseData?: (data: any, req: Request) => any;
 };
