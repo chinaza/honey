@@ -16,7 +16,7 @@ const formatters: Record<string, Function> = {
   number: Number,
   boolean: Boolean,
   json: JSON.stringify,
-  object: JSON.stringify
+  csv: (value: string) => value.split(',')
 };
 
 export const extractInsertData = (

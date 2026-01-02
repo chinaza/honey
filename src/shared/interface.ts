@@ -5,6 +5,8 @@ export type FilterOps =
   | '<='
   | '>'
   | '>='
+  | 'in'
+  | 'not in'
   | 'like'
   | 'not like';
 
@@ -42,7 +44,7 @@ export type FilterLocation =
   | 'request'
   | 'params';
 export type GetFilterParam = {
-  value: 'string' | 'number' | 'boolean' | 'json';
+  value: 'string' | 'number' | 'boolean' | 'json' | 'csv';
   operator: FilterOps;
   /**
    * Force a value to be used as filter regardless of request value
