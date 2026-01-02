@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.42.0
+
+### Minor Changes
+
+- 4c3bad9: add support for in/not-in filters using csv
+
 ## 1.41.3
 
 ### Patch Changes
