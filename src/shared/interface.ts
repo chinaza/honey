@@ -44,7 +44,7 @@ export type FilterLocation =
   | 'request'
   | 'params';
 export type GetFilterParam = {
-  value: 'string' | 'number' | 'boolean' | 'json' | 'csv';
+  value: 'string' | 'number' | 'boolean' | 'json' | 'csv' | 'as-is';
   operator: FilterOps;
   /**
    * Force a value to be used as filter regardless of request value
