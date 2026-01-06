@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.44.0
+
+### Minor Changes
+
+- f827d97: Add `doNothingOnConflict` option for upsert operations to prevent updates on conflict.
+
 ## 1.43.0
 
 ### Minor Changes
