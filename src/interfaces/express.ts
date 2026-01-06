@@ -1,4 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request as ExpressRequest, Response } from 'express';
+
+export interface Request extends ExpressRequest {
+  isInsert?: boolean;
+}
 
 export interface Metadata {
   fallbackErrorMessage?: string;
@@ -18,4 +22,4 @@ export type ExitMiddleware = (
   next: NextFunction
 ) => void;
 
-export type { Request, Response };
+export type { Response };

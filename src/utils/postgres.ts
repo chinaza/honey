@@ -207,7 +207,7 @@ export const generateUpsertQuery = (
     .insert(insertData)
     .onConflict(conflictTarget)
     .merge(updateData)
-    .returning('*')
+    .returning(['*', knex.raw('(xmax = 0) as is_insert')])
     .toSQL();
 
   return { query, replacements };

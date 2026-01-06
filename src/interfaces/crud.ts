@@ -2,8 +2,7 @@ import { Controller } from '../controllers/interfaces';
 import Knex from 'knex';
 import Postgres from '../services/postgres';
 import { GetQueryFilter, Join } from '../shared/interface';
-import { ExitMiddleware, Middleware } from './express';
-import { Request } from 'express';
+import { ExitMiddleware, Middleware, Request } from './express';
 
 export interface ICrud {
   method: 'get' | 'post' | 'put' | 'delete' | 'patch';

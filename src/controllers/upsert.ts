@@ -4,7 +4,8 @@ import {
 } from '../interfaces/crud';
 import HttpError, { handleHttpError } from '../utils/error';
 import { generateUpdateData } from '../utils/formatter';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { Request } from '../interfaces/express';
 import { Controller } from './interfaces';
 
 export function upsertByIdController({
@@ -23,6 +24,10 @@ export function upsertByIdController({
       const body = generateUpdateData(req.body, params);
 
       const result = await db.upsert(resource, body, [idField]);
+
+      if (result?.[0]) {
+        req.isInsert = (result[0] as any).is_insert;
+      }
 
       const data = processResponseData
         ? await processResponseData(result?.[0], req)
@@ -55,6 +60,10 @@ export function upsertController({
       const body = generateUpdateData(req.body, params);
 
       const result = await db.upsert(resource, body, conflictTarget);
+
+      if (result?.[0]) {
+        req.isInsert = (result[0] as any).is_insert;
+      }
 
       const data = processResponseData
         ? await processResponseData(result?.[0], req)
