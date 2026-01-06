@@ -172,7 +172,8 @@ export const generateDeleteQuery = (table: string, filter?: Filter) => {
 export const generateUpsertQuery = (
   table: string,
   data: UpdateOpParam,
-  conflictTarget: string[]
+  conflictTarget: string[],
+  doNothingOnConflict = false
 ) => {
   const knex = getKnex();
 
@@ -185,23 +186,31 @@ export const generateUpsertQuery = (
   // Prepare update data for conflict resolution
   const updateData: Record<string, Knex.Raw | UpdateOpParam[string]['value']> =
     {};
-  Object.entries(data).forEach(([field, fieldData]) => {
-    const param = fieldData;
 
-    if (param.operator === 'inc') {
-      updateData[field] = knex.raw('?? + ?', [
-        `${table}.${field}`,
-        param.value
-      ]);
-    } else if (param.operator === 'dec') {
-      updateData[field] = knex.raw('?? - ?', [
-        `${table}.${field}`,
-        param.value
-      ]);
-    } else {
-      updateData[field] = param.value;
-    }
-  });
+  if (doNothingOnConflict) {
+    // Dummy update to force returning the row
+    // We update the first conflict target column to itself
+    const conflictField = conflictTarget[0];
+    updateData[conflictField] = knex.raw('??', [`${table}.${conflictField}`]);
+  } else {
+    Object.entries(data).forEach(([field, fieldData]) => {
+      const param = fieldData;
+
+      if (param.operator === 'inc') {
+        updateData[field] = knex.raw('?? + ?', [
+          `${table}.${field}`,
+          param.value
+        ]);
+      } else if (param.operator === 'dec') {
+        updateData[field] = knex.raw('?? - ?', [
+          `${table}.${field}`,
+          param.value
+        ]);
+      } else {
+        updateData[field] = param.value;
+      }
+    });
+  }
 
   const { sql: query, bindings: replacements } = knex(table)
     .insert(insertData)

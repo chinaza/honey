@@ -268,7 +268,8 @@ export default class Honey {
     methodOverride,
     table,
     processErrorResponse,
-    processResponseData
+    processResponseData,
+    doNothingOnConflict
   }: IUpsertById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -280,7 +281,8 @@ export default class Honey {
       message,
       idField,
       processErrorResponse,
-      processResponseData
+      processResponseData,
+      doNothingOnConflict
     });
     this.crud({
       method: methodOverride || 'put',
@@ -302,7 +304,8 @@ export default class Honey {
     conflictTarget,
     table,
     processErrorResponse,
-    processResponseData
+    processResponseData,
+    doNothingOnConflict
   }: IUpsert) {
     const path = pathOverride || `/${resource}`;
     resource = table || resource;
@@ -314,7 +317,8 @@ export default class Honey {
       message,
       conflictTarget,
       processErrorResponse,
-      processResponseData
+      processResponseData,
+      doNothingOnConflict
     });
     this.crud({
       method: methodOverride || 'put',

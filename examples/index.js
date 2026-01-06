@@ -63,7 +63,9 @@ honey.upsertById({
   params: {
     name: 'replace'
   },
-  message: 'User upserted'
+  message: 'User upserted',
+  methodOverride: 'post',
+  doNothingOnConflict: true
 });
 
 honey.deleteById({

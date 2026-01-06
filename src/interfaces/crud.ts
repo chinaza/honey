@@ -74,6 +74,8 @@ export type IUpsertById = CrudParams & {
   idField: string;
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  /** Whether to do nothing (fetch existing) on conflict. Defaults to false (update on conflict) */
+  doNothingOnConflict?: boolean;
 };
 
 export type IUpsert = CrudParams & {
@@ -85,6 +87,8 @@ export type IUpsert = CrudParams & {
   conflictTarget: string[];
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  /** Whether to do nothing (fetch existing) on conflict. Defaults to false (update on conflict) */
+  doNothingOnConflict?: boolean;
 };
 
 export type IGet = CrudParams & {
@@ -186,12 +190,14 @@ export interface UpsertByIdControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   idField: string;
+  doNothingOnConflict?: boolean;
 }
 
 export interface UpsertControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;
   conflictTarget: string[];
+  doNothingOnConflict?: boolean;
 }
 
 export interface DeleteByIdControllerParams

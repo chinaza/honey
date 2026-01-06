@@ -84,12 +84,14 @@ export default class Postgres {
   public async upsert(
     table: string,
     data: UpdateOpParam,
-    conflictTarget: string[]
+    conflictTarget: string[],
+    doNothingOnConflict = false
   ) {
     const { query, replacements } = generateUpsertQuery(
       table,
       data,
-      conflictTarget
+      conflictTarget,
+      doNothingOnConflict
     );
 
     const result = await config.db.query(query, {

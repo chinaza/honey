@@ -15,7 +15,8 @@ export function upsertByIdController({
   message,
   idField = 'id',
   processErrorResponse,
-  processResponseData
+  processResponseData,
+  doNothingOnConflict
 }: UpsertByIdControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -23,7 +24,12 @@ export function upsertByIdController({
       params = { ...params, [idField]: 'replace' };
       const body = generateUpdateData(req.body, params);
 
-      const result = await db.upsert(resource, body, [idField]);
+      const result = await db.upsert(
+        resource,
+        body,
+        [idField],
+        doNothingOnConflict
+      );
 
       if (result?.[0]) {
         req.isInsert = (result[0] as any).is_insert;
@@ -53,13 +59,19 @@ export function upsertController({
   message,
   conflictTarget,
   processErrorResponse,
-  processResponseData
+  processResponseData,
+  doNothingOnConflict
 }: UpsertControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const body = generateUpdateData(req.body, params);
 
-      const result = await db.upsert(resource, body, conflictTarget);
+      const result = await db.upsert(
+        resource,
+        body,
+        conflictTarget,
+        doNothingOnConflict
+      );
 
       if (result?.[0]) {
         req.isInsert = (result[0] as any).is_insert;
