@@ -16,6 +16,8 @@ const formatters: Record<string, Function> = {
   number: Number,
   boolean: Boolean,
   json: JSON.stringify,
+  // Required for updating JSON fields
+  object: JSON.stringify,
   csv: (value: string) => value.split(','),
   'as-is': (value: any) => value
 };
