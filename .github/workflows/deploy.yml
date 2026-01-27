@@ -44,6 +44,10 @@ jobs:
           echo "No changeset file found, generating from template"
           cp .changeset/default.template .changeset/temp-change-set.md
       - run: yarn changeset version
+      - name: Get New Version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "NEW_VERSION=$VERSION" >> $GITHUB_ENV
       - run: yarn build
       - run: yarn npm publish
         env:
@@ -51,14 +55,14 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Bump version
-          commit_options: '--no-verify --signoff'
-          file_pattern: '.changeset/* CHANGELOG.md package.json'
+          commit_options: "--no-verify --signoff"
+          file_pattern: ".changeset/* CHANGELOG.md package.json"
           commit_user_name: Naza Bot
           commit_user_email: bot@chinaza.dev
           commit_author: Author <actions@github.com>
-          status_options: '--untracked-files=no'
-          add_options: '-u'
-          push_options: '--force'
+          status_options: "--untracked-files=no"
+          add_options: "-u"
+          push_options: "--force"
           skip_dirty_check: true
           skip_fetch: true
           skip_checkout: true
@@ -70,3 +74,11 @@ jobs:
         run: yarn npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REG_TOKEN }}
+      - name: Trigger Generator Update
+        if: success()
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          repository: chinaza/generator-honeyjs
+          event-type: update_honey_version
+          client-payload: '{"version": "${{ env.NEW_VERSION }}"}'
