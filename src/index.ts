@@ -54,3 +54,4 @@ export type {
 export * from 'sequelize';
 export { Knex } from 'knex';
 export { validateRequestData } from './utils/validation';
+export { createReqTransit } from './utils/transit';
