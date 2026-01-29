@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.46.0
+
+### Minor Changes
+
+- 6889afa: Add request transit utility for Express requests and upgrade TypeScript to 5.8.3.
+
 ## 1.45.1
 
 ### Patch Changes
