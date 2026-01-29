@@ -23,7 +23,7 @@ export function getByIdController({
 
       const filter = formatReadFilter(req.query, filterQuery, req);
 
-      const data = await db.read(
+      let data = await db.read(
         resource,
         fields,
         {
@@ -42,10 +42,12 @@ export function getByIdController({
         throw new HttpError('Record does not exist', 404);
       }
 
+      data = processResponseData
+        ? await processResponseData(data[0], req)
+        : data[0];
+
       res.send({
-        data: processResponseData
-          ? await processResponseData(data[0], req)
-          : data[0]
+        data
       });
       next({ data });
     } catch (error: any) {

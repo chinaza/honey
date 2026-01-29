@@ -16,18 +16,18 @@ export default function createController({
     try {
       const body = extractInsertData(req.body, params);
 
-      const data = await db.create(resource, body);
+      let data = await db.create(resource, body);
       const id = data[0].id;
+
+      data =
+        req.body.dataOverride ||
+        (processResponseData ? await processResponseData({ id }, req) : { id });
 
       res.send({
         message,
-        data:
-          req.body.dataOverride ||
-          (processResponseData
-            ? await processResponseData({ id }, req)
-            : { id })
+        data
       });
-      next({ message, data: { id } });
+      next({ message, data });
     } catch (error: any) {
       if (processErrorResponse) {
         error = processErrorResponse(error);

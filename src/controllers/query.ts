@@ -26,11 +26,12 @@ export function queryController({
 
       const result = await db.query(sql, [...bindings]);
 
-      if (processResponseData) {
-        return res.send({ data: await processResponseData(result, req) });
-      }
+      const data = processResponseData
+        ? await processResponseData(result, req)
+        : result;
 
-      return res.send({ data: result });
+      res.send({ data });
+      next({ data });
     } catch (e) {
       if (processErrorResponse) {
         return next(processErrorResponse(e as Error));
