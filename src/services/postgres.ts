@@ -4,7 +4,8 @@ import {
   generateDeleteQuery,
   generateReadQuery,
   generateUpdateQuery,
-  generateUpsertQuery
+  generateUpsertQuery,
+  nestResults
 } from '../utils/postgres';
 import { QueryTypes } from 'sequelize';
 import { Filter, UpdateOpParam, Join } from '../shared/interface';
@@ -27,11 +28,16 @@ export default class Postgres {
       joins
     );
 
-    const result = await config.db.query(query, {
+    const result: any[] = await config.db.query(query, {
       type: QueryTypes.SELECT,
       raw: true,
       replacements: [...replacements]
     });
+
+    if (joins?.length) {
+      return nestResults(result, joins);
+    }
+
     return result;
   }
 

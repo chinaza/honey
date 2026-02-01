@@ -2,6 +2,74 @@ import { Knex } from 'knex';
 import { Filter, FilterParam, UpdateOpParam, Join } from '../shared/interface';
 import { getKnex } from './db';
 
+export const NESTED_DELIMITER = '__hj__';
+
+export const nestResults = (
+  results: Record<string, any>[],
+  joins: Join[] = []
+) => {
+  if (!joins.length || !results.length) return results;
+
+  const nestedResults: any[] = [];
+  const mainTableFields = Object.keys(results[0]).filter(
+    (key) => !key.includes(NESTED_DELIMITER)
+  );
+
+  const groups = new Map<string, any>();
+
+  results.forEach((row) => {
+    // Generate a unique key for the main record based on non-nested fields
+    const key = mainTableFields.map((f) => row[f]).join('|');
+
+    if (!groups.has(key)) {
+      const mainRecord: any = {};
+      mainTableFields.forEach((f) => {
+        mainRecord[f] = row[f];
+      });
+
+      // Initialize nested arrays for each join
+      joins.forEach((join) => {
+        const joinKey = join.alias || join.table;
+        mainRecord[joinKey] = [];
+      });
+
+      groups.set(key, mainRecord);
+      nestedResults.push(mainRecord);
+    }
+
+    const mainRecord = groups.get(key);
+
+    joins.forEach((join) => {
+      const joinKey = join.alias || join.table;
+      const nestedObject: any = {};
+      let hasValue = false;
+
+      Object.keys(row).forEach((k) => {
+        if (k.startsWith(`${joinKey}${NESTED_DELIMITER}`)) {
+          const fieldName = k.split(NESTED_DELIMITER)[1];
+          nestedObject[fieldName] = row[k];
+          if (row[k] !== null) hasValue = true;
+        }
+      });
+
+      if (hasValue) {
+        // Check if this specific nested object already exists in the array
+        const alreadyExists = mainRecord[joinKey].some((item: any) => {
+          return Object.keys(nestedObject).every(
+            (k) => item[k] === nestedObject[k]
+          );
+        });
+
+        if (!alreadyExists) {
+          mainRecord[joinKey].push(nestedObject);
+        }
+      }
+    });
+  });
+
+  return nestedResults;
+};
+
 export const applyFilter = (query: Knex.QueryBuilder, filter: Filter = {}) => {
   Object.entries(filter).forEach(([field, data]) => {
     if (field === '$or') {
@@ -58,14 +126,34 @@ export const generateReadQuery = (
 ) => {
   const knex = getKnex();
 
-  let q = knex(table).select(fields);
+  // Handle field aliasing for joins
+  const formattedFields = fields.map((field) => {
+    if (field.includes('.')) {
+      const [tableName, fieldName] = field.split('.');
+      // Check if the table is part of a join
+      const join = joins?.find(
+        (j) => j.table === tableName || j.alias === tableName
+      );
+      if (join) {
+        return `${field} as ${tableName}${NESTED_DELIMITER}${fieldName}`;
+      }
+    }
+    return field;
+  });
+
+  let q = knex(table).select(formattedFields);
 
   // Add total count if pagination is needed
   if (paginate) {
     // Using knex.raw to create the count column with the same name as in original code
     q = knex(table).select([
-      ...fields.map((field) => knex.raw(`?? as ??`, [field, field])),
-      knex.raw('count(??) OVER() AS honey_total_count', [fields[0]])
+      ...formattedFields.map((field) => {
+        const [actualField, alias] = field.split(' as ');
+        return alias
+          ? knex.raw(`?? as ??`, [actualField, alias])
+          : knex.raw(`?? as ??`, [field, field]);
+      }),
+      knex.raw('count(??) OVER() AS honey_total_count', [formattedFields[0]])
     ]);
   }
 
