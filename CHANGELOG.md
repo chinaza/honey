@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.47.0
+
+### Minor Changes
+
+- 00ed488: add optional shouldErrorOnNotFound flag for GET operations
+
 ## 1.46.3
 
 ### Patch Changes
