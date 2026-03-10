@@ -9,7 +9,6 @@ import {
   GetQueryFilter,
   UpdateOpParam
 } from '../shared/interface';
-import HttpError from './error';
 
 const formatters: Record<string, Function> = {
   string: String,
@@ -92,7 +91,7 @@ export const formatReadFilter = (
 ) => {
   const result: Filter = {};
 
-  Object.entries(filter).forEach(([key, param]) => {
+  for (const [key, param] of Object.entries(filter)) {
     if (key === '$or') {
       const val = formatReadFilter(
         filterParams,
@@ -120,7 +119,7 @@ export const formatReadFilter = (
       }
 
       if (typeof valueToUse === 'undefined') {
-        throw new HttpError('Missing filter parameter', 400);
+        continue;
       }
 
       const valueFormatter = formatters[(param as GetFilterParam).value];
@@ -129,7 +128,7 @@ export const formatReadFilter = (
         value: valueFormatter(valueToUse)
       };
     }
-  });
+  }
 
   return result;
 };
