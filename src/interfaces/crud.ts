@@ -105,6 +105,8 @@ export type IGet = CrudParams & {
   joins?: Join[];
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  /** Whether to error on not found (default: true) */
+  shouldErrorOnNotFound?: boolean;
 };
 
 export type IGetById = CrudParams & {
@@ -118,6 +120,8 @@ export type IGetById = CrudParams & {
   joins?: Join[];
   /** A function that is called to transform your response data */
   processResponseData?: (data: any, req: Request) => any;
+  /** Whether to error on not found (default: true) */
+  shouldErrorOnNotFound?: boolean;
 };
 
 export type IDeleteById = CrudParams & {
@@ -159,6 +163,7 @@ export interface GetByQueryControllerParams extends ControllerParams {
     sortField: string;
   };
   joins?: Join[];
+  shouldErrorOnNotFound?: boolean;
 }
 
 export interface GetByIdControllerParams extends ControllerParams {
@@ -166,6 +171,7 @@ export interface GetByIdControllerParams extends ControllerParams {
   idField?: string;
   filterQuery?: GetQueryFilter;
   joins?: Join[];
+  shouldErrorOnNotFound?: boolean;
 }
 
 export interface CreateControllerParams extends ControllerParams {

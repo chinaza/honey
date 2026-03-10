@@ -15,7 +15,8 @@ export function getByIdController({
   processResponseData,
   processErrorResponse,
   filterQuery = {},
-  joins
+  joins,
+  shouldErrorOnNotFound
 }: GetByIdControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -38,7 +39,7 @@ export function getByIdController({
         joins
       );
 
-      if (!data?.length) {
+      if (!data?.length && shouldErrorOnNotFound) {
         throw new HttpError('Record does not exist', 404);
       }
 
@@ -68,7 +69,8 @@ export function getByQueryController({
   format,
   processResponseData,
   processErrorResponse,
-  joins
+  joins,
+  shouldErrorOnNotFound
 }: GetByQueryControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -99,7 +101,7 @@ export function getByQueryController({
 
       if (processResponseData) {
         data = await processResponseData(data, req);
-      } else if (!data?.length) {
+      } else if (!data?.length && shouldErrorOnNotFound) {
         throw new HttpError('No records found', 404);
       }
       const response = {

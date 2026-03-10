@@ -126,7 +126,8 @@ export default class Honey {
     processResponseData,
     processErrorResponse,
     table,
-    joins
+    joins,
+    shouldErrorOnNotFound = true
   }: IGet) {
     const path = pathOverride || `/${resource}`;
     resource = table || resource;
@@ -139,7 +140,8 @@ export default class Honey {
       format,
       processResponseData,
       processErrorResponse,
-      joins
+      joins,
+      shouldErrorOnNotFound
     });
     this.crud({
       method: methodOverride || 'get',
@@ -162,7 +164,8 @@ export default class Honey {
     processErrorResponse,
     table,
     filter,
-    joins
+    joins,
+    shouldErrorOnNotFound = true
   }: IGetById) {
     const path = pathOverride || `/${resource}/:id`;
     resource = table || resource;
@@ -175,7 +178,8 @@ export default class Honey {
       processResponseData,
       processErrorResponse,
       filterQuery: filter,
-      joins
+      joins,
+      shouldErrorOnNotFound
     });
 
     this.crud({

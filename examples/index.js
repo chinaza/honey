@@ -16,6 +16,7 @@ honey.get({
       value: 'string'
     }
   },
+  shouldErrorOnNotFound: false,
   format: {
     sort: 'ASC',
     sortField: 'name'
