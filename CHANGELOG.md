@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.47.21
+
+### Patch Changes
+
+- Patch
+
 ## 1.47.20
 
 ### Patch Changes
