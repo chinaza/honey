@@ -69,7 +69,7 @@ jobs:
         run: |
           jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
       - name: Publish to NPM
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
       # - name: Trigger Generator Update
       #   if: success()
       #   uses: peter-evans/repository-dispatch@v4
