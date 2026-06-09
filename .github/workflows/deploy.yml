@@ -51,6 +51,7 @@ jobs:
           echo "NEW_VERSION=$VERSION" >> $GITHUB_ENV
       - run: yarn build
       - run: yarn npm publish
+        if: false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: stefanzweifel/git-auto-commit-action@v7
@@ -71,11 +72,6 @@ jobs:
       - name: Setup for NPM
         run: |
           jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
-      - name: Setup Node for NPM OIDC publish
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-          registry-url: "https://registry.npmjs.org"
       - name: Publish to NPM
         run: npx npm@latest publish --access=public --provenance
       - name: Trigger Generator Update
