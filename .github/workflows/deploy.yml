@@ -20,11 +20,11 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [26.x]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
       - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
@@ -52,7 +52,7 @@ jobs:
       - run: yarn npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: Bump version
           commit_options: "--no-verify --signoff"
@@ -76,7 +76,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REG_TOKEN }}
       - name: Trigger Generator Update
         if: success()
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v4
         with:
           token: ${{ secrets.NPM_TOKEN }}
           repository: chinaza/generator-honeyjs
