@@ -68,8 +68,8 @@ jobs:
       - name: Setup for NPM
         run: |
           jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
-      - name: Print NPM version
-        run: echo "NPM version is $(npm -v)"
+      - name: Clear npm auth for OIDC
+        run: npm config delete //registry.npmjs.org/:_authToken
       - name: Publish to NPM
         run: npm publish --access=public --provenance
       # - name: Trigger Generator Update
