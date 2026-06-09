@@ -19,15 +19,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [24]
-
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
       - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
       - name: Enable Corepack
@@ -44,7 +40,7 @@ jobs:
         run: |
           echo "No changeset file found, generating from template"
           cp .changeset/default.template .changeset/temp-change-set.md
-      - run: yarn changeset version
+      # - run: yarn changeset version
       - name: Get New Version
         run: |
           VERSION=$(jq -r .version package.json)
@@ -53,30 +49,30 @@ jobs:
       # - run: yarn npm publish
       #   env:
       #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: Bump version
-          commit_options: "--no-verify --signoff"
-          file_pattern: ".changeset/* CHANGELOG.md package.json"
-          commit_user_name: Naza Bot
-          commit_user_email: bot@chinaza.dev
-          commit_author: Author <actions@github.com>
-          status_options: "--untracked-files=no"
-          add_options: "-u"
-          push_options: "--force"
-          skip_dirty_check: true
-          skip_fetch: true
-          skip_checkout: true
-          disable_globbing: true
+      # - uses: stefanzweifel/git-auto-commit-action@v7
+      #   with:
+      #     commit_message: Bump version
+      #     commit_options: "--no-verify --signoff"
+      #     file_pattern: ".changeset/* CHANGELOG.md package.json"
+      #     commit_user_name: Naza Bot
+      #     commit_user_email: bot@chinaza.dev
+      #     commit_author: Author <actions@github.com>
+      #     status_options: "--untracked-files=no"
+      #     add_options: "-u"
+      #     push_options: "--force"
+      #     skip_dirty_check: true
+      #     skip_fetch: true
+      #     skip_checkout: true
+      #     disable_globbing: true
       - name: Setup for NPM
         run: |
           jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
       - name: Publish to NPM
-        run: npx npm@latest publish --access=public --provenance
-      - name: Trigger Generator Update
-        if: success()
-        uses: peter-evans/repository-dispatch@v4
-        with:
-          repository: chinaza/generator-honeyjs
-          event-type: update_honey_version
-          client-payload: '{"version": "${{ env.NEW_VERSION }}"}'
+        run: npm publish --access=public
+      # - name: Trigger Generator Update
+      #   if: success()
+      #   uses: peter-evans/repository-dispatch@v4
+      #   with:
+      #     repository: chinaza/generator-honeyjs
+      #     event-type: update_honey_version
+      #     client-payload: '{"version": "${{ env.NEW_VERSION }}"}'
