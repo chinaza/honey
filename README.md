@@ -9,6 +9,9 @@ A TypeScript-based Node.js declarative library for building RESTful APIs with se
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
+  - [Database Connection](#database-connection)
+  - [Environment Variables](#environment-variables)
+  - [Built-in Defaults](#built-in-defaults)
 - [API Reference](#api-reference)
   - [Core Methods](#core-methods)
   - [CRUD Operations](#crud-operations)
@@ -32,7 +35,7 @@ A TypeScript-based Node.js declarative library for building RESTful APIs with se
 - **TypeScript Ready**: Full TypeScript support with comprehensive type definitions
 - **Validation**: Request validation using Joi
 - **Error Handling**: Consistent error handling and response formatting
-- **Swagger Documentation**: Automatic OpenAPI documentation generation
+- **API Documentation**: Automatic OpenAPI documentation is generated internally via `express-oas-generator`.
 
 ## Prerequisites
 
@@ -104,7 +107,7 @@ honey.deleteById({
 honey.startServer();
 ```
 
-2. Run your server:
+1. Run your server:
 
 ```bash
 # If using TypeScript
@@ -156,6 +159,15 @@ import { createHoney } from '@promind/honey';
 const honey = createHoney(process.env.PORT, process.env.DB_URI);
 ```
 
+### Built-in Defaults
+
+HoneyJS automatically configures the following on startup:
+
+- **CORS**: Enabled for all origins (`*`) with all methods and headers allowed
+- **Body parsing**: JSON and URL-encoded bodies up to 50MB
+- **Cookie parsing**: Enabled via `cookie-parser`
+- **Route prefix**: `/api` (configurable via `metadata.routePrefix`)
+
 ## API Reference
 
 ### Core Methods
@@ -180,11 +192,17 @@ Starts the HTTP server.
 
 Adds global middleware to all routes.
 
+#### `honey.db`
+
+Exposes the underlying Sequelize instance for direct database access.
+
 ### CRUD Operations
 
 #### `honey.create(options)`
 
 Creates a POST endpoint for creating new resources.
+
+The response `data` field contains `{ id }` (the inserted record's ID) by default unless `processResponseData` is provided.
 
 ```typescript
 honey.create({
@@ -202,16 +220,35 @@ honey.create({
   message: 'Post created', // Success message
   pathOverride: '/blog/posts', // Optional: Custom path
   middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'post', // Optional: Override the HTTP method
   processResponseData: (data, req) => {
     // Optional: Transform response data
     return { ...data, extra: 'info' };
-  }
+  },
+  processErrorResponse: (err) => err // Optional: Customize error response
 });
 ```
 
 #### `honey.get(options)`
 
 Creates a GET endpoint for retrieving a list of resources.
+
+Automatically supports `?page=` and `?limit=` query parameters for pagination. The response shape is:
+
+```json
+{
+  "data": [...],
+  "meta": {
+    "pagination": {
+      "total": 100,
+      "pageSize": 10,
+      "page": 1,
+      "pageCount": 10
+    }
+  }
+}
+```
 
 ```typescript
 honey.get({
@@ -221,11 +258,17 @@ honey.get({
     // Optional: Query filters
     title: {
       operator: 'like', // Filter operator
-      value: 'string' // Parameter type
+      value: 'string', // Parameter type
+      location: 'query' // Optional: where to read the value from (default: query string)
     },
     published: {
       operator: '=',
       value: 'boolean'
+    },
+    author_id: {
+      operator: '=',
+      value: 'number',
+      overrideValue: (req) => req.user?.id // Dynamic value based on request
     },
     $or: {
       // Logical OR condition
@@ -243,9 +286,38 @@ honey.get({
     // Optional: Sorting
     sort: 'DESC', // ASC or DESC
     sortField: 'created_at' // Field to sort by
-  }
+  },
+  joins: [
+    // Optional: SQL joins
+    {
+      table: 'users',
+      type: 'inner', // 'inner' | 'left' | 'right' | 'full' | 'cross' (default: 'inner')
+      on: {
+        left: 'posts.author_id',
+        right: 'users.id',
+        operator: '=' // '=' | '!=' | '<' | '<=' | '>' | '>='
+      },
+      alias: 'author' // Optional alias
+    }
+  ],
+  shouldErrorOnNotFound: false, // Optional: When false, returns empty data instead of 404 (default: true)
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'get' // Optional: Override the HTTP method
 });
 ```
+
+**Filter operators:** `'='`, `'!='`, `'<'`, `'<='`, `'>'`, `'>='`, `'in'`, `'not in'`, `'like'`, `'not like'`
+
+> **Note:** `'like'` uses PostgreSQL `ILIKE` for case-insensitive matching.
+
+**Filter `value` types:** `'string'`, `'number'`, `'boolean'`, `'json'`, `'csv'` (splits comma-separated string into array), `'as-is'` (passes value through unchanged)
+
+**Filter `location` options:** `'query'` (default), `'body'`, `'headers'`, `'request'`, `'params'`
+
+**Filter `overrideValue`:** Can be a static value or a function `(req) => value` for dynamic values based on the request.
+
+**Using joins with dot-notation:** When using joins, fields can use dot-notation to reference columns from joined tables: `'tableName.fieldName'`.
 
 #### `honey.getById(options)`
 
@@ -262,7 +334,19 @@ honey.getById({
       operator: '=',
       overrideValue: true // Force a value regardless of request
     }
-  }
+  },
+  joins: [
+    // Optional: SQL joins (same as honey.get())
+    {
+      table: 'users',
+      type: 'left',
+      on: { left: 'posts.author_id', right: 'users.id' }
+    }
+  ],
+  shouldErrorOnNotFound: false, // Optional: When false, returns empty data instead of 404 (default: true)
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'get' // Optional: Override the HTTP method
 });
 ```
 
@@ -280,7 +364,17 @@ honey.updateById({
     updated_at: '@updatedAt' // Set to current timestamp
   },
   message: 'Post updated',
-  idField: 'slug' // Optional: Use a different field as identifier
+  idField: 'slug', // Optional: Use a different field as identifier
+  filter: {
+    // Optional: Additional WHERE conditions beyond the ID
+    author_id: {
+      operator: '=',
+      value: 'number'
+    }
+  },
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'put' // Optional: Override the HTTP method
 });
 ```
 
@@ -302,13 +396,20 @@ honey.update({
       value: 'number'
     }
   },
-  message: 'Posts updated'
+  message: 'Posts updated',
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'put' // Optional: Override the HTTP method
 });
 ```
+
+> **Note:** `filter` is **required** for `honey.update()` to prevent unintended bulk updates.
 
 #### `honey.upsertById(options)`
 
 Creates a PUT endpoint for upserting a resource by ID.
+
+After an upsert, `req.isInsert` is set to `true` if the operation was an INSERT, or `false` if it was an UPDATE. This flag is accessible in `processResponseData` and `exitMiddleware`.
 
 ```typescript
 honey.upsertById({
@@ -319,13 +420,23 @@ honey.upsertById({
     updated_at: '@updatedAt'
   },
   message: 'Post upserted',
-  idField: 'id' // Field to use for conflict detection
+  idField: 'id', // Required: Field to use for conflict detection
+  doNothingOnConflict: false, // Optional: When true, returns existing record unchanged on conflict (default: false)
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'put', // Optional: Override the HTTP method
+  processResponseData: (data, req) => {
+    // req.isInsert is true for INSERT, false for UPDATE
+    return { ...data, wasInserted: req.isInsert };
+  }
 });
 ```
 
 #### `honey.upsert(options)`
 
 Creates a PUT endpoint for upserting a resource with custom conflict resolution.
+
+After an upsert, `req.isInsert` is set to `true` if the operation was an INSERT, or `false` if it was an UPDATE. This flag is accessible in `processResponseData` and `exitMiddleware`.
 
 ```typescript
 honey.upsert({
@@ -337,7 +448,11 @@ honey.upsert({
     updated_at: '@updatedAt'
   },
   message: 'Post upserted',
-  conflictTarget: ['slug'] // Fields to check for conflicts
+  conflictTarget: ['slug'], // Fields to check for conflicts
+  doNothingOnConflict: false, // Optional: When true, returns existing record unchanged on conflict (default: false)
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'put' // Optional: Override the HTTP method
 });
 ```
 
@@ -356,9 +471,73 @@ honey.deleteById({
       operator: '=',
       value: 'number'
     }
-  }
+  },
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'delete' // Optional: Override the HTTP method
 });
 ```
+
+#### `honey.delete(options)`
+
+Creates a DELETE endpoint for bulk-deleting resources (no ID in path).
+
+```typescript
+honey.delete({
+  resource: 'posts',
+  filter: {
+    // Filter criteria for records to delete
+    author_id: {
+      operator: '=',
+      value: 'number'
+    }
+  },
+  message: 'Posts deleted',
+  table: 'blog_posts', // Optional: Table name if different from resource
+  pathOverride: '/blog/posts', // Optional: Custom path
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'delete', // Optional: Override the HTTP method
+  processErrorResponse: (err) => err // Optional: Customize error response
+});
+```
+
+#### `honey.query(options)`
+
+Creates a custom endpoint backed by a raw Knex query. Useful for complex queries that go beyond standard CRUD operations.
+
+Automatically supports `?page=` and `?limit=` query parameters for pagination.
+
+```typescript
+honey.query({
+  resource: 'stats',
+  methodOverride: 'get', // Optional: HTTP method (default: 'get')
+  query: (knex, req) => {
+    return knex('posts')
+      .select('author_id')
+      .count('id as post_count')
+      .groupBy('author_id');
+  },
+  processResponseData: (data, req) => {
+    return data;
+  },
+  pathOverride: '/stats/posts', // Optional: Custom path
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  processErrorResponse: (err) => err // Optional: Customize error response
+});
+```
+
+**Options:**
+
+- `resource` — Resource name used in the URL path
+- `query` — Function receiving `(knex, req)` and returning a Knex `QueryBuilder`
+- `pathOverride` — Optional custom path
+- `methodOverride` — HTTP method (default: `'get'`)
+- `middleware` — Route-specific middleware
+- `exitMiddleware` — Middleware that runs after the response is sent
+- `processResponseData` — Transform the response data
+- `processErrorResponse` — Customize the error response
 
 ### Advanced Usage
 
@@ -414,26 +593,34 @@ HoneyJS provides several utilities for working directly with the database.
 ```typescript
 import { defineModel, DataTypes } from '@promind/honey';
 
-const User = defineModel('users', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+const User = defineModel(
+  'users',
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    }
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
-  },
-  created_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
+  {
+    // Optional: Sequelize ModelOptions
+    timestamps: false,
+    tableName: 'app_users'
   }
-});
+);
 
 export default User;
 ```
@@ -453,6 +640,35 @@ async function getUsersWithPosts() {
 
   return runDbQuery(query, { type: QueryTypes.SELECT });
 }
+```
+
+### `createReqTransit`
+
+`createReqTransit` creates a typed transit object for safely passing data between middleware and controllers via the request object.
+
+```typescript
+import { createReqTransit } from '@promind/honey';
+
+// Create a typed transit for passing data between middleware and controllers
+const userTransit = createReqTransit<User>('currentUser');
+
+// In middleware
+const authMiddleware = (req, res, next) => {
+  const user = verifyToken(req.headers.authorization);
+  userTransit.inject(req, user);
+  next();
+};
+
+// In processResponseData or exitMiddleware
+honey.getById({
+  resource: 'posts',
+  fields: ['id', 'title'],
+  middleware: [authMiddleware],
+  processResponseData: (data, req) => {
+    const user = userTransit.extract(req, null);
+    return { ...data, viewedBy: user?.name };
+  }
+});
 ```
 
 ## Error Handling
@@ -499,6 +715,16 @@ honey.create({
   message: 'User created',
   middleware: [validateRequestData(userSchema)]
 });
+```
+
+`validateRequestData` accepts the following arguments:
+
+```typescript
+validateRequestData(
+  schema,     // Joi ObjectSchema
+  location?,  // 'body' | 'params' | 'query' | 'headers' | 'cookies' (default: 'body')
+  options?    // Joi ValidationOptions (default: { allowUnknown: true })
+)
 ```
 
 ### Custom Middleware
@@ -773,6 +999,26 @@ honey.create({
   message: 'Product created',
   middleware: [loggerMiddleware],
   processErrorResponse: errorHandler
+});
+```
+
+### `ExitMiddleware`
+
+`ExitMiddleware` is middleware that runs after the response has been sent. It receives the response data as its first argument, making it ideal for audit logging, analytics, or post-response side effects.
+
+```typescript
+import { ExitMiddleware } from '@promind/honey';
+
+const auditMiddleware: ExitMiddleware = (data, req, res, next) => {
+  console.log(`Response sent for ${req.method} ${req.path}:`, data);
+  next();
+};
+
+honey.create({
+  resource: 'users',
+  params: { name: 'string', email: 'string' },
+  message: 'User created',
+  exitMiddleware: [auditMiddleware]
 });
 ```
 
