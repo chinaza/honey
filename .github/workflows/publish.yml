@@ -47,5 +47,9 @@ jobs:
         run: |
           jq '.name = "@promind/honey" | .publishConfig = {"access": "public"}' package.json > temp.json && mv temp.json package.json
 
+      - name: Debug auth
+        run: |
+          npm whoami
+          npm config list
       - name: Publish to NPM
         run: npm publish
