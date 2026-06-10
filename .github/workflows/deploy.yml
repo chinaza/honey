@@ -25,7 +25,6 @@ jobs:
         with:
           node-version: "24"
           # registry-url: "https://registry.npmjs.org"
-      - run: npm install -g npm@latest
       - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
       - name: Enable Corepack
         run: corepack enable
@@ -69,7 +68,7 @@ jobs:
         run: |
           jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
       - name: Publish to NPM
-        run: npm publish --access=public
+        run: npm publish
       # - name: Trigger Generator Update
       #   if: success()
       #   uses: peter-evans/repository-dispatch@v4
