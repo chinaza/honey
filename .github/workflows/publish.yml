@@ -4,7 +4,7 @@ permissions:
   contents: write
   packages: write
   pull-requests: write
-  id-token: write
+  id-token: write # Required for OIDC
 
 on:
   push:
@@ -18,24 +18,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
+      id-token: write # Required for OIDC
       contents: write
 
     steps:
       - uses: actions/checkout@v6
+
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
+          registry-url: "https://registry.npmjs.org" # Critical: enables OIDC auth wiring
+          package-manager-cache: false # Recommended for release builds
+
       - name: Upgrade npm
         run: npm install -g npm@latest
-      - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
+
       - name: Enable Corepack
         run: corepack enable
+
       - run: yarn install
+
       - run: yarn test
+
       - run: yarn build
+
       - name: Change package name for NPM
         run: |
           jq '.name = "@promind/honey" | .publishConfig = {"access": "public"}' package.json > temp.json && mv temp.json package.json
+
       - name: Publish to NPM
-        run: npm publish --provenance --registry=https://registry.npmjs.org/ --auth-type=oauth
+        run: npm publish
