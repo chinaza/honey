@@ -29,7 +29,6 @@
     "test-watch": "jest --watch --passWithNoTests",
     "start": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node --transpile-only ./src/index.ts",
-    "prepare": "npm run build",
     "prepare:dev": "husky install",
     "bump": "yarn changeset; yarn changeset version"
   },
