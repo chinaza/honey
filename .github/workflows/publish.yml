@@ -23,7 +23,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
+      - name: Change package name for NPM
+        run: |
+          jq '.name = "@promind/honey" | .publishConfig = {"access": "public"}' package.json > temp.json && mv temp.json package.json
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
@@ -42,11 +44,5 @@ jobs:
       - run: yarn build
       - name: Cleanup tokens
         run: rm .env.yarn .yarnrc.yml
-
-      # Optional optimization: Ensure registry is explicitly public for the scoped package
-      - name: Change package name for NPM
-        run: |
-          jq '.name = "@promind/honey" | .publishConfig = {"access": "public"}' package.json > temp.json && mv temp.json package.json
-
       - name: Publish to NPM
         run: npm publish --provenance
