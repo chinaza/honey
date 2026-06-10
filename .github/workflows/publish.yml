@@ -1,11 +1,5 @@
 name: Publish Honey to NPM registry
 
-permissions:
-  contents: write
-  packages: write
-  pull-requests: write
-  id-token: write # Required for OIDC
-
 on:
   push:
     branches: [main]
@@ -19,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # Required for OIDC
-      contents: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v6
@@ -29,9 +23,6 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org" # Critical: enables OIDC auth wiring
           package-manager-cache: false # Recommended for release builds
-
-      - name: Upgrade npm
-        run: npm install -g npm@latest
 
       - name: Enable Corepack
         run: corepack enable
@@ -46,10 +37,5 @@ jobs:
       - name: Change package name for NPM
         run: |
           jq '.name = "@promind/honey" | .publishConfig = {"access": "public"}' package.json > temp.json && mv temp.json package.json
-
-      - name: Debug auth
-        run: |
-          npm whoami
-          npm config list
       - name: Publish to NPM
         run: npm publish
