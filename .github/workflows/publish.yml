@@ -1,0 +1,40 @@
+name: Publish Honey to NPM registry
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  id-token: write
+
+on:
+  push:
+    branches: [main]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  number_of_files_changeset_folder: 0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+      - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
+      - name: Enable Corepack
+        run: corepack enable
+      - run: yarn install
+      - run: yarn test
+      - run: yarn build
+      - name: Cleanup tokens
+        run: rm .env.yarn .yarnrc.yml
+      - name: Change package name for NPM
+        run: |
+          jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
+      - name: Publish to NPM
+        run: npm publish

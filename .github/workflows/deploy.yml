@@ -1,4 +1,4 @@
-name: Publish Honey to Github Packages
+name: Deploy Honey to Github Packages
 
 permissions:
   contents: write
