@@ -28,6 +28,8 @@ jobs:
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
+      - name: Upgrade npm
+        run: npm install -g npm@latest
       - name: Clear npm auth for OIDC
         run: npm config delete //registry.npmjs.org/:_authToken
       - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
@@ -42,4 +44,4 @@ jobs:
         run: |
           jq '.name = "@promind/honey"' package.json > temp.json && mv temp.json package.json
       - name: Publish to NPM
-        run: npm publish
+        run: npm publish --provenance
