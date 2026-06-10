@@ -36,6 +36,7 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
       - run: yarn install
 
       - run: yarn test
