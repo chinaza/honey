@@ -26,13 +26,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
-          # REMOVED: registry-url (This prevents setup-node from forcing NODE_AUTH_TOKEN)
-
       - name: Upgrade npm
         run: npm install -g npm@latest
-
-      # REMOVED: npm config delete //registry.npmjs.org/:_authToken (No longer needed)
-
       - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
       - name: Enable Corepack
         run: corepack enable
