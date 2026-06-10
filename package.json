@@ -14,7 +14,7 @@
   "engineStrict": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/chinaza/honey.git"
+    "url": "git+https://github.com/chinaza/honey.git"
   },
   "files": [
     "dist"
