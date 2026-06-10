@@ -1,0 +1,144 @@
+name: Release Honey
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  id-token: write
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  number_of_files_changeset_folder: 0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      new_version: ${{ steps.version.outputs.new_version }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
+
+      - run: yarn install
+
+      - run: yarn test
+
+      - name: Count files in changeset folder
+        run: |
+          number_of_files_changeset_folder=$(ls -l .changeset/ | grep "^-" | wc -l)
+          echo "Number of files: $number_of_files_changeset_folder"
+          echo "CHANGESET_FOLDER_FILE_COUNT=$number_of_files_changeset_folder" >> $GITHUB_ENV
+
+      - name: Manually generate changeset
+        if: env.CHANGESET_FOLDER_FILE_COUNT < 4
+        run: |
+          echo "No changeset file found, generating from template"
+          cp .changeset/default.template .changeset/temp-change-set.md
+
+      - run: yarn changeset version
+
+      - name: Get New Version
+        id: version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "NEW_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "new_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - run: yarn build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            dist/
+            package.json
+            CHANGELOG.md
+
+  publish-github:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - run: echo "GH_TOKEN=${{ secrets.NPM_TOKEN }}" >> .env.yarn
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+
+      - name: Publish to GitHub Packages
+        run: yarn npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Bump version
+          commit_options: "--no-verify --signoff"
+          file_pattern: ".changeset/* CHANGELOG.md package.json"
+          commit_user_name: Naza Bot
+          commit_user_email: bot@chinaza.dev
+          commit_author: Author <actions@github.com>
+          status_options: "--untracked-files=no"
+          add_options: "-u"
+          push_options: "--force"
+          skip_dirty_check: true
+          skip_fetch: true
+          skip_checkout: true
+          disable_globbing: true
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+
+      - name: Change package name for NPM
+        run: |
+          jq '.name = "@promind/honey" | .publishConfig = {"access": "public"}' package.json > temp.json && mv temp.json package.json
+
+      - name: Publish to NPM
+        run: npm publish
+
+      - name: Trigger Generator Update
+        if: success()
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          repository: chinaza/generator-honeyjs
+          event-type: update_honey_version
+          client-payload: '{"version": "${{ needs.build.outputs.new_version }}"}'
