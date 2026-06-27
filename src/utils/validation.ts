@@ -1,10 +1,10 @@
-import { ObjectSchema, ValidationOptions } from 'joi';
+import { ArraySchema, ObjectSchema, ValidationOptions } from 'joi';
 import { Middleware } from 'src/interfaces/express';
 import HttpError, { handleHttpError } from './error';
 
 export const validateRequestData =
   (
-    schema: ObjectSchema,
+    schema: ObjectSchema | ArraySchema,
     location: 'body' | 'params' | 'query' | 'headers' | 'cookies' = 'body',
     options: ValidationOptions = { allowUnknown: true }
   ): Middleware =>
