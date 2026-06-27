@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.48.0
+
+### Minor Changes
+
+- 3264b55: introduce support for bulk create
+
 ## 1.47.24
 
 ### Patch Changes
