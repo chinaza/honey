@@ -105,7 +105,9 @@ export const applyFilter = (query: Knex.QueryBuilder, filter: Filter = {}) => {
 
 export const generateCreateQuery = (
   table: string,
-  data: Record<string, string | number | boolean | Date | Object>
+  data:
+    | Record<string, string | number | boolean | Date | Object>
+    | Record<string, string | number | boolean | Date | Object>[]
 ) => {
   const knex = getKnex();
   const { sql: query, bindings: replacements } = knex(table)

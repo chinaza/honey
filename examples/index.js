@@ -36,6 +36,14 @@ honey.create({
   message: 'User created'
 });
 
+honey.bulkCreate({
+  resource: 'posts',
+  params: {
+    name: 'string'
+  },
+  message: 'Posts bulk created'
+});
+
 honey.updateById({
   resource: 'posts',
   params: {

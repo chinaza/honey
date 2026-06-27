@@ -29,6 +29,7 @@ A TypeScript-based Node.js declarative library for building RESTful APIs with se
 
 - **Declarative API Definition**: Define your REST endpoints with simple configuration objects
 - **Full CRUD Support**: Built-in controllers for create, read, update, delete, and upsert operations
+- **Bulk Create Support**: Insert multiple records in a single request with `honey.bulkCreate()`
 - **PostgreSQL Integration**: Seamless connection to PostgreSQL via Sequelize ORM
 - **Query Building**: Flexible filtering, sorting, and pagination
 - **Middleware Support**: Add custom middleware to your routes
@@ -227,6 +228,56 @@ honey.create({
   },
   processErrorResponse: (err) => err // Optional: Customize error response
 });
+```
+
+#### `honey.bulkCreate(options)`
+
+Creates a POST endpoint for inserting multiple records in a single request. The request body must be an **array** of objects.
+
+The response `data` field contains `{ ids }` — an array of the inserted records' IDs — by default unless `processResponseData` is provided.
+
+```typescript
+honey.bulkCreate({
+  resource: 'posts', // Resource name (used in URL path)
+  table: 'blog_posts', // Optional: Table name if different from resource
+  params: {
+    // Request body parameters (applied to each item in the array)
+    title: 'string',
+    content: 'string',
+    author_id: 'number',
+    published: 'boolean',
+    metadata: 'json',
+    created_at: '@updatedAt'
+  },
+  message: 'Posts created', // Success message
+  pathOverride: '/blog/posts/bulk', // Optional: Custom path (default: /{resource}/bulk)
+  middleware: [authMiddleware], // Optional: Route-specific middleware
+  exitMiddleware: [auditMiddleware], // Optional: Middleware that runs after response is sent
+  methodOverride: 'post', // Optional: Override the HTTP method
+  processResponseData: (data, req) => {
+    // data.ids is an array of inserted record IDs
+    return { ...data, count: data.ids.length };
+  },
+  processErrorResponse: (err) => err // Optional: Customize error response
+});
+```
+
+**Request body format:**
+```json
+[
+  { "title": "Post One", "content": "...", "author_id": 1 },
+  { "title": "Post Two", "content": "...", "author_id": 1 }
+]
+```
+
+**Response format:**
+```json
+{
+  "message": "Posts created",
+  "data": {
+    "ids": [42, 43]
+  }
+}
 ```
 
 #### `honey.get(options)`
@@ -798,6 +849,19 @@ honey.create({
     created_at: '@updatedAt'
   },
   message: 'Post created successfully',
+  middleware: [authMiddleware]
+});
+
+honey.bulkCreate({
+  resource: 'posts',
+  params: {
+    title: 'string',
+    content: 'string',
+    excerpt: 'string',
+    author_id: 'number',
+    created_at: '@updatedAt'
+  },
+  message: 'Posts created successfully',
   middleware: [authMiddleware]
 });
 

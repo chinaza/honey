@@ -179,6 +179,26 @@ export interface CreateControllerParams extends ControllerParams {
   message: string;
 }
 
+export type IBulkCreate = CrudParams & {
+  /** Parameters in request body */
+  params: Record<
+    string,
+    'string' | 'number' | 'boolean' | '@updatedAt' | 'json'
+  >;
+  /** Response message */
+  message?: string;
+  /** A function that is called to transform your response data */
+  processResponseData?: (
+    data: { ids: (string | number)[] },
+    req: Request
+  ) => Promise<Record<string, unknown>> | Record<string, unknown>;
+};
+
+export interface BulkCreateControllerParams extends ControllerParams {
+  params: IBulkCreate['params'];
+  message?: string;
+}
+
 export interface UpdateByIdControllerParams extends ControllerParams {
   params: IUpdateById['params'];
   message: string;

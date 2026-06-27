@@ -19,9 +19,9 @@ export default function createController({
       let data = await db.create(resource, body);
       const id = data[0].id;
 
-      data =
-        req.body.dataOverride ||
-        (processResponseData ? await processResponseData({ id }, req) : { id });
+      data = processResponseData
+        ? await processResponseData({ id }, req)
+        : { id };
 
       res.send({
         message,

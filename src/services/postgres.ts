@@ -66,6 +66,22 @@ export default class Postgres {
     return res[0] as { id: string | number }[];
   }
 
+  public async bulkCreate(
+    table: string,
+    data: Record<string, string | number | boolean | Date | Object>[]
+  ) {
+    const { query, replacements } = generateCreateQuery(table, data);
+
+    const res: any = await config.db.query(query, {
+      type: QueryTypes.INSERT,
+      raw: true,
+      replacements: [...replacements]
+    });
+
+    // inserted ids
+    return res[0] as { id: string | number }[];
+  }
+
   public async update(table: string, data: UpdateOpParam, filter?: Filter) {
     const { query, replacements } = generateUpdateQuery(table, data, filter);
 

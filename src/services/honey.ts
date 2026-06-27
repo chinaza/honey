@@ -1,6 +1,7 @@
 import Config from '../config';
 import {
   createController,
+  bulkCreateController,
   deleteByIdController,
   getByIdController,
   getByQueryController,
@@ -12,6 +13,7 @@ import {
   queryController
 } from '../controllers';
 import {
+  IBulkCreate,
   ICreate,
   ICrud,
   IDelete,
@@ -97,6 +99,39 @@ export default class Honey {
     resource = table || resource;
 
     const controller = createController({
+      db: this.postgres,
+      resource,
+      params,
+      message,
+      processResponseData,
+      processErrorResponse
+    });
+
+    this.crud({
+      method: methodOverride || 'post',
+      path,
+      controller,
+      middleware,
+      exitMiddleware
+    });
+  }
+
+  public bulkCreate({
+    resource,
+    params,
+    message,
+    middleware,
+    pathOverride,
+    exitMiddleware,
+    processResponseData,
+    processErrorResponse,
+    table,
+    methodOverride
+  }: IBulkCreate) {
+    const path = pathOverride || `/${resource}/bulk`;
+    resource = table || resource;
+
+    const controller = bulkCreateController({
       db: this.postgres,
       resource,
       params,
