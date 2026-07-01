@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.52.0
+
+### Minor Changes
+
+- afb0770: add support for filter presets
+
 ## 1.51.1
 
 ### Patch Changes
