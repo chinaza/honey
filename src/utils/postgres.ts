@@ -147,15 +147,30 @@ export const generateReadQuery = (
 
   // Add total count if pagination is needed
   if (paginate) {
-    // Using knex.raw to create the count column with the same name as in original code
     q = knex(table).select([
       ...formattedFields.map((field) => {
+        // formattedFields entries are either plain strings (e.g. "users.id") or
+        // knex.raw objects (produced above for join-aliased fields).
+        // For plain strings we must NOT use ?? binding on a dotted value like
+        // "users.id" because knex wraps the whole string in double-quotes,
+        // producing the invalid identifier "users.id" instead of "users"."id".
+        // Passing the string directly to knex.raw as a literal SQL fragment is safe
+        // because formattedFields values are generated internally (not user input).
+        if (typeof field !== 'string') {
+          // Already a knex.raw object (join-aliased field) — use as-is
+          return field;
+        }
         const [actualField, alias] = field.split(' as ');
-        return alias
-          ? knex.raw(`?? as ??`, [actualField, alias])
-          : knex.raw(`?? as ??`, [field, field]);
+        if (alias) {
+          // Has an explicit alias: quote each part of the column reference
+          // then attach the alias as a plain identifier
+          return knex.raw(`${actualField} as ??`, [alias]);
+        }
+        // No alias: emit the field as a literal SQL fragment so dotted names
+        // like "users.id" are kept as-is and not collapsed into one quoted token
+        return knex.raw(field);
       }),
-      knex.raw('count(??) OVER() AS honey_total_count', [formattedFields[0]])
+      knex.raw('count(*) OVER() AS honey_total_count')
     ]);
   }
 
