@@ -15,6 +15,7 @@ A TypeScript-based Node.js declarative library for building RESTful APIs with se
 - [API Reference](#api-reference)
   - [Core Methods](#core-methods)
   - [CRUD Operations](#crud-operations)
+  - [Filter Presets](#filter-presets)
   - [Advanced Usage](#advanced-usage)
 - [Database Utilities](#database-utilities)
 - [Error Handling](#error-handling)
@@ -368,6 +369,119 @@ honey.get({
 **Filter `overrideValue`:** Can be a static value or a function `(req) => value` for dynamic values based on the request.
 
 **Using joins with dot-notation:** When using joins, fields can use dot-notation to reference columns from joined tables: `'tableName.fieldName'`.
+
+#### Filter Presets
+
+Filter presets let you define named, server-side filter configurations that a caller can activate at request time via the `?preset=<name>` query parameter. They are useful when you want to expose a fixed set of filtered views of a resource — such as "upcoming", "completed", or "cancelled" bookings — without allowing arbitrary client-side filter composition.
+
+Presets are evaluated entirely on the server; the client only supplies the preset name.
+
+##### Types
+
+```typescript
+// A single field condition — same shape as a regular filter entry
+type FilterCondition = {
+  [field: string]: {
+    operator: FilterOps;           // '=', '!=', '<', '<=', '>', '>=', 'in', 'not in', 'like', 'not like'
+    value: FilterValue | 'as-is';  // 'string' | 'number' | 'boolean' | 'json' | 'csv' | 'as-is'
+    overrideValue?: unknown | (() => unknown);
+  };
+};
+
+// An AND group: all child nodes must match
+type FilterAndGroup = { $and: FilterNode[] };
+
+// A node is either a leaf condition or an AND group
+type FilterNode = FilterCondition | FilterAndGroup;
+
+// A preset is an array of FilterNodes — top-level items are joined with OR
+type FilterPreset = FilterNode[];
+
+// The full presets map passed to honey.get()
+type FilterPresets = Record<string, FilterPreset>;
+```
+
+##### Logic model
+
+| Structure | SQL equivalent |
+|---|---|
+| `[A, B]` (top-level array) | `A OR B` |
+| `{ $and: [A, B] }` | `A AND B` |
+| `[A, { $and: [B, C] }]` | `A OR (B AND C)` |
+
+##### Example — bookings
+
+```typescript
+honey.get({
+  resource: 'bookings',
+  fields: ['id', 'status', 'scheduled_at', 'customer_id'],
+  format: { sort: 'ASC', sortField: 'scheduled_at' },
+
+  filterPresets: {
+    // GET /api/bookings?preset=upcoming
+    // WHERE status = 'confirmed' AND scheduled_at > NOW()
+    upcoming: [
+      {
+        $and: [
+          { status:       { operator: '=',  value: 'as-is', overrideValue: 'confirmed' } },
+          { scheduled_at: { operator: '>',  value: 'as-is', overrideValue: () => new Date() } }
+        ]
+      }
+    ],
+
+    // GET /api/bookings?preset=completed
+    // WHERE status = 'completed' OR (status = 'confirmed' AND scheduled_at < NOW())
+    completed: [
+      { status: { operator: '=', value: 'as-is', overrideValue: 'completed' } },
+      {
+        $and: [
+          { status:       { operator: '=', value: 'as-is', overrideValue: 'confirmed' } },
+          { scheduled_at: { operator: '<', value: 'as-is', overrideValue: () => new Date() } }
+        ]
+      }
+    ],
+
+    // GET /api/bookings?preset=cancelled
+    // WHERE status = 'cancelled'
+    cancelled: [
+      { status: { operator: '=', value: 'as-is', overrideValue: 'cancelled' } }
+    ]
+  }
+});
+```
+
+**Resulting SQL for `?preset=completed`:**
+
+```sql
+SELECT id, status, scheduled_at, customer_id
+FROM bookings
+WHERE (status = 'completed')
+   OR (status = 'confirmed' AND scheduled_at < '2024-11-01T10:00:00.000Z')
+ORDER BY scheduled_at ASC;
+```
+
+##### HTTP behaviour
+
+| Request | Behaviour |
+|---|---|
+| `GET /api/bookings` | No preset applied — returns all bookings (existing `filter` param is unaffected) |
+| `GET /api/bookings?preset=upcoming` | Applies the `upcoming` preset |
+| `GET /api/bookings?preset=unknown` | Returns **HTTP 400** — unknown preset name |
+
+##### `overrideValue` and the factory pattern
+
+When `value` is set to `'as-is'`, the filter value is taken from `overrideValue` directly rather than from the query string. `overrideValue` can be:
+
+- A **static value** — evaluated once at definition time: `overrideValue: 'confirmed'`
+- A **factory function** `() => value` — called on every request, useful for dynamic values: `overrideValue: () => new Date()`
+
+Use the factory form whenever the value must reflect the current moment (timestamps, session data, etc.).
+
+##### Backward compatibility
+
+`filterPresets` is an entirely additive parameter. Existing `filter` configurations on `honey.get()` are unaffected — both can be used together on the same endpoint. If no `?preset=` query parameter is supplied, no OR clause is added and the request is handled exactly as before.
+
+---
 
 #### `honey.getById(options)`
 

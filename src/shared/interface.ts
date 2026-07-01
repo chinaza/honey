@@ -60,6 +60,43 @@ export type GetQueryFilter = {
   [key: string]: GetFilterParam | Record<string, GetFilterParam>;
 };
 
+// ── Filter Preset types (additive — do not modify existing types above) ──────
+
+/** The operator type used in filter conditions */
+export type FilterOperator = FilterOps;
+
+/** The value type used in filter conditions */
+export type FilterValue = GetFilterParam['value'];
+
+/**
+ * A single leaf condition — same shape as GetFilterParam but with an optional
+ * overrideValue. When value === 'as-is', overrideValue is used directly.
+ */
+export interface FilterCondition {
+  [field: string]: {
+    operator: FilterOperator;
+    value: FilterValue | 'as-is';
+    overrideValue?: unknown | (() => unknown);
+  };
+}
+
+/** A node in a filter tree is either a leaf condition or an AND group */
+// eslint-disable-next-line no-use-before-define
+export type FilterNode = FilterCondition | FilterAndGroup;
+
+/** An AND group: all child nodes must match */
+export interface FilterAndGroup {
+  $and: FilterNode[];
+}
+
+/** A preset is an array of FilterNodes joined by OR at the top level */
+export type FilterPreset = FilterNode[];
+
+/** The full presets map: preset name → FilterPreset */
+export type FilterPresets = Record<string, FilterPreset>;
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export type JoinType = 'inner' | 'left' | 'right' | 'full' | 'cross';
 
 export interface Join {

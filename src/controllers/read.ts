@@ -3,7 +3,7 @@ import {
   GetByQueryControllerParams
 } from '../interfaces/crud';
 import HttpError, { handleHttpError } from '../utils/error';
-import { formatReadFilter } from '../utils/formatter';
+import { formatReadFilter, resolveFilterPreset } from '../utils/formatter';
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from './interfaces';
 
@@ -70,7 +70,8 @@ export function getByQueryController({
   processResponseData,
   processErrorResponse,
   joins,
-  shouldErrorOnNotFound
+  shouldErrorOnNotFound,
+  filterPresets
 }: GetByQueryControllerParams): Controller {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
@@ -82,13 +83,23 @@ export function getByQueryController({
       const filter =
         filterQuery && formatReadFilter(req.query, filterQuery, req);
 
+      // Resolve optional ?preset= query param — additive, does not touch filter
+      const presetName =
+        typeof req.query.preset === 'string' ? req.query.preset : undefined;
+      const resolvedOrGroup = resolveFilterPreset(
+        presetName,
+        filterPresets,
+        req.query as Record<string, unknown>
+      );
+
       let data: Record<string, any>[] = await db.read(
         resource,
         fields,
         filter,
         paginate,
         format,
-        joins
+        joins,
+        resolvedOrGroup ?? undefined
       );
       let total = 0;
       if (paginate) {

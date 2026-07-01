@@ -1,7 +1,7 @@
 import { Controller } from '../controllers/interfaces';
 import Knex from 'knex';
 import Postgres from '../services/postgres';
-import { GetQueryFilter, Join } from '../shared/interface';
+import { FilterPresets, GetQueryFilter, Join } from '../shared/interface';
 import { ExitMiddleware, Middleware, Request } from './express';
 
 export interface ICrud {
@@ -107,6 +107,8 @@ export type IGet = CrudParams & {
   processResponseData?: (data: any, req: Request) => any;
   /** Whether to error on not found (default: true) */
   shouldErrorOnNotFound?: boolean;
+  /** Named filter presets supporting OR/AND logic via ?preset= query param */
+  filterPresets?: FilterPresets;
 };
 
 export type IGetById = CrudParams & {
@@ -164,6 +166,8 @@ export interface GetByQueryControllerParams extends ControllerParams {
   };
   joins?: Join[];
   shouldErrorOnNotFound?: boolean;
+  /** Named filter presets supporting OR/AND logic via ?preset= query param */
+  filterPresets?: FilterPresets;
 }
 
 export interface GetByIdControllerParams extends ControllerParams {

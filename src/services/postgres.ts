@@ -9,6 +9,7 @@ import {
 } from '../utils/postgres';
 import { QueryTypes } from 'sequelize';
 import { Filter, UpdateOpParam, Join } from '../shared/interface';
+import { ResolvedOrGroup } from '../utils/formatter';
 
 export default class Postgres {
   public async read(
@@ -17,7 +18,8 @@ export default class Postgres {
     filter?: Filter,
     paginate?: { page: number; limit: number },
     format?: { sort: 'ASC' | 'DESC'; sortField: string },
-    joins?: Join[]
+    joins?: Join[],
+    resolvedOrGroup?: ResolvedOrGroup
   ) {
     const { query, replacements } = generateReadQuery(
       table,
@@ -25,7 +27,8 @@ export default class Postgres {
       filter,
       paginate,
       format,
-      joins
+      joins,
+      resolvedOrGroup
     );
 
     const result: any[] = await config.db.query(query, {

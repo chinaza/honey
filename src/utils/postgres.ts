@@ -1,5 +1,11 @@
 import { Knex } from 'knex';
 import { Filter, FilterParam, UpdateOpParam, Join } from '../shared/interface';
+import {
+  ResolvedAndGroup,
+  ResolvedLeaf,
+  ResolvedNode,
+  ResolvedOrGroup
+} from './formatter';
 import { getKnex } from './db';
 
 export const NESTED_DELIMITER = '__hj__';
@@ -70,6 +76,65 @@ export const nestResults = (
   return nestedResults;
 };
 
+// ── Preset condition group helpers (additive — applyFilter unchanged) ────────
+
+/**
+ * Returns true if a ResolvedNode is an AND group.
+ */
+function isResolvedAndGroup(node: ResolvedNode): node is ResolvedAndGroup {
+  return '$and' in node;
+}
+
+/**
+ * Recursively applies a single ResolvedNode to a knex builder.
+ * AND groups are applied as nested `.where()` calls; leaves are plain conditions.
+ */
+function applyConditionGroup(
+  builder: Knex.QueryBuilder,
+  node: ResolvedNode
+): void {
+  if (isResolvedAndGroup(node)) {
+    builder.where((andBuilder) => {
+      node.$and.forEach((child) => applyConditionGroup(andBuilder, child));
+    });
+  } else {
+    const leaf = node as ResolvedLeaf;
+    if (['like', 'not like'].includes(leaf.operator)) {
+      builder.where(
+        leaf.field,
+        leaf.operator === 'like' ? 'ilike' : 'not ilike',
+        `%${leaf.value}%`
+      );
+    } else {
+      builder.where(leaf.field, leaf.operator, leaf.value as any);
+    }
+  }
+}
+
+/**
+ * Applies a resolved OR group (produced by resolveFilterPreset) to a knex
+ * query builder as a single AND-ed WHERE clause containing OR branches.
+ */
+export const applyResolvedOrGroup = (
+  query: Knex.QueryBuilder,
+  orGroup: ResolvedOrGroup
+): Knex.QueryBuilder => {
+  query.where((outerBuilder) => {
+    orGroup.$or.forEach((branch, index) => {
+      if (index === 0) {
+        applyConditionGroup(outerBuilder, branch);
+      } else {
+        outerBuilder.orWhere((branchBuilder) => {
+          applyConditionGroup(branchBuilder, branch);
+        });
+      }
+    });
+  });
+  return query;
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const applyFilter = (query: Knex.QueryBuilder, filter: Filter = {}) => {
   Object.entries(filter).forEach(([field, data]) => {
     if (field === '$or') {
@@ -124,7 +189,8 @@ export const generateReadQuery = (
   filter?: Filter,
   paginate?: { page: number; limit: number },
   format?: { sort: 'ASC' | 'DESC'; sortField: string },
-  joins?: Join[]
+  joins?: Join[],
+  resolvedOrGroup?: ResolvedOrGroup
 ) => {
   const knex = getKnex();
 
@@ -214,6 +280,11 @@ export const generateReadQuery = (
   // Apply filters
   if (filter) {
     q = applyFilter(q, filter);
+  }
+
+  // Apply resolved preset OR group (additive — only when a preset is active)
+  if (resolvedOrGroup) {
+    q = applyResolvedOrGroup(q, resolvedOrGroup);
   }
 
   // Apply sorting
