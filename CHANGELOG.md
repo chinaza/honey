@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.53.0
+
+### Minor Changes
+
+- f94fcb6: add new and improved request logger middleware to replace morgan
+
 ## 1.52.0
 
 ### Minor Changes
