@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import logger from 'morgan';
 import cors from 'cors';
+import { requestLogger } from '../middleware/request-logger';
 import http from 'http';
 import expressOasGenerator from 'express-oas-generator';
 import '../config';
@@ -88,7 +88,7 @@ class ExpressApp {
     };
 
     expressOasGenerator.handleResponses(this.app, {} as any);
-    this.app.use(logger('dev'));
+    this.app.use(requestLogger);
     this.app.use(cors(corsOptions));
     this.app.use(
       express.json({
