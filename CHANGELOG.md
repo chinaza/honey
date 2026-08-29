@@ -1,5 +1,11 @@
 # @promind/honey
 
+## 1.54.0
+
+### Minor Changes
+
+- b773215: add support for nullable filters
+
 ## 1.53.1
 
 ### Patch Changes
