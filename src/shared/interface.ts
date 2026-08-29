@@ -36,7 +36,8 @@ type FilterOverrideValue =
   | number
   | boolean
   | Date
-  | Record<string, any>;
+  | Record<string, any>
+  | null;
 export type FilterLocation =
   | 'query'
   | 'body'
