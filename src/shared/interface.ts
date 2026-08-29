@@ -8,7 +8,9 @@ export type FilterOps =
   | 'in'
   | 'not in'
   | 'like'
-  | 'not like';
+  | 'not like'
+  | 'is null'
+  | 'is not null';
 
 type UpdateOp = 'inc' | 'dec' | 'replace' | '@updatedAt';
 

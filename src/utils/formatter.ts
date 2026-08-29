@@ -128,9 +128,21 @@ export const formatReadFilter = (
       }
 
       const valueFormatter = formatters[(param as GetFilterParam).value];
+      const filterParam = param as GetFilterParam;
+      let operator = filterParam.operator as FilterOps;
+
+      // Auto-convert operator for null values to use IS NULL / IS NOT NULL
+      if (valueToUse === null) {
+        if (operator === '=') {
+          operator = 'is null';
+        } else if (operator === '!=') {
+          operator = 'is not null';
+        }
+      }
+
       result[key] = {
-        operator: param.operator as FilterOps,
-        value: valueFormatter(valueToUse)
+        operator,
+        value: valueToUse === null ? null : valueFormatter(valueToUse)
       };
     }
   }
