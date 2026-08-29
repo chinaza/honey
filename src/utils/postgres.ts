@@ -105,6 +105,10 @@ function applyConditionGroup(
         leaf.operator === 'like' ? 'ilike' : 'not ilike',
         `%${leaf.value}%`
       );
+    } else if (leaf.operator === 'is null') {
+      builder.whereNull(leaf.field);
+    } else if (leaf.operator === 'is not null') {
+      builder.whereNotNull(leaf.field);
     } else {
       builder.where(leaf.field, leaf.operator, leaf.value as any);
     }
@@ -143,7 +147,11 @@ export const applyFilter = (query: Knex.QueryBuilder, filter: Filter = {}) => {
           const method = index === 0 ? 'where' : 'orWhere';
           const orParam = orData as FilterParam;
 
-          if (['like', 'not like'].includes(orParam.operator)) {
+          if (orParam.operator === 'is null') {
+            builder[`${method}Null`](orField);
+          } else if (orParam.operator === 'is not null') {
+            builder[`${method}NotNull`](orField);
+          } else if (['like', 'not like'].includes(orParam.operator)) {
             builder[method](orField, 'ilike', `%${orParam.value}%`);
           } else {
             builder[method](orField, orParam.operator, orParam.value);
@@ -159,6 +167,10 @@ export const applyFilter = (query: Knex.QueryBuilder, filter: Filter = {}) => {
           param.operator === 'like' ? 'ilike' : 'not ilike',
           `%${param.value}%`
         );
+      } else if (param.operator === 'is null') {
+        query.whereNull(field);
+      } else if (param.operator === 'is not null') {
+        query.whereNotNull(field);
       } else {
         query.where(field, param.operator, param.value);
       }
